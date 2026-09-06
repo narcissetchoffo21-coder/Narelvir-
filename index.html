@@ -1,38 +1,186 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NARELVIR - Pièces Détachées & Lubrifiants</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>NARELVIR - Pièces Détachées & Lubrifiants</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#f5f5f5;
+    color:#222;
+}
+
+header{
+    background:#0756a3;
+    color:white;
+    text-align:center;
+    padding:30px 15px;
+    border-bottom:6px solid #e31b23;
+}
+
+header h1{
+    font-size:38px;
+    margin:0;
+}
+
+header p{
+    font-size:17px;
+}
+
+nav{
+    background:white;
+    padding:15px;
+    text-align:center;
+}
+
+nav a{
+    color:#0756a3;
+    font-weight:bold;
+    text-decoration:none;
+    margin:8px;
+}
+
+section{
+    padding:30px 15px;
+    max-width:1000px;
+    margin:auto;
+}
+
+h2{
+    color:#0756a3;
+    text-align:center;
+}
+
+.produits{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+    gap:15px;
+}
+
+.produit{
+    background:white;
+    padding:18px;
+    border-radius:12px;
+    text-align:center;
+    box-shadow:0 2px 8px #ccc;
+}
+
+.contact{
+    background:#0756a3;
+    color:white;
+    text-align:center;
+    padding:30px 15px;
+}
+
+.contact h2{
+    color:white;
+}
+
+.whatsapp{
+    display:inline-block;
+    background:#25D366;
+    color:white;
+    padding:15px 25px;
+    border-radius:30px;
+    text-decoration:none;
+    font-weight:bold;
+    margin-top:15px;
+}
+
+footer{
+    background:#222;
+    color:white;
+    text-align:center;
+    padding:18px;
+}
+</style>
 </head>
 
 <body>
-  <h1>NARELVIR</h1>
 
-  <h2>Pièces Détachées & Lubrifiants</h2>
+<header>
+    <h1>NARELVIR</h1>
+    <p>Pièces Détachées & Lubrifiants</p>
+    <p>Votre spécialiste des pièces détachées et équipements motorisés</p>
+</header>
 
-  <p>
-    Votre spécialiste des pièces détachées,
-    lubrifiants et équipements motorisés.
-  </p>
+<nav>
+    <a href="#produits">Produits</a>
+    <a href="#contact">Contact</a>
+</nav>
 
-  <h2>Nos produits</h2>
+<section id="produits">
 
-  <p>
-    Pièces moto • Débroussailleuses • Tronçonneuses •
-    Tarières • Motopompes • Groupes électrogènes • Lubrifiants
-  </p>
+<h2>Nos produits</h2>
 
-  <h2>Contact</h2>
+<div class="produits">
 
-  <p>📍 Nouvelle Route Brique, derrière l’Immeuble Ekan</p>
+<div class="produit">
+<h3>🏍️ Pièces Moto</h3>
+<p>GN125 • CG150 • CGL125 • TVS et autres modèles</p>
+</div>
 
-  <p>📞 652 242 847 / 692 049 233</p>
+<div class="produit">
+<h3>🌿 Débroussailleuses</h3>
+<p>Machines, carburateurs, cylindres, lanceurs et accessoires</p>
+</div>
 
-  <p>
-    <a href="https://wa.me/237652242847">
-      Commander sur WhatsApp
-    </a>
-  </p>
+<div class="produit">
+<h3>🪚 Tronçonneuses</h3>
+<p>Pièces détachées et accessoires</p>
+</div>
+
+<div class="produit">
+<h3>💧 Motopompes</h3>
+<p>Machines et pièces de rechange</p>
+</div>
+
+<div class="produit">
+<h3>⚡ Groupes électrogènes</h3>
+<p>Pièces moteur et accessoires</p>
+</div>
+
+<div class="produit">
+<h3>🛢️ Lubrifiants</h3>
+<p>Huiles moteur et produits d'entretien</p>
+</div>
+
+<div class="produit">
+<h3>🌱 Pulvérisateurs</h3>
+<p>Équipements pour vos travaux agricoles</p>
+</div>
+
+<div class="produit">
+<h3>⚙️ Pièces moteur</h3>
+<p>Carburateurs, cylindres, bobines et nombreuses autres pièces</p>
+</div>
+
+</div>
+</section>
+
+<div class="contact" id="contact">
+
+<h2>Contactez NARELVIR</h2>
+
+<p>📍 Nouvelle Route Brique, derrière l’Immeuble Ekan</p>
+
+<p>📞 652 242 847</p>
+<p>📞 692 049 233</p>
+
+<a class="whatsapp"
+href="https://wa.me/237652242847">
+💬 Commander sur WhatsApp
+</a>
+
+</div>
+
+<footer>
+NARELVIR © 2026 — Pièces Détachées & Lubrifiants
+</footer>
+
 </body>
 </html>
