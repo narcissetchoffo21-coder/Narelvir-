@@ -204,6 +204,21 @@ href="https://wa.me/237652242847">
 <footer>
 NARELVIR © 2026 — Pièces Détachées & Lubrifiants
 </footer>
+<script>
+function rechercherProduit() {
+    let recherche = document.getElementById("recherche").value.toLowerCase();
+    let produits = document.querySelectorAll(".produit");
 
+    produits.forEach(function(produit) {
+        let texte = produit.innerText.toLowerCase();
+
+        if (texte.includes(recherche)) {
+            produit.style.display = "";
+        } else {
+            produit.style.display = "none";
+        }
+    });
+}
+</script>
 </body>
 </html>
