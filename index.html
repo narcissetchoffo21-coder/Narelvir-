@@ -230,23 +230,73 @@ function rechercherProduit() {
             produit.style.display = "none";
         }
     });
-}
-    let panier = [];
-let totalPanier = 0;
+
+let panier = [];
 
 function ajouterPanier(nom, prix) {
-    panier.push({ nom: nom, prix: prix });
-    totalPanier += prix;
-
-    let liste = document.getElementById("liste-panier");
-    liste.innerHTML = "";
-
-    panier.forEach(function(article) {
-        liste.innerHTML += "<p>✅ " + article.nom + " - " + article.prix + " FCFA</p>";
+    let article = panier.find(function(item) {
+        return item.nom === nom;
     });
 
-    document.getElementById("total-panier").innerText = totalPanier;
+    if (article) {
+        article.quantite++;
+    } else {
+        panier.push({
+            nom: nom,
+            prix: prix,
+            quantite: 1
+        });
+    }
+
+    afficherPanier();
 }
-</script>
+
+function afficherPanier() {
+    let liste = document.getElementById("liste-panier");
+    let total = 0;
+
+    liste.innerHTML = "";
+
+    panier.forEach(function(article, index) {
+        let sousTotal = article.prix * article.quantite;
+        total += sousTotal;
+
+        liste.innerHTML +=
+            "<p>✅ " + article.nom +
+            " — " + article.prix + " FCFA" +
+            "<br>Quantité : " +
+            "<button onclick='diminuerQuantite(" + index + ")'>➖</button> " +
+            article.quantite +
+            " <button onclick='augmenterQuantite(" + index + ")'>➕</button>" +
+            "<br>Sous-total : " + sousTotal + " FCFA" +
+            " <button onclick='supprimerArticle(" + index + ")'>🗑️ Supprimer</button></p>";
+    });
+
+    if (panier.length === 0) {
+        liste.innerHTML = "<p>Votre panier est vide.</p>";
+    }
+
+    document.getElementById("total-panier").innerText = total;
+}
+
+function augmenterQuantite(index) {
+    panier[index].quantite++;
+    afficherPanier();
+}
+
+function diminuerQuantite(index) {
+    panier[index].quantite--;
+
+    if (panier[index].quantite <= 0) {
+        panier.splice(index, 1);
+    }
+
+    afficherPanier();
+}
+
+function supprimerArticle(index) {
+    panier.splice(index, 1);
+    afficherPanier();
+            }</script>
 </body>
 </html>
