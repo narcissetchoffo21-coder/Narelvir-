@@ -206,6 +206,13 @@ href="https://wa.me/237652242847">
     📕 VOIR NOTRE CATALOGUE NARELVIR
   </a>
 </div>
+    <section id="panier">
+    <h2>🛒 Mon Panier</h2>
+    <div id="liste-panier">
+        <p>Votre panier est vide.</p>
+    </div>
+    <p><strong>Total : <span id="total-panier">0</span> FCFA</strong></p>
+</section>
 <footer>
 NARELVIR © 2026 — Pièces Détachées & Lubrifiants
 </footer>
@@ -223,6 +230,22 @@ function rechercherProduit() {
             produit.style.display = "none";
         }
     });
+}
+    let panier = [];
+let totalPanier = 0;
+
+function ajouterPanier(nom, prix) {
+    panier.push({ nom: nom, prix: prix });
+    totalPanier += prix;
+
+    let liste = document.getElementById("liste-panier");
+    liste.innerHTML = "";
+
+    panier.forEach(function(article) {
+        liste.innerHTML += "<p>✅ " + article.nom + " - " + article.prix + " FCFA</p>";
+    });
+
+    document.getElementById("total-panier").innerText = totalPanier;
 }
 </script>
 </body>
