@@ -34,18 +34,25 @@ header h1{
 header p{
     font-size:17px;
 }
-
 nav{
     background:white;
-    padding:15px;
+    padding:15px 8px;
     text-align:center;
+    white-space:nowrap;
+    overflow-x:auto;
+    border-bottom:5px solid #e31b23;
 }
 
 nav a{
-    color:#0756a3;
-    font-weight:bold;
+    color:#333;
+    font-weight:600;
     text-decoration:none;
-    margin:8px;
+    margin:0 10px;
+    font-size:14px;
+}
+
+nav a:last-child{
+    color:#e31b23;
 }
 
 section{
@@ -101,6 +108,29 @@ footer{
     text-align:center;
     padding:18px;
 }
+    #apropos, #services, #overseas{
+    background:white;
+    margin:20px auto;
+    padding:25px 20px;
+    border-radius:15px;
+    box-shadow:0 3px 12px #ccc;
+    text-align:center;
+}
+
+#overseas{
+    border-top:5px solid #e31b23;
+}
+
+#overseas a{
+    display:inline-block;
+    background:#0756a3;
+    color:white;
+    padding:14px 24px;
+    border-radius:25px;
+    text-decoration:none;
+    font-weight:bold;
+    margin-top:12px;
+}
 </style>
 </head>
 
@@ -113,11 +143,43 @@ footer{
 </header>
 
 <nav>
-    <a href="#produits">Produits</a>
-    <a href="#panier">🛒 Panier <span id="nombrePanier">0</span></a>
+    <a href="#">Accueil</a>
+    <a href="#apropos">À propos</a>
+    <a href="#services">Services</a>
     <a href="#contact">Contact</a>
+    <a href="#overseas">Overseas Store</a>
 </nav>
+    <section id="apropos">
+    <h2>À propos de NARELVIR</h2>
+    <p>
+        NARELVIR est votre spécialiste des pièces détachées,
+        lubrifiants et équipements motorisés.
+    </p>
+</section>
 
+<section id="services">
+    <h2>Nos Services</h2>
+    <p>
+        Vente de pièces détachées, lubrifiants, équipements motorisés
+        et accompagnement de nos clients dans le choix de leurs produits.
+    </p>
+</section>
+    <section id="overseas">
+    <h2>🌍 Overseas Store</h2>
+
+    <p>
+        Découvrez notre sélection de pièces détachées,
+        lubrifiants et équipements disponibles sur commande.
+    </p>
+
+    <p>
+        📦 Importation • Commande • Vente en gros et détail
+    </p>
+
+    <a href="https://wa.me/237652242847">
+        Commander via WhatsApp
+    </a>
+    </section>
 <div style="max-width:700px;margin:25px auto;padding:0 15px;">
   <input
     type="text"
