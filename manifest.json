@@ -5,5 +5,17 @@
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#0756a3",
-  "description": "Pièces détachées, lubrifiants et équipements motorisés NARELVIR"
+  "description": "Pièces détachées, lubrifiants et équipements motorisés NARELVIR",
+"icons": [
+  {
+    "src": "/icon-192-1.png",
+    "sizes": "192x192",
+    "type": "image/png"
+  },
+  {
+    "src": "/icon-512.png",
+    "sizes": "512x512",
+    "type": "image/png"
+  }
+  ]
 }
