@@ -131,11 +131,91 @@ footer{
     font-weight:bold;
     margin-top:12px;
 }
+.topbar{
+    background:white;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px 20px;
+    border-bottom:1px solid #ddd;
+}
+
+.topbar button{
+    background:none;
+    border:none;
+    color:#0756a3;
+    font-size:18px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.topbar a{
+    color:#0756a3;
+    font-size:18px;
+    font-weight:bold;
+    text-decoration:none;
+}
+.menu-lateral{
+    position:fixed;
+    top:0;
+    left:-85%;
+    width:80%;
+    height:100%;
+    background:#0756a3;
+    z-index:9999;
+    transition:0.3s;
+    box-shadow:3px 0 15px #555;
+    overflow-y:auto;
+}
+
+.menu-lateral.ouvert{
+    left:0;
+}
+
+.menu-lateral h2{
+    color:white;
+    text-align:center;
+    padding:25px 10px;
+}
+
+.menu-lateral a{
+    display:block;
+    color:white;
+    padding:18px 25px;
+    border-top:1px solid rgba(255,255,255,0.25);
+    text-decoration:none;
+    font-size:17px;
+}
+
+.fermer-menu{
+    float:right;
+    margin:15px;
+    background:none;
+    border:none;
+    color:white;
+    font-size:25px;
+}
 </style>
 </head>
 
 <body>
+<div class="topbar">
+    <button onclick="ouvrirMenu()">☰ MENU</button>
+    <a href="#connexion">CONNEXION</a>
+</div>
+    <div id="menuLateral" class="menu-lateral">
+    <button class="fermer-menu" onclick="fermerMenu()">✕</button>
 
+    <h2>NARELVIR</h2>
+
+    <a href="#" onclick="fermerMenu()">Accueil ›</a>
+    <a href="#produits" onclick="fermerMenu()">Produits ›</a>
+    <a href="#panier" onclick="fermerMenu()">Commandes ›</a>
+    <a href="#factures" onclick="fermerMenu()">Factures ›</a>
+    <a href="#messages" onclick="fermerMenu()">Messages ›</a>
+    <a href="#connexion" onclick="fermerMenu()">Mon compte ›</a>
+    <a href="#apropos" onclick="fermerMenu()">À propos ›</a>
+    </div>
 <header>
     <h1>NARELVIR</h1>
     <p>Pièces Détachées & Lubrifiants</p>
@@ -445,5 +525,14 @@ if ('serviceWorker' in navigator) {
   });
 }
     </script>
+    <script>
+function ouvrirMenu() {
+    document.getElementById("menuLateral").classList.add("ouvert");
+}
+
+function fermerMenu() {
+    document.getElementById("menuLateral").classList.remove("ouvert");
+}
+        </script>
 </body>
 </html>
