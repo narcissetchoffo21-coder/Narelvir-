@@ -240,25 +240,21 @@ href="https://wa.me/237652242847">
 <footer>
 NARELVIR © 2026 — Pièces Détachées & Lubrifiants
 </footer>
-<script>
+    <script>
 function rechercherProduit() {
-    let recherche = document.getElementById("recherche").value.toLowerCase();
-    let produits = document.querySelectorAll(".produit");
+    const recherche = document.getElementById("recherche").value.toLowerCase();
+    const produits = document.querySelectorAll(".produit");
 
     produits.forEach(function(produit) {
-        let texte = produit.innerText.toLowerCase();
-
-        if (texte.includes(recherche)) {
-            produit.style.display = "";
-        } else {
-            produit.style.display = "none";
-        }
+        const texte = produit.innerText.toLowerCase();
+        produit.style.display = texte.includes(recherche) ? "" : "none";
     });
 }
+
 let panier = [];
 
 function ajouterPanier(nom, prix) {
-    let article = panier.find(function(item) {
+    const article = panier.find(function(item) {
         return item.nom === nom;
     });
 
@@ -267,40 +263,50 @@ function ajouterPanier(nom, prix) {
     } else {
         panier.push({
             nom: nom,
-            prix: prix,
+            prix: Number(prix),
             quantite: 1
         });
-    
+    }
 
     afficherPanier();
 }
 
 function afficherPanier() {
-    let liste = document.getElementById("liste-panier");
+    const liste = document.getElementById("liste-panier");
+    const totalElement = document.getElementById("total-panier");
+    const nombreElement = document.getElementById("nombrePanier");
+
     let total = 0;
+    let nombre = 0;
 
     liste.innerHTML = "";
 
     panier.forEach(function(article, index) {
-        let sousTotal = article.prix * article.quantite;
+        const sousTotal = article.prix * article.quantite;
+
         total += sousTotal;
+        nombre += article.quantite;
 
         liste.innerHTML +=
-            "<p>✅ " + article.nom +
-            " — " + article.prix + " FCFA" +
+            "<p>✅ <strong>" + article.nom + "</strong>" +
+            "<br>Prix : " + article.prix.toLocaleString("fr-FR") + " FCFA" +
             "<br>Quantité : " +
-            "<button onclick='diminuerQuantite(" + index + ")'>➖</button> " +
+            "<button onclick='diminuerQuantite(" + index + ")'>−</button> " +
             article.quantite +
-            " <button onclick='augmenterQuantite(" + index + ")'>➕</button>" +
-            "<br>Sous-total : " + sousTotal + " FCFA" +
-            " <button onclick='supprimerArticle(" + index + ")'>🗑️ Supprimer</button></p>";
+            " <button onclick='augmenterQuantite(" + index + ")'>+</button>" +
+            "<br>Sous-total : " + sousTotal.toLocaleString("fr-FR") + " FCFA" +
+            "<br><button onclick='supprimerArticle(" + index + ")'>🗑️ Supprimer</button></p>";
     });
 
     if (panier.length === 0) {
         liste.innerHTML = "<p>Votre panier est vide.</p>";
     }
 
-    document.getElementById("total-panier").innerText = total;
+    totalElement.innerText = total.toLocaleString("fr-FR");
+
+    if (nombreElement) {
+        nombreElement.innerText = nombre;
+    }
 }
 
 function augmenterQuantite(index) {
