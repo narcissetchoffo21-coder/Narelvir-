@@ -1,0 +1,9 @@
+{
+  "name": "NARELVIR - Pièces Détachées & Lubrifiants",
+  "short_name": "NARELVIR",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0756a3",
+  "description": "Pièces détachées, lubrifiants et équipements motorisés NARELVIR"
+}
