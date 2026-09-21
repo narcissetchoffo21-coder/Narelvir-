@@ -501,7 +501,8 @@ h2{
 
 .auth-formulaire.cache,
 .compte-connecte.cache,
-.reinitialisation-mot-de-passe.cache{
+.reinitialisation-mot-de-passe.cache,
+.admin-narelvir.cache{
     display:none;
 }
 
@@ -620,6 +621,141 @@ h2{
 .liens-compte a{
     color:var(--bleu);
     font-weight:bold;
+}
+
+.admin-narelvir{
+    margin-top:22px;
+    padding:18px;
+    border:2px solid var(--bleu);
+    border-radius:14px;
+    background:#f8fbff;
+    text-align:left;
+}
+
+.admin-narelvir h3{
+    margin:0 0 8px;
+    color:var(--bleu);
+    text-align:center;
+}
+
+.admin-intro{
+    margin:0 0 15px;
+    color:#445;
+    line-height:1.45;
+    text-align:center;
+}
+
+.admin-total{
+    margin:0 0 14px;
+    padding:14px;
+    border-radius:11px;
+    background:var(--bleu);
+    color:white;
+    font-size:18px;
+    font-weight:bold;
+    text-align:center;
+}
+
+.admin-outils{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto;
+    gap:8px;
+    margin-bottom:12px;
+}
+
+.admin-outils input{
+    width:100%;
+    min-height:46px;
+    padding:11px 13px;
+    border:1px solid #aebbc7;
+    border-radius:9px;
+    font-size:16px;
+}
+
+.admin-outils button{
+    min-height:46px;
+    padding:10px 14px;
+    border:0;
+    border-radius:9px;
+    background:var(--rouge);
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.admin-outils button:disabled{
+    opacity:0.55;
+    cursor:wait;
+}
+
+.admin-message{
+    display:none;
+    margin:10px 0;
+    padding:11px 12px;
+    border-radius:9px;
+    line-height:1.4;
+}
+
+.admin-message.visible{
+    display:block;
+}
+
+.admin-message.info{
+    color:#174f7d;
+    background:#e8f2fb;
+    border:1px solid #a9cce9;
+}
+
+.admin-message.erreur{
+    color:#85151a;
+    background:#fde9ea;
+    border:1px solid #ecb2b5;
+}
+
+.admin-liste{
+    display:grid;
+    gap:10px;
+}
+
+.admin-client{
+    padding:14px;
+    border:1px solid #cbd7e2;
+    border-left:5px solid var(--bleu);
+    border-radius:10px;
+    background:white;
+}
+
+.admin-client p{
+    margin:5px 0;
+    overflow-wrap:anywhere;
+}
+
+.admin-client-nom{
+    color:var(--bleu-fonce);
+    font-size:17px;
+    font-weight:bold;
+}
+
+.admin-badge{
+    display:inline-block;
+    margin-top:5px;
+    padding:4px 8px;
+    border-radius:20px;
+    background:#e5f7eb;
+    color:#125c2b;
+    font-size:13px;
+    font-weight:bold;
+}
+
+.admin-badge.attente{
+    background:#fff3d6;
+    color:#7a4e00;
+}
+
+@media (max-width:560px){
+    .admin-outils{
+        grid-template-columns:1fr;
+    }
 }
 
 .reinitialisation-mot-de-passe{
@@ -1002,6 +1138,19 @@ footer{
             <a href="#factures">Demander une facture</a>
             <a href="#messages">Contacter NARELVIR</a>
         </div>
+
+        <div id="zoneAdminNarelvir" class="admin-narelvir cache" aria-labelledby="titreAdminNarelvir">
+            <h3 id="titreAdminNarelvir">🛡️ Administration NARELVIR</h3>
+            <p class="admin-intro">Cette liste privée est réservée au propriétaire de NARELVIR. Les mots de passe ne sont jamais affichés.</p>
+            <p class="admin-total"><span id="totalClientsAdmin">0</span> compte(s) client(s)</p>
+            <div class="admin-outils">
+                <input type="search" id="rechercheClientsAdmin" placeholder="Rechercher nom, e-mail ou téléphone" aria-label="Rechercher un client" oninput="filtrerClientsAdmin()">
+                <button type="button" id="actualiserClientsAdmin" onclick="chargerClientsAdmin()">Actualiser</button>
+            </div>
+            <div id="messageAdminNarelvir" class="admin-message" role="status" aria-live="polite"></div>
+            <div id="listeClientsAdmin" class="admin-liste" aria-live="polite"></div>
+        </div>
+
         <button type="button" class="auth-bouton rouge" onclick="deconnecterClient()">Se déconnecter</button>
     </div>
 
@@ -1040,8 +1189,10 @@ const NUMERO_WHATSAPP = "237652242847";
 const CLE_PANIER = "narelvir-panier";
 const SUPABASE_URL = "https://jyitudbysxfadgjcubgh.supabase.co";
 const SUPABASE_CLE_PUBLIQUE = "sb_publishable_PsnwN6TTzw_mZWvWcq-dFQ_39uprhHX";
+const EMAIL_ADMIN_NARELVIR = "narcissetchoffo21@gmail.com";
 const clientSupabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_CLE_PUBLIQUE) : null;
 let panier = chargerPanier();
+let clientsAdminNarelvir = [];
 
 function afficherMessageAuth(message, type) {
     const zone = document.getElementById("messageAuth");
@@ -1086,15 +1237,150 @@ function basculerBoutonFormulaire(formulaire, chargement) {
     bouton.textContent = chargement ? "Veuillez patienter…" : bouton.dataset.texteInitial;
 }
 
+function estAdministrateurNarelvir(utilisateur) {
+    return Boolean(
+        utilisateur &&
+        utilisateur.email &&
+        utilisateur.email.trim().toLowerCase() === EMAIL_ADMIN_NARELVIR
+    );
+}
+
+function afficherMessageAdmin(message, type) {
+    const zone = document.getElementById("messageAdminNarelvir");
+    zone.textContent = message;
+    zone.className = "admin-message visible " + (type || "info");
+}
+
+function effacerMessageAdmin() {
+    const zone = document.getElementById("messageAdminNarelvir");
+    zone.textContent = "";
+    zone.className = "admin-message";
+}
+
+function formaterDateAdmin(valeur) {
+    if (!valeur) return "Jamais";
+    const date = new Date(valeur);
+    if (Number.isNaN(date.getTime())) return "Non disponible";
+    return date.toLocaleString("fr-FR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+    });
+}
+
+function creerLigneAdmin(libelle, valeur) {
+    const ligne = document.createElement("p");
+    const titre = document.createElement("strong");
+    titre.textContent = libelle + " : ";
+    ligne.appendChild(titre);
+    ligne.appendChild(document.createTextNode(valeur || "Non renseigné"));
+    return ligne;
+}
+
+function afficherClientsAdmin(liste) {
+    const conteneur = document.getElementById("listeClientsAdmin");
+    conteneur.replaceChildren();
+    document.getElementById("totalClientsAdmin").textContent = String(clientsAdminNarelvir.length);
+
+    if (!liste.length) {
+        const vide = document.createElement("p");
+        vide.textContent = clientsAdminNarelvir.length ? "Aucun client ne correspond à votre recherche." : "Aucun compte client enregistré.";
+        conteneur.appendChild(vide);
+        return;
+    }
+
+    liste.forEach(function(client) {
+        const carte = document.createElement("article");
+        carte.className = "admin-client";
+
+        const nom = document.createElement("p");
+        nom.className = "admin-client-nom";
+        nom.textContent = client.nom || "Client NARELVIR";
+        carte.appendChild(nom);
+        carte.appendChild(creerLigneAdmin("E-mail", client.email));
+        carte.appendChild(creerLigneAdmin("Téléphone", client.telephone));
+        carte.appendChild(creerLigneAdmin("Inscription", formaterDateAdmin(client.date_inscription)));
+        carte.appendChild(creerLigneAdmin("Dernière connexion", formaterDateAdmin(client.derniere_connexion)));
+
+        const badge = document.createElement("span");
+        badge.className = "admin-badge" + (client.email_confirme ? "" : " attente");
+        badge.textContent = client.email_confirme ? "E-mail confirmé" : "Confirmation en attente";
+        carte.appendChild(badge);
+        conteneur.appendChild(carte);
+    });
+}
+
+function filtrerClientsAdmin() {
+    const champ = document.getElementById("rechercheClientsAdmin");
+    const recherche = champ.value.trim().toLowerCase();
+
+    if (!recherche) {
+        afficherClientsAdmin(clientsAdminNarelvir);
+        return;
+    }
+
+    const resultat = clientsAdminNarelvir.filter(function(client) {
+        return [client.nom, client.email, client.telephone]
+            .filter(Boolean)
+            .some(function(valeur) { return String(valeur).toLowerCase().includes(recherche); });
+    });
+    afficherClientsAdmin(resultat);
+}
+
+async function chargerClientsAdmin(utilisateur) {
+    if (!clientSupabase) return;
+
+    let utilisateurActuel = utilisateur;
+    if (!utilisateurActuel) {
+        const resultatUtilisateur = await clientSupabase.auth.getUser();
+        utilisateurActuel = resultatUtilisateur.data ? resultatUtilisateur.data.user : null;
+    }
+
+    if (!estAdministrateurNarelvir(utilisateurActuel)) {
+        document.getElementById("zoneAdminNarelvir").classList.add("cache");
+        return;
+    }
+
+    const bouton = document.getElementById("actualiserClientsAdmin");
+    bouton.disabled = true;
+    bouton.textContent = "Chargement…";
+    effacerMessageAdmin();
+
+    try {
+        const resultat = await clientSupabase
+            .from("profils_clients")
+            .select("id,email,nom,telephone,date_inscription,derniere_connexion,email_confirme")
+            .order("date_inscription", { ascending: false });
+
+        if (resultat.error) throw resultat.error;
+        clientsAdminNarelvir = resultat.data || [];
+        afficherClientsAdmin(clientsAdminNarelvir);
+        afficherMessageAdmin("Liste des clients actualisée.", "info");
+    } catch (erreur) {
+        clientsAdminNarelvir = [];
+        afficherClientsAdmin([]);
+        afficherMessageAdmin("L’espace administrateur doit encore être activé dans Supabase.", "erreur");
+        console.error("Chargement des clients impossible :", erreur);
+    } finally {
+        bouton.disabled = false;
+        bouton.textContent = "Actualiser";
+    }
+}
+
 function afficherEtatCompte(utilisateur) {
     const invite = document.getElementById("zoneAuthInvite");
     const compte = document.getElementById("zoneCompteConnecte");
     const reinitialisation = document.getElementById("zoneNouveauMotDePasse");
+    const administration = document.getElementById("zoneAdminNarelvir");
 
     if (!utilisateur) {
         invite.classList.remove("cache");
         compte.classList.add("cache");
         reinitialisation.classList.add("cache");
+        administration.classList.add("cache");
+        clientsAdminNarelvir = [];
         return;
     }
 
@@ -1106,6 +1392,14 @@ function afficherEtatCompte(utilisateur) {
     invite.classList.add("cache");
     compte.classList.remove("cache");
     reinitialisation.classList.add("cache");
+
+    if (estAdministrateurNarelvir(utilisateur)) {
+        administration.classList.remove("cache");
+        chargerClientsAdmin(utilisateur);
+    } else {
+        administration.classList.add("cache");
+        clientsAdminNarelvir = [];
+    }
 }
 
 async function inscrireClient(evenement) {
