@@ -3,44 +3,80 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="manifest" href="manifest.json">
+<meta name="description" content="NARELVIR : pièces détachées moto, lubrifiants et équipements motorisés à Yaoundé.">
 <meta name="theme-color" content="#0756a3">
-    <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png">
-<link rel="apple-touch-icon" href="/icon-512.png">
+<link rel="manifest" href="https://narelvir.cm/manifest.json">
+<link rel="icon" type="image/png" sizes="512x512" href="https://narelvir.cm/icon-512.png">
+<link rel="apple-touch-icon" href="https://narelvir.cm/icon-512.png">
 
-<title>NARELVIR - Pièces Détachées & Lubrifiants</title>
+<title>NARELVIR - Pièces Détachées &amp; Lubrifiants</title>
 
 <style>
+:root{
+    --bleu:#0756a3;
+    --bleu-fonce:#003b73;
+    --rouge:#e31b23;
+    --vert:#25d366;
+    --gris:#f5f5f5;
+    --ombre:0 3px 12px rgba(0,0,0,0.15);
+}
+
+*{
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
 body{
     margin:0;
     font-family:Arial,sans-serif;
-    background:#f5f5f5;
+    background:var(--gris);
     color:#222;
 }
 
+body.menu-actif{
+    overflow:hidden;
+}
+
+img{
+    max-width:100%;
+}
+
+button,
+input,
+a{
+    font:inherit;
+}
+
+/* ===== EN-TÊTE ===== */
 header{
-    background:#0756a3;
+    background:var(--bleu);
     color:white;
     text-align:center;
-    padding:30px 15px;
-    border-bottom:6px solid #e31b23;
+    padding:22px 15px;
+    border-bottom:6px solid var(--rouge);
 }
 
 header h1{
-    font-size:38px;
-    margin:0;
+    font-size:34px;
+    margin:0 0 6px;
 }
 
 header p{
-    font-size:17px;
+    font-size:16px;
+    margin:0;
 }
+
+/* ===== NAVIGATION ===== */
 nav{
     background:white;
     padding:15px 8px;
     text-align:center;
     white-space:nowrap;
     overflow-x:auto;
-    border-bottom:5px solid #e31b23;
+    border-bottom:5px solid var(--rouge);
 }
 
 nav a{
@@ -52,9 +88,10 @@ nav a{
 }
 
 nav a:last-child{
-    color:#e31b23;
+    color:var(--rouge);
 }
 
+/* ===== SECTIONS ===== */
 section{
     padding:30px 15px;
     max-width:1000px;
@@ -62,75 +99,45 @@ section{
 }
 
 h2{
-    color:#0756a3;
+    color:var(--bleu);
     text-align:center;
 }
 
-.produits{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
-    gap:15px;
-}
-
-.produit{
-    background:white;
-    padding:18px;
-    border-radius:12px;
-    text-align:center;
-    box-shadow:0 2px 8px #ccc;
-}
-
-.contact{
-    background:#0756a3;
-    color:white;
-    text-align:center;
-    padding:30px 15px;
-}
-
-.contact h2{
-    color:white;
-}
-
-.whatsapp{
-    display:inline-block;
-    background:#25D366;
-    color:white;
-    padding:15px 25px;
-    border-radius:30px;
-    text-decoration:none;
-    font-weight:bold;
-    margin-top:15px;
-}
-
-footer{
-    background:#222;
-    color:white;
-    text-align:center;
-    padding:18px;
-}
-    #apropos, #services, #overseas{
+#apropos,
+#services,
+#overseas,
+#factures,
+#messages,
+#connexion,
+#panier{
     background:white;
     margin:20px auto;
     padding:25px 20px;
     border-radius:15px;
-    box-shadow:0 3px 12px #ccc;
+    box-shadow:var(--ombre);
     text-align:center;
+    max-width:960px;
 }
 
 #overseas{
-    border-top:5px solid #e31b23;
+    border-top:5px solid var(--rouge);
 }
 
+.bouton-bleu,
 #overseas a{
     display:inline-block;
-    background:#0756a3;
+    background:var(--bleu);
     color:white;
     padding:14px 24px;
+    border:0;
     border-radius:25px;
     text-decoration:none;
     font-weight:bold;
     margin-top:12px;
+    cursor:pointer;
 }
+
+/* ===== BARRE DU HAUT + MENU LATÉRAL ===== */
 .topbar{
     background:white;
     display:flex;
@@ -143,28 +150,30 @@ footer{
 .topbar button{
     background:none;
     border:none;
-    color:#0756a3;
+    color:var(--bleu);
     font-size:18px;
     font-weight:bold;
     cursor:pointer;
 }
 
 .topbar a{
-    color:#0756a3;
+    color:var(--bleu);
     font-size:18px;
     font-weight:bold;
     text-decoration:none;
 }
+
 .menu-lateral{
     position:fixed;
     top:0;
     left:-85%;
     width:80%;
+    max-width:360px;
     height:100%;
-    background:#0756a3;
-    z-index:9999;
-    transition:0.3s;
-    box-shadow:3px 0 15px #555;
+    background:var(--bleu);
+    z-index:10001;
+    transition:left 0.3s ease;
+    box-shadow:3px 0 15px rgba(0,0,0,0.35);
     overflow-y:auto;
 }
 
@@ -194,81 +203,565 @@ footer{
     border:none;
     color:white;
     font-size:25px;
+    cursor:pointer;
 }
-/* ===== ACCUEIL PROFESSIONNEL NARELVIR ===== */
 
+.fond-menu{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.52);
+    z-index:10000;
+    opacity:0;
+    visibility:hidden;
+    transition:0.3s;
+}
+
+.fond-menu.visible{
+    opacity:1;
+    visibility:visible;
+}
+
+/* ===== ACCUEIL ===== */
 .accueil-pro{
-    background: linear-gradient(135deg, #0756a3, #003b73);
-    color: white;
-    text-align: center;
-    padding: 55px 20px;
-    border-bottom: 5px solid #e31b23;
+    background:linear-gradient(135deg,var(--bleu),var(--bleu-fonce));
+    color:white;
+    text-align:center;
+    padding:55px 20px;
+    border-bottom:5px solid var(--rouge);
+    max-width:none;
 }
 
 .accueil-pro h2{
-    font-size: 32px;
-    margin-bottom: 15px;
+    color:white;
+    font-size:32px;
+    margin-bottom:15px;
 }
 
 .accueil-pro p{
-    font-size: 18px;
-    line-height: 1.6;
-    margin-bottom: 30px;
+    font-size:18px;
+    line-height:1.6;
+    margin-bottom:30px;
 }
 
 .accueil-pro a{
-    display: inline-block;
-    background: white;
-    color: #0756a3;
-    padding: 13px 20px;
-    margin: 6px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: bold;
+    display:inline-block;
+    background:white;
+    color:var(--bleu);
+    padding:13px 20px;
+    margin:6px;
+    border-radius:8px;
+    text-decoration:none;
+    font-weight:bold;
 }
 
 .accueil-pro a:hover{
-    background: #e31b23;
-    color: white;
+    background:var(--rouge);
+    color:white;
+}
+
+/* ===== RECHERCHE ===== */
+.recherche-zone{
+    max-width:700px;
+    margin:25px auto;
+    padding:0 15px;
+}
+
+.recherche-zone input{
+    width:100%;
+    padding:16px;
+    border:2px solid var(--bleu);
+    border-radius:30px;
+    font-size:16px;
+}
+
+.recherche-zone input:focus{
+    outline:3px solid rgba(7,86,163,0.18);
+}
+
+/* ===== PRODUITS ===== */
+.produits{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+    gap:18px;
+}
+
+.produit{
+    display:flex;
+    flex-direction:column;
+    min-width:0;
+    background:white;
+    padding:14px;
+    border-radius:12px;
+    text-align:center;
+    box-shadow:0 2px 8px rgba(0,0,0,0.15);
+}
+
+.produit h3{
+    font-size:16px;
+    margin:0 0 10px;
+    overflow-wrap:break-word;
+    hyphens:auto;
+}
+
+.produit img,
+.produit-visuel{
+    display:block;
+    width:100%;
+    aspect-ratio:1 / 1;
+    object-fit:cover;
+    border-radius:8px;
+    margin:0 0 10px;
+}
+
+.produit-visuel{
+    display:grid;
+    place-items:center;
+    background:linear-gradient(135deg,#eaf3fb,#d6e8f7);
+    color:var(--bleu);
+    font-size:64px;
+}
+
+.produit p{
+    margin:0 0 8px;
+    font-size:14px;
+    line-height:1.35;
+}
+
+.produit .actions{
+    margin-top:auto;
+    padding-top:8px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.btn-panier{
+    width:100%;
+    background:var(--rouge);
+    color:white;
+    border:none;
+    padding:12px 10px;
+    border-radius:25px;
+    font-weight:bold;
+    font-size:14px;
+    cursor:pointer;
+}
+
+.btn-panier:active{
+    background:#b3141a;
+}
+
+.whatsapp{
+    display:inline-block;
+    background:var(--vert);
+    color:white;
+    padding:15px 25px;
+    border-radius:30px;
+    text-decoration:none;
+    font-weight:bold;
+    margin-top:15px;
+}
+
+.produit .whatsapp{
+    display:block;
+    width:100%;
+    margin:0;
+    padding:12px 10px;
+    font-size:14px;
+    border-radius:25px;
+}
+
+.aucun-resultat{
+    display:none;
+    text-align:center;
+    color:#a4141a;
+    font-weight:bold;
+    margin-top:20px;
+}
+
+/* ===== PANIER ===== */
+.article-panier{
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:10px;
+    align-items:center;
+    padding:14px 0;
+    text-align:left;
+    border-bottom:1px solid #ddd;
+}
+
+.article-panier:last-child{
+    border-bottom:0;
+}
+
+.article-panier p{
+    margin:3px 0;
+}
+
+.controle-quantite{
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+    gap:7px;
+    flex-wrap:wrap;
+}
+
+.controle-quantite button{
+    min-width:34px;
+    min-height:34px;
+    border:0;
+    border-radius:7px;
+    background:var(--bleu);
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.controle-quantite .supprimer{
+    background:var(--rouge);
+    padding:7px 10px;
+}
+
+.total-panier{
+    font-size:20px;
+    color:var(--bleu);
+    margin-top:20px;
+}
+
+.actions-panier{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+.commander-panier,
+.vider-panier{
+    border:0;
+    padding:14px 20px;
+    border-radius:25px;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.commander-panier{
+    background:var(--vert);
+}
+
+.vider-panier{
+    background:#555;
+}
+
+.commander-panier:disabled,
+.vider-panier:disabled{
+    opacity:0.45;
+    cursor:not-allowed;
+}
+
+/* ===== COMPTE CLIENT ===== */
+.compte-intro{
+    max-width:620px;
+    margin:0 auto 20px;
+    line-height:1.5;
+}
+
+.auth-onglets{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    max-width:560px;
+    margin:0 auto 18px;
+    padding:5px;
+    background:#edf3f8;
+    border-radius:12px;
+}
+
+.auth-onglet{
+    border:0;
+    border-radius:9px;
+    padding:12px 8px;
+    background:transparent;
+    color:var(--bleu);
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.auth-onglet.actif{
+    background:var(--bleu);
+    color:white;
+    box-shadow:0 2px 7px rgba(0,0,0,0.18);
+}
+
+.auth-formulaire{
+    max-width:560px;
+    margin:auto;
+    text-align:left;
+}
+
+.auth-formulaire.cache,
+.compte-connecte.cache,
+.reinitialisation-mot-de-passe.cache{
+    display:none;
+}
+
+.auth-formulaire label{
+    display:block;
+    margin:12px 0 6px;
+    color:#333;
+    font-weight:bold;
+}
+
+.auth-formulaire input{
+    width:100%;
+    min-height:48px;
+    padding:12px 14px;
+    border:1px solid #b9c2ca;
+    border-radius:9px;
+    font-size:16px;
+}
+
+.auth-formulaire input:focus{
+    border-color:var(--bleu);
+    outline:3px solid rgba(7,86,163,0.15);
+}
+
+.auth-bouton{
+    width:100%;
+    min-height:49px;
+    margin-top:18px;
+    padding:12px 16px;
+    border:0;
+    border-radius:25px;
+    background:var(--bleu);
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.auth-bouton.rouge{
+    background:var(--rouge);
+}
+
+.auth-bouton:disabled{
+    opacity:0.55;
+    cursor:wait;
+}
+
+.mot-de-passe-oublie{
+    display:block;
+    margin:15px auto 0;
+    padding:5px;
+    border:0;
+    background:transparent;
+    color:var(--bleu);
+    text-decoration:underline;
+    cursor:pointer;
+}
+
+.auth-message{
+    display:none;
+    max-width:560px;
+    margin:16px auto;
+    padding:12px 14px;
+    border-radius:9px;
+    line-height:1.4;
+    text-align:left;
+}
+
+.auth-message.visible{
+    display:block;
+}
+
+.auth-message.succes{
+    color:#125c2b;
+    background:#e5f7eb;
+    border:1px solid #9ed8af;
+}
+
+.auth-message.erreur{
+    color:#85151a;
+    background:#fde9ea;
+    border:1px solid #ecb2b5;
+}
+
+.auth-message.info{
+    color:#174f7d;
+    background:#e8f2fb;
+    border:1px solid #a9cce9;
+}
+
+.compte-connecte{
+    max-width:560px;
+    margin:auto;
+}
+
+.profil-client{
+    padding:18px;
+    background:#edf5fc;
+    border-left:5px solid var(--bleu);
+    border-radius:10px;
+    text-align:left;
+}
+
+.profil-client p{
+    margin:7px 0;
+    overflow-wrap:anywhere;
+}
+
+.liens-compte{
+    display:flex;
+    justify-content:center;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:14px;
+}
+
+.liens-compte a{
+    color:var(--bleu);
+    font-weight:bold;
+}
+
+.reinitialisation-mot-de-passe{
+    max-width:560px;
+    margin:auto;
+}
+
+/* ===== CONTACT / PIED DE PAGE ===== */
+.contact{
+    background:var(--bleu);
+    color:white;
+    text-align:center;
+    padding:30px 15px;
+}
+
+.contact h2{
+    color:white;
+}
+
+.contact p a{
+    color:white;
+    text-decoration:none;
+}
+
+.catalogue{
+    text-align:center;
+    margin:30px;
+}
+
+.catalogue a{
+    background:var(--bleu);
+    color:white;
+    padding:15px 25px;
+    border-radius:10px;
+    text-decoration:none;
+    font-weight:bold;
+    display:inline-block;
+}
+
+footer{
+    background:#222;
+    color:white;
+    text-align:center;
+    padding:18px;
+}
+
+/* ===== TÉLÉPHONE : 2 colonnes ===== */
+@media (max-width:600px){
+    section{
+        padding:24px 10px;
     }
+
+    .produits{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:10px;
+    }
+
+    .produit{
+        padding:10px;
+    }
+
+    .produit h3{
+        font-size:14px;
+    }
+
+    .produit p{
+        font-size:13px;
+    }
+
+    .produit-visuel{
+        font-size:48px;
+    }
+
+    .btn-panier,
+    .produit .whatsapp{
+        font-size:13px;
+        padding:11px 6px;
+    }
+
+    .accueil-pro h2{
+        font-size:26px;
+    }
+
+    .article-panier{
+        grid-template-columns:1fr;
+    }
+
+    .controle-quantite{
+        justify-content:flex-start;
+    }
+}
 </style>
 </head>
 
 <body>
+
 <div class="topbar">
-    <button onclick="ouvrirMenu()">☰ MENU</button>
+    <button type="button" onclick="ouvrirMenu()" aria-label="Ouvrir le menu">☰ MENU</button>
     <a href="#connexion">CONNEXION</a>
 </div>
-    <div id="menuLateral" class="menu-lateral">
-    <button class="fermer-menu" onclick="fermerMenu()">✕</button>
+
+<aside id="menuLateral" class="menu-lateral" aria-label="Menu principal" aria-hidden="true">
+    <button type="button" class="fermer-menu" onclick="fermerMenu()" aria-label="Fermer le menu">✕</button>
 
     <h2>NARELVIR</h2>
 
-    <a href="#" onclick="fermerMenu()">Accueil ›</a>
+    <a href="#accueil" onclick="fermerMenu()">Accueil ›</a>
     <a href="#produits" onclick="fermerMenu()">Produits ›</a>
     <a href="#panier" onclick="fermerMenu()">Commandes ›</a>
     <a href="#factures" onclick="fermerMenu()">Factures ›</a>
     <a href="#messages" onclick="fermerMenu()">Messages ›</a>
     <a href="#connexion" onclick="fermerMenu()">Mon compte ›</a>
     <a href="#apropos" onclick="fermerMenu()">À propos ›</a>
-    </div>
-<section class="accueil-pro">
-  <h2>Bienvenue chez NARELVIR</h2>
-  <p>Pièces détachées, lubrifiants et équipements motorisés</p>
+</aside>
 
-  <a href="#produits">🛒 Voir nos produits</a>
-  <a href="#contact">📞 Nous contacter</a>
-</section>
-    <header>
+<div id="fondMenu" class="fond-menu" onclick="fermerMenu()" aria-hidden="true"></div>
 
-<nav>
-    <a href="#">Accueil</a>
+<header>
+    <h1>NARELVIR</h1>
+    <p>Pièces Détachées &amp; Lubrifiants</p>
+</header>
+
+<nav aria-label="Navigation rapide">
+    <a href="#accueil">Accueil</a>
     <a href="#apropos">À propos</a>
     <a href="#services">Services</a>
+    <a href="#produits">Produits</a>
     <a href="#contact">Contact</a>
+    <a href="#panier">🛒 Panier (<span id="nombrePanier">0</span>)</a>
     <a href="#overseas">Overseas Store</a>
 </nav>
-    <section id="apropos">
+
+<main>
+<section class="accueil-pro" id="accueil">
+    <h2>Bienvenue chez NARELVIR</h2>
+    <p>Pièces détachées, lubrifiants et équipements motorisés</p>
+
+    <a href="#produits">🛒 Voir nos produits</a>
+    <a href="#contact">📞 Nous contacter</a>
+</section>
+
+<section id="apropos">
     <h2>À propos de NARELVIR</h2>
     <p>
         NARELVIR est votre spécialiste des pièces détachées,
@@ -283,7 +776,8 @@ footer{
         et accompagnement de nos clients dans le choix de leurs produits.
     </p>
 </section>
-    <section id="overseas">
+
+<section id="overseas">
     <h2>🌍 Overseas Store</h2>
 
     <p>
@@ -291,195 +785,527 @@ footer{
         lubrifiants et équipements disponibles sur commande.
     </p>
 
-    <p>
-        📦 Importation • Commande • Vente en gros et détail
-    </p>
+    <p>📦 Importation • Commande • Vente en gros et détail</p>
 
-    <a href="https://wa.me/237652242847">
+    <a href="https://wa.me/237652242847?text=Bonjour%20NARELVIR%2C%20je%20souhaite%20faire%20une%20commande%20Overseas%20Store">
         Commander via WhatsApp
     </a>
-    </section>
-<div style="max-width:700px;margin:25px auto;padding:0 15px;">
-  <input
-    type="text"
-    id="recherche"
-    placeholder="🔍 Rechercher une pièce ou un produit..."
-    onkeyup="rechercherProduit()"
-    style="width:100%;box-sizing:border-box;padding:16px;border:2px solid #0756a3;border-radius:30px;font-size:16px;">
+</section>
+
+<div class="recherche-zone">
+    <label for="recherche" style="position:absolute;left:-9999px;">Rechercher un produit</label>
+    <input
+        type="search"
+        id="recherche"
+        placeholder="🔍 Rechercher une pièce ou un produit..."
+        oninput="rechercherProduit()">
 </div>
 
 <section id="produits">
-
 <h2>Nos produits</h2>
 
 <div class="produits">
 
-<div class="produit">
-<h3>🏍️ Pièces Moto</h3>
-<img src="IMG-20251208-WA0006.jpg" alt="Transmission Moto NARELVIR" style="width:100%;height:180px;object-fit:cover;border-radius:8px;">
-<p>GN125 • CG150 • CGL125 • TVS et autres modèles</p><p><strong>Transmission GN125 — 3 300 FCFA</strong></p> 
-    <button onclick="ajouterPanier('Transmission GN125', 3300)"
-style="background:#e31b23;color:white;border:none;padding:14px 20px;border-radius:25px;font-weight:bold;font-size:15px;">
-🛒 Ajouter au panier
-</button>
-<a href="https://wa.me/237652242847?text=Bonjour%20NARELVIR%2C%20je%20souhaite%20commander%20la%20Transmission%20GN125" class="whatsapp">🛒 Commander sur WhatsApp</a>
-</div>
+<article class="produit">
+    <h3>🏍️ Pièces Moto</h3>
+    <img src="https://narelvir.cm/IMG-20251208-WA0006.jpg" alt="Transmission Moto NARELVIR" loading="lazy" decoding="async" onerror="imageIndisponible(this, '🏍️')">
+    <p>GN125 • CG150 • CGL125 • TVS et autres modèles</p>
+    <p><strong>Transmission GN125 — 3 300 FCFA</strong></p>
+    <div class="actions">
+        <button type="button" class="btn-panier" onclick="ajouterPanier('Transmission GN125', 3300)">🛒 Ajouter au panier</button>
+        <a href="https://wa.me/237652242847?text=Bonjour%20NARELVIR%2C%20je%20souhaite%20commander%20la%20Transmission%20GN125" class="whatsapp">💬 Commander sur WhatsApp</a>
+    </div>
+</article>
 
-<div class="produit">
-<h3>🌿 Débroussailleuses</h3>
-<img src="IMG-20260903-WA0016.jpg" alt="Débroussailleuse NARELVIR" style="width:100%;height:180px;object-fit:cover;border-radius:8px;">
-<p>Machines, carburateurs, cylindres, lanceurs et accessoires</p>
+<article class="produit">
+    <h3>🌿 Débroussailleuses</h3>
+    <img src="https://narelvir.cm/IMG-20260903-WA0016.jpg" alt="Débroussailleuse NARELVIR" loading="lazy" decoding="async" onerror="imageIndisponible(this, '🌿')">
+    <p>Machines, carburateurs, cylindres, lanceurs et accessoires</p>
+    <div class="actions">
+        <a href="https://wa.me/237652242847?text=Bonjour%20NARELVIR%2C%20je%20souhaite%20conna%C3%AEtre%20le%20prix%20des%20d%C3%A9broussailleuses" class="whatsapp">💬 Demander le prix</a>
+    </div>
+</article>
 
-</div>
+<article class="produit">
+    <h3>🪚 Tronçonneuses</h3>
+    <div class="produit-visuel" role="img" aria-label="Tronçonneuse">🪚</div>
+    <p>Pièces détachées et accessoires</p>
+    <div class="actions">
+        <a href="https://wa.me/237652242847?text=Bonjour%20NARELVIR%2C%20je%20souhaite%20conna%C3%AEtre%20le%20prix%20des%20tron%C3%A7onneuses" class="whatsapp">💬 Demander le prix</a>
+    </div>
+</article>
 
-<div class="produit">
-<h3>🪚 Tronçonneuses</h3>
-<p>Pièces détachées et accessoires</p>
-</div>
+<article class="produit">
+    <h3>💧 Motopompes</h3>
+    <div class="produit-visuel" role="img" aria-label="Motopompe">💧</div>
+    <p>Machines et pièces de rechange</p>
+    <div class="actions">
+        <a href="https://wa.me/237652242847?text=Bonjour%20NARELVIR%2C%20je%20souhaite%20conna%C3%AEtre%20le%20prix%20des%20motopompes" class="whatsapp">💬 Demander le prix</a>
+    </div>
+</article>
 
-<div class="produit">
-<h3>💧 Motopompes</h3>
-<p>Machines et pièces de rechange</p>
-</div>
+<article class="produit">
+    <h3>⚡ Groupes électrogènes</h3>
+    <img src="https://narelvir.cm/images/bb3d4cca61ce46ed82391e176c967dab.jpg" alt="Groupe électrogène GSTARMAX NARELVIR" loading="lazy" decoding="async" onerror="imageIndisponible(this, '⚡')">
+    <p>Groupe électrogène GSTARMAX</p>
+    <p><strong>Prix : 170 000 FCFA</strong></p>
+    <div class="actions">
+        <button type="button" class="btn-panier" onclick="ajouterPanier('Groupe électrogène GSTARMAX', 170000)">🛒 Ajouter au panier</button>
+        <a href="https://wa.me/237652242847?text=Bonjour%20NARELVIR%2C%20je%20souhaite%20commander%20le%20groupe%20%C3%A9lectrog%C3%A8ne%20GSTARMAX" class="whatsapp">💬 Commander sur WhatsApp</a>
+    </div>
+</article>
 
-<div class="produit">
-<h3>⚡ Groupes électrogènes</h3>
-<img src="images/bb3d4cca61ce46ed82391e176c967dab.jpg" alt="Groupe électrogène GSTARMAX NARELVIR" style="width:100%;height:180px;object-fit:cover;border-radius:10px;">
-<p>Groupe électrogène GSTARMAX</p><p><strong>Prix : 170 000 FCFA</strong></p>
+<article class="produit">
+    <h3>🛢️ Lubrifiants</h3>
+    <img src="https://narelvir.cm/images/20260919_132055.jpg" alt="Huile Yo Speed 1L 15W40" loading="lazy" decoding="async" onerror="imageIndisponible(this, '🛢️')">
+    <p>Huile moteur Yo Speed 1L 15W40</p>
+    <p><strong>Prix détail : 2 500 FCFA / litre</strong></p>
+    <p><strong>Carton de 12 : 21 000 FCFA</strong></p>
+    <div class="actions">
+        <button type="button" class="btn-panier" onclick="ajouterPanier('Huile Yo Speed 1L 15W40', 2500)">🛒 Ajouter au panier</button>
+        <a href="https://wa.me/237652242847?text=Bonjour%20NARELVIR%2C%20je%20souhaite%20commander%20l%27huile%20Yo%20Speed%201L%2015W40" class="whatsapp">💬 Commander sur WhatsApp</a>
+    </div>
+</article>
 
-<button onclick="ajouterPanier('Groupe électrogène GSTARMAX', 170000)"
-style="background:#e31b23;color:white;border:none;padding:14px 20px;border-radius:25px;font-weight:bold;">
-Ajouter au panier
-</button>
-</div>
+<article class="produit">
+    <h3>🌱 Pulvérisateur Solo 423</h3>
+    <img src="https://narelvir.cm/images/d3dc3e8dd3e141a59c9a26980109d0fa.jpg" alt="Pulvérisateur Solo 423 NARELVIR" loading="lazy" decoding="async" onerror="imageIndisponible(this, '🌱')">
+    <p>Pulvérisateur thermique Solo 423</p>
+    <p><strong>Prix : 120 000 FCFA</strong></p>
+    <div class="actions">
+        <button type="button" class="btn-panier" onclick="ajouterPanier('Pulvérisateur Solo 423', 120000)">🛒 Ajouter au panier</button>
+        <a href="https://wa.me/237652242847?text=Bonjour%20NARELVIR%2C%20je%20souhaite%20commander%20le%20Pulv%C3%A9risateur%20Solo%20423" class="whatsapp">💬 Commander sur WhatsApp</a>
+    </div>
+</article>
 
-<div class="produit">
-<h3>🛢️ Lubrifiants</h3>
-<p>Huiles moteur et produits d'entretien</p><img src="images/20260919_132055.jpg"
-     alt="Huile Yo Speed 1L 15W40"
-     style="width:100%;height:180px;object-fit:cover;border-radius:10px;">
+<article class="produit">
+    <h3>⚙️ Moteur Robin</h3>
+    <img src="https://narelvir.cm/images/d82e16656843460a882b65a94010f79c.jpg" alt="Moteur Robin pour vibrateur à béton NARELVIR" loading="lazy" decoding="async" onerror="imageIndisponible(this, '⚙️')">
+    <p>Moteur Robin pour vibrateur à béton</p>
+    <p><strong>Prix : 175 000 FCFA</strong></p>
+    <div class="actions">
+        <button type="button" class="btn-panier" onclick="ajouterPanier('Moteur Robin', 175000)">🛒 Ajouter au panier</button>
+        <a href="https://wa.me/237652242847?text=Bonjour%20NARELVIR%2C%20je%20souhaite%20commander%20le%20Moteur%20Robin" class="whatsapp">💬 Commander sur WhatsApp</a>
+    </div>
+</article>
 
-<p>Huile moteur Yo Speed 1L 15W40</p>
+<article class="produit">
+    <h3>💧 Motopompe Honda WB30XT</h3>
+    <img src="https://narelvir.cm/images/file_000000002da4820e8cb87c46b5617cc3.png" alt="Motopompe Honda WB30XT NARELVIR" loading="lazy" decoding="async" onerror="imageIndisponible(this, '💧')">
+    <p>Sortie 80 mm (3&quot;) - Idéale pour irrigation et pompage</p>
+    <p><strong>Prix : 70 000 FCFA</strong></p>
+    <div class="actions">
+        <button type="button" class="btn-panier" onclick="ajouterPanier('Motopompe Honda WB30XT', 70000)">🛒 Ajouter au panier</button>
+        <a href="https://wa.me/237652242847?text=Bonjour%20NARELVIR%2C%20je%20souhaite%20commander%20la%20Motopompe%20Honda%20WB30XT" class="whatsapp">💬 Commander sur WhatsApp</a>
+    </div>
+</article>
 
-<p><strong>Prix détail : 2 500 FCFA / litre</strong></p>
-<p><strong>Carton de 12 : 21 000 FCFA</strong></p>
+<article class="produit">
+    <h3>🛠️ Tarière thermique</h3>
+    <img src="https://narelvir.cm/images/IMG-20260908-WA0021.jpg" alt="Tarière thermique NARELVIR" loading="lazy" decoding="async" onerror="imageIndisponible(this, '🛠️')">
+    <p>Tarière thermique avec mèches</p>
+    <p><strong>Prix : 170 000 FCFA</strong></p>
+    <div class="actions">
+        <button type="button" class="btn-panier" onclick="ajouterPanier('Tarière thermique', 170000)">🛒 Ajouter au panier</button>
+        <a href="https://wa.me/237652242847?text=Bonjour%20NARELVIR%2C%20je%20souhaite%20commander%20la%20Tari%C3%A8re%20thermique" class="whatsapp">💬 Commander sur WhatsApp</a>
+    </div>
+</article>
 
-<button onclick="ajouterPanier('Huile Yo Speed 1L 15W40', 2500)"
-style="background:#e31b23;color:white;border:none;padding:14px 20px;border-radius:25px;font-weight:bold;">
-🛒 Ajouter au panier
-</button>
-</div>
-
-<div class="produit">
-<h3>🌱 Pulvérisateur Solo 423</h3>
-<img src="images/d3dc3e8dd3e141a59c9a26980109d0fa.jpg" alt="Pulvérisateur Solo 423 NARELVIR" style="width:100%;height:180px;object-fit:cover;border-radius:10px;">
-<p>Pulvérisateur thermique Solo 423</p>
-<p><strong>Prix : 120 000 FCFA</strong></p>
-
-<button onclick="ajouterPanier('Pulvérisateur Solo 423', 120000)"
-style="background:#e31b23;color:white;border:none;padding:14px 20px;border-radius:25px;font-weight:bold;">
-Ajouter au panier
-</button></div>
-
-
-<div class="produit">
-<h3>⚙️ Moteur Robin</h3>
-<img src="images/d82e16656843460a882b65a94010f79c.jpg" alt="Moteur Robin pour vibrateur à béton NARELVIR" style="width:100%;height:180px;object-fit:cover;border-radius:10px;">
-<p>Moteur Robin pour vibrateur à béton</p>
-<p><strong>Prix : 175 000 FCFA</strong></p>
-
-<button onclick="ajouterPanier('Moteur Robin', 175000)"
-style="background:#e31b23;color:white;border:none;padding:14px 20px;border-radius:25px;font-weight:bold;">
-Ajouter au panier
-</button>
-
-</div>
-<div class="produit">
-  <h3>💧 Motopompe Honda WB30XT</h3>
-  <img src="images/file_000000002da4820e8cb87c46b5617cc3.png"
-       alt="Motopompe Honda WB30XT NARELVIR"
-       style="width:100%;height:180px;object-fit:cover;border-radius:10px;">
-  <p>Sortie 80 mm (3") - Idéale pour irrigation et pompage</p>
-  <p><strong>Prix : 70 000 FCFA</strong></p>
-  <button onclick="ajouterPanier('Motopompe Honda WB30XT', 70000)"
-          style="background:#e31b23;color:white;border:none;padding:14px 20px;border-radius:25px;font-weight:bold;font-size:15px;">
-    Ajouter au panier
-  </button>
-</div>
-<div class="produit">
-  <h3>🛠️ Tarière thermique</h3>
-
-  <img src="images/IMG-20260908-WA0021.jpg"
-       alt="Tarière thermique NARELVIR"
-       style="width:100%;height:180px;object-fit:cover;border-radius:10px;">
-
-  <p>Tarière thermique avec mèches</p>
-  <p><strong>Prix : 170 000 FCFA</strong></p>
-
-  <button onclick="ajouterPanier('Tarière thermique', 170000)">
-    Ajouter au panier
-  </button>
-</div>⁸
-<div class="produit">
-  <h3>🌿 Débroussailleuse multifonction</h3>
-  <img src="images/file_000000009bb8820e9bb8763ace608fc6.png"
-       alt="Débroussailleuse multifonction NARELVIR"
-       style="width:100%;height:180px;object-fit:cover;border-radius:10px;">
-  <p>Kit multifonction complet</p>
-  <p><strong>Prix : 170 000 FCFA</strong></p>
-  <button onclick="ajouterPanier('Débroussailleuse multifonction', 170000)"
-          style="background:#e31b23;color:white;border:none;padding:14px 20px;border-radius:25px;font-weight:bold;font-size:15px;">
-    Ajouter au panier
-  </button>
-</div>
+<article class="produit">
+    <h3>🌿 Débroussailleuse multifonction</h3>
+    <img src="https://narelvir.cm/images/file_000000009bb8820e9bb8763ace608fc6.png" alt="Débroussailleuse multifonction NARELVIR" loading="lazy" decoding="async" onerror="imageIndisponible(this, '🌿')">
+    <p>Kit multifonction complet</p>
+    <p><strong>Prix : 170 000 FCFA</strong></p>
+    <div class="actions">
+        <button type="button" class="btn-panier" onclick="ajouterPanier('Débroussailleuse multifonction', 170000)">🛒 Ajouter au panier</button>
+        <a href="https://wa.me/237652242847?text=Bonjour%20NARELVIR%2C%20je%20souhaite%20commander%20la%20D%C3%A9broussailleuse%20multifonction" class="whatsapp">💬 Commander sur WhatsApp</a>
+    </div>
+</article>
 
 </div>
+<p id="aucunResultat" class="aucun-resultat">Aucun produit ne correspond à votre recherche.</p>
+</section>
+
+<section id="panier">
+    <h2>🛒 Mon Panier</h2>
+    <div id="liste-panier" aria-live="polite">
+        <p>Votre panier est vide.</p>
+    </div>
+    <p class="total-panier"><strong>Total : <span id="total-panier">0</span> FCFA</strong></p>
+    <div class="actions-panier">
+        <button type="button" id="commanderPanier" class="commander-panier" onclick="commanderPanierWhatsApp()" disabled>💬 Commander le panier sur WhatsApp</button>
+        <button type="button" id="viderPanier" class="vider-panier" onclick="viderPanier()" disabled>🗑️ Vider le panier</button>
+    </div>
+</section>
+
+<section id="factures">
+    <h2>🧾 Factures</h2>
+    <p>Après confirmation de votre commande, NARELVIR peut préparer et vous transmettre votre facture.</p>
+    <a class="bouton-bleu" href="https://wa.me/237652242847?text=Bonjour%20NARELVIR%2C%20je%20souhaite%20recevoir%20ma%20facture">Demander une facture</a>
+</section>
+
+<section id="messages">
+    <h2>💬 Messages</h2>
+    <p>Une question sur un produit, un prix ou une disponibilité ? Écrivez-nous directement.</p>
+    <a class="whatsapp" href="https://wa.me/237652242847?text=Bonjour%20NARELVIR%2C%20je%20souhaite%20un%20renseignement">Écrire sur WhatsApp</a>
+</section>
+
+<section id="connexion">
+    <h2>👤 Mon compte</h2>
+    <p class="compte-intro">Créez votre compte NARELVIR ou connectez-vous avec votre adresse e-mail et votre mot de passe.</p>
+
+    <div id="zoneAuthInvite">
+        <div class="auth-onglets" role="tablist" aria-label="Accès au compte client">
+            <button type="button" id="ongletConnexion" class="auth-onglet actif" onclick="afficherFormulaireAuth('connexion')" role="tab" aria-selected="true">Se connecter</button>
+            <button type="button" id="ongletInscription" class="auth-onglet" onclick="afficherFormulaireAuth('inscription')" role="tab" aria-selected="false">Créer un compte</button>
+        </div>
+
+        <form id="formConnexion" class="auth-formulaire" onsubmit="connecterClient(event)">
+            <label for="emailConnexion">Adresse e-mail</label>
+            <input type="email" id="emailConnexion" autocomplete="email" inputmode="email" required placeholder="exemple@email.com">
+
+            <label for="motDePasseConnexion">Mot de passe</label>
+            <input type="password" id="motDePasseConnexion" autocomplete="current-password" required minlength="6" placeholder="Votre mot de passe">
+
+            <button type="submit" class="auth-bouton">Se connecter</button>
+            <button type="button" class="mot-de-passe-oublie" onclick="motDePasseOublie()">Mot de passe oublié ?</button>
+        </form>
+
+        <form id="formInscription" class="auth-formulaire cache" onsubmit="inscrireClient(event)">
+            <label for="nomInscription">Nom complet</label>
+            <input type="text" id="nomInscription" autocomplete="name" required maxlength="80" placeholder="Votre nom complet">
+
+            <label for="telephoneInscription">Numéro de téléphone</label>
+            <input type="tel" id="telephoneInscription" autocomplete="tel" inputmode="tel" required maxlength="25" placeholder="Ex. 652 242 847">
+
+            <label for="emailInscription">Adresse e-mail</label>
+            <input type="email" id="emailInscription" autocomplete="email" inputmode="email" required placeholder="exemple@email.com">
+
+            <label for="motDePasseInscription">Mot de passe</label>
+            <input type="password" id="motDePasseInscription" autocomplete="new-password" required minlength="6" placeholder="Au moins 6 caractères">
+
+            <button type="submit" class="auth-bouton">Créer mon compte</button>
+        </form>
+    </div>
+
+    <div id="messageAuth" class="auth-message" role="status" aria-live="polite"></div>
+
+    <div id="zoneCompteConnecte" class="compte-connecte cache">
+        <div class="profil-client">
+            <p><strong>✅ Compte connecté</strong></p>
+            <p><strong>Nom :</strong> <span id="profilNom">Client NARELVIR</span></p>
+            <p><strong>E-mail :</strong> <span id="profilEmail"></span></p>
+            <p id="ligneProfilTelephone"><strong>Téléphone :</strong> <span id="profilTelephone"></span></p>
+        </div>
+        <div class="liens-compte">
+            <a href="#panier">Voir mon panier</a>
+            <a href="#factures">Demander une facture</a>
+            <a href="#messages">Contacter NARELVIR</a>
+        </div>
+        <button type="button" class="auth-bouton rouge" onclick="deconnecterClient()">Se déconnecter</button>
+    </div>
+
+    <div id="zoneNouveauMotDePasse" class="reinitialisation-mot-de-passe cache">
+        <h3>Choisir un nouveau mot de passe</h3>
+        <form class="auth-formulaire" onsubmit="enregistrerNouveauMotDePasse(event)">
+            <label for="nouveauMotDePasse">Nouveau mot de passe</label>
+            <input type="password" id="nouveauMotDePasse" autocomplete="new-password" required minlength="6" placeholder="Au moins 6 caractères">
+            <button type="submit" class="auth-bouton">Enregistrer le nouveau mot de passe</button>
+        </form>
+    </div>
 </section>
 
 <div class="contact" id="contact">
-
-<h2>Contactez NARELVIR</h2>
-
-<p>📍 Nouvelle Route Brique, derrière l’Immeuble Ekan</p>
-
-<p>📞 652 242 847</p>
-<p>📞 692 049 233</p>
-
-<a class="whatsapp"
-href="https://wa.me/237652242847">
-💬 Commander sur WhatsApp
-</a>
-
+    <h2>Contactez NARELVIR</h2>
+    <p>📍 Nouvelle Route Brique, derrière l’Immeuble Ekan</p>
+    <p>📞 <a href="tel:+237652242847">652 242 847</a></p>
+    <p>📞 <a href="tel:+237692049233">692 049 233</a></p>
+    <a class="whatsapp" href="https://wa.me/237652242847?text=Bonjour%20NARELVIR">💬 Commander sur WhatsApp</a>
 </div>
-<div style="text-align:center; margin:30px;">
-  <a href="Catalogue_NARELVIR_2026_MAJ.pdf"
-     target="_blank"
-     style="background:#0756a3; color:white; padding:15px 25px; border-radius:10px; text-decoration:none; font-weight:bold;">
-    📕 VOIR NOTRE CATALOGUE NARELVIR
-  </a>
+
+<div class="catalogue">
+    <a href="https://narelvir.cm/Catalogue_NARELVIR_2026_MAJ.pdf" target="_blank" rel="noopener">
+        📕 VOIR NOTRE CATALOGUE NARELVIR
+    </a>
 </div>
-    <section id="panier">
-    <h2>🛒 Mon Panier</h2>
-    <div id="liste-panier">
-        <p>Votre panier est vide.</p>
-    </div>
-    <p><strong>Total : <span id="total-panier">0</span> FCFA</strong></p>
-</section>
+</main>
+
 <footer>
-NARELVIR © 2026 — Pièces Détachées & Lubrifiants
+    NARELVIR © 2026 — Pièces Détachées &amp; Lubrifiants
 </footer>
-    <script>
-function rechercherProduit() {
-    const recherche = document.getElementById("recherche").value.toLowerCase();
-    const produits = document.querySelectorAll(".produit");
 
-    produits.forEach(function(produit) {
-        const texte = produit.innerText.toLowerCase();
-        produit.style.display = texte.includes(recherche) ? "" : "none";
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" crossorigin="anonymous"></script>
+<script>
+const NUMERO_WHATSAPP = "237652242847";
+const CLE_PANIER = "narelvir-panier";
+const SUPABASE_URL = "https://jyitudbysxfadgjcubgh.supabase.co";
+const SUPABASE_CLE_PUBLIQUE = "sb_publishable_PsnwN6TTzw_mZWvWcq-dFQ_39uprhHX";
+const clientSupabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_CLE_PUBLIQUE) : null;
+let panier = chargerPanier();
+
+function afficherMessageAuth(message, type) {
+    const zone = document.getElementById("messageAuth");
+    zone.textContent = message;
+    zone.className = "auth-message visible " + (type || "info");
+}
+
+function effacerMessageAuth() {
+    const zone = document.getElementById("messageAuth");
+    zone.textContent = "";
+    zone.className = "auth-message";
+}
+
+function traduireErreurAuth(message) {
+    const erreurs = {
+        "Invalid login credentials": "Adresse e-mail ou mot de passe incorrect.",
+        "Email not confirmed": "Veuillez d’abord confirmer votre adresse e-mail.",
+        "User already registered": "Un compte existe déjà avec cette adresse e-mail.",
+        "Password should be at least 6 characters": "Le mot de passe doit contenir au moins 6 caractères.",
+        "Unable to validate email address: invalid format": "L’adresse e-mail n’est pas valide.",
+        "Email rate limit exceeded": "Trop de messages ont été demandés. Veuillez patienter avant de réessayer."
+    };
+    return erreurs[message] || "Une erreur est survenue. Vérifiez vos informations et réessayez.";
+}
+
+function afficherFormulaireAuth(type) {
+    const connexion = type === "connexion";
+    document.getElementById("formConnexion").classList.toggle("cache", !connexion);
+    document.getElementById("formInscription").classList.toggle("cache", connexion);
+    document.getElementById("ongletConnexion").classList.toggle("actif", connexion);
+    document.getElementById("ongletInscription").classList.toggle("actif", !connexion);
+    document.getElementById("ongletConnexion").setAttribute("aria-selected", String(connexion));
+    document.getElementById("ongletInscription").setAttribute("aria-selected", String(!connexion));
+    effacerMessageAuth();
+}
+
+function basculerBoutonFormulaire(formulaire, chargement) {
+    const bouton = formulaire.querySelector('button[type="submit"]');
+    if (!bouton) return;
+    if (!bouton.dataset.texteInitial) bouton.dataset.texteInitial = bouton.textContent;
+    bouton.disabled = chargement;
+    bouton.textContent = chargement ? "Veuillez patienter…" : bouton.dataset.texteInitial;
+}
+
+function afficherEtatCompte(utilisateur) {
+    const invite = document.getElementById("zoneAuthInvite");
+    const compte = document.getElementById("zoneCompteConnecte");
+    const reinitialisation = document.getElementById("zoneNouveauMotDePasse");
+
+    if (!utilisateur) {
+        invite.classList.remove("cache");
+        compte.classList.add("cache");
+        reinitialisation.classList.add("cache");
+        return;
+    }
+
+    const metadata = utilisateur.user_metadata || {};
+    document.getElementById("profilNom").textContent = metadata.nom || "Client NARELVIR";
+    document.getElementById("profilEmail").textContent = utilisateur.email || "";
+    document.getElementById("profilTelephone").textContent = metadata.telephone || "";
+    document.getElementById("ligneProfilTelephone").style.display = metadata.telephone ? "block" : "none";
+    invite.classList.add("cache");
+    compte.classList.remove("cache");
+    reinitialisation.classList.add("cache");
+}
+
+async function inscrireClient(evenement) {
+    evenement.preventDefault();
+    const formulaire = evenement.currentTarget;
+
+    if (!clientSupabase) {
+        afficherMessageAuth("Le service de connexion n’a pas pu être chargé. Vérifiez votre connexion Internet.", "erreur");
+        return;
+    }
+
+    const nom = document.getElementById("nomInscription").value.trim();
+    const telephone = document.getElementById("telephoneInscription").value.trim();
+    const email = document.getElementById("emailInscription").value.trim();
+    const motDePasse = document.getElementById("motDePasseInscription").value;
+    basculerBoutonFormulaire(formulaire, true);
+    effacerMessageAuth();
+
+    try {
+        const resultat = await clientSupabase.auth.signUp({
+            email: email,
+            password: motDePasse,
+            options: {
+                emailRedirectTo: window.location.origin + window.location.pathname,
+                data: { nom: nom, telephone: telephone }
+            }
+        });
+
+        if (resultat.error) throw resultat.error;
+
+        formulaire.reset();
+        if (resultat.data.session) {
+            afficherEtatCompte(resultat.data.user);
+            afficherMessageAuth("Votre compte NARELVIR a été créé et vous êtes connecté.", "succes");
+        } else {
+            afficherFormulaireAuth("connexion");
+            afficherMessageAuth("Compte créé. Consultez votre e-mail et cliquez sur le lien de confirmation avant de vous connecter.", "succes");
+        }
+    } catch (erreur) {
+        afficherMessageAuth(traduireErreurAuth(erreur.message), "erreur");
+    } finally {
+        basculerBoutonFormulaire(formulaire, false);
+    }
+}
+
+async function connecterClient(evenement) {
+    evenement.preventDefault();
+    const formulaire = evenement.currentTarget;
+
+    if (!clientSupabase) {
+        afficherMessageAuth("Le service de connexion n’a pas pu être chargé. Vérifiez votre connexion Internet.", "erreur");
+        return;
+    }
+
+    const email = document.getElementById("emailConnexion").value.trim();
+    const motDePasse = document.getElementById("motDePasseConnexion").value;
+    basculerBoutonFormulaire(formulaire, true);
+    effacerMessageAuth();
+
+    try {
+        const resultat = await clientSupabase.auth.signInWithPassword({ email: email, password: motDePasse });
+        if (resultat.error) throw resultat.error;
+        formulaire.reset();
+        afficherEtatCompte(resultat.data.user);
+        afficherMessageAuth("Connexion réussie. Bienvenue dans votre espace NARELVIR.", "succes");
+    } catch (erreur) {
+        afficherMessageAuth(traduireErreurAuth(erreur.message), "erreur");
+    } finally {
+        basculerBoutonFormulaire(formulaire, false);
+    }
+}
+
+async function deconnecterClient() {
+    if (!clientSupabase) return;
+    const resultat = await clientSupabase.auth.signOut();
+    if (resultat.error) {
+        afficherMessageAuth(traduireErreurAuth(resultat.error.message), "erreur");
+        return;
+    }
+    afficherEtatCompte(null);
+    afficherFormulaireAuth("connexion");
+    afficherMessageAuth("Vous êtes maintenant déconnecté.", "info");
+}
+
+async function motDePasseOublie() {
+    if (!clientSupabase) {
+        afficherMessageAuth("Le service de connexion n’a pas pu être chargé.", "erreur");
+        return;
+    }
+
+    const champ = document.getElementById("emailConnexion");
+    const email = champ.value.trim() || window.prompt("Saisissez votre adresse e-mail :", "") || "";
+    if (!email) return;
+
+    const resultat = await clientSupabase.auth.resetPasswordForEmail(email.trim(), {
+        redirectTo: window.location.origin + window.location.pathname
+    });
+
+    if (resultat.error) {
+        afficherMessageAuth(traduireErreurAuth(resultat.error.message), "erreur");
+    } else {
+        afficherMessageAuth("Un lien de réinitialisation a été envoyé à votre adresse e-mail.", "succes");
+    }
+}
+
+async function enregistrerNouveauMotDePasse(evenement) {
+    evenement.preventDefault();
+    const formulaire = evenement.currentTarget;
+    const motDePasse = document.getElementById("nouveauMotDePasse").value;
+    basculerBoutonFormulaire(formulaire, true);
+
+    try {
+        const resultat = await clientSupabase.auth.updateUser({ password: motDePasse });
+        if (resultat.error) throw resultat.error;
+        formulaire.reset();
+        const session = await clientSupabase.auth.getSession();
+        afficherEtatCompte(session.data.session ? session.data.session.user : null);
+        afficherMessageAuth("Votre nouveau mot de passe a été enregistré.", "succes");
+    } catch (erreur) {
+        afficherMessageAuth(traduireErreurAuth(erreur.message), "erreur");
+    } finally {
+        basculerBoutonFormulaire(formulaire, false);
+    }
+}
+
+async function initialiserCompteClient() {
+    if (!clientSupabase) {
+        afficherMessageAuth("Le service de connexion est momentanément indisponible.", "erreur");
+        return;
+    }
+
+    const resultat = await clientSupabase.auth.getSession();
+    afficherEtatCompte(resultat.data.session ? resultat.data.session.user : null);
+
+    clientSupabase.auth.onAuthStateChange(function(evenement, session) {
+        if (evenement === "PASSWORD_RECOVERY") {
+            document.getElementById("zoneAuthInvite").classList.add("cache");
+            document.getElementById("zoneCompteConnecte").classList.add("cache");
+            document.getElementById("zoneNouveauMotDePasse").classList.remove("cache");
+            afficherMessageAuth("Choisissez maintenant votre nouveau mot de passe.", "info");
+            document.getElementById("connexion").scrollIntoView({ behavior: "smooth" });
+            return;
+        }
+
+        afficherEtatCompte(session ? session.user : null);
     });
 }
 
-let panier = [];
+function imageIndisponible(image, symbole) {
+    const remplacement = document.createElement("div");
+    remplacement.className = "produit-visuel";
+    remplacement.setAttribute("role", "img");
+    remplacement.setAttribute("aria-label", image.alt || "Image du produit indisponible");
+    remplacement.textContent = symbole || "📦";
+    image.replaceWith(remplacement);
+}
+
+function rechercherProduit() {
+    const recherche = document.getElementById("recherche").value.trim().toLowerCase();
+    const produits = document.querySelectorAll(".produit");
+    let nombreVisible = 0;
+
+    produits.forEach(function(produit) {
+        const texte = produit.innerText.toLowerCase();
+        const visible = texte.includes(recherche);
+        produit.style.display = visible ? "" : "none";
+        if (visible) nombreVisible++;
+    });
+
+    document.getElementById("aucunResultat").style.display = nombreVisible === 0 ? "block" : "none";
+}
+
+function chargerPanier() {
+    try {
+        const panierEnregistre = localStorage.getItem(CLE_PANIER);
+        const donnees = panierEnregistre ? JSON.parse(panierEnregistre) : [];
+
+        if (!Array.isArray(donnees)) return [];
+
+        return donnees.filter(function(article) {
+            return article && typeof article.nom === "string" && Number(article.prix) >= 0 && Number(article.quantite) > 0;
+        }).map(function(article) {
+            return {
+                nom: article.nom,
+                prix: Number(article.prix),
+                quantite: Math.floor(Number(article.quantite))
+            };
+        });
+    } catch (erreur) {
+        return [];
+    }
+}
+
+function sauvegarderPanier() {
+    try {
+        localStorage.setItem(CLE_PANIER, JSON.stringify(panier));
+    } catch (erreur) {
+        console.warn("Le panier n'a pas pu être sauvegardé.");
+    }
+}
 
 function ajouterPanier(nom, prix) {
     const article = panier.find(function(item) {
@@ -496,82 +1322,177 @@ function ajouterPanier(nom, prix) {
         });
     }
 
+    sauvegarderPanier();
     afficherPanier();
+}
+
+function creerBouton(texte, classe, action, etiquette) {
+    const bouton = document.createElement("button");
+    bouton.type = "button";
+    bouton.textContent = texte;
+    if (classe) bouton.className = classe;
+    if (etiquette) bouton.setAttribute("aria-label", etiquette);
+    bouton.addEventListener("click", action);
+    return bouton;
 }
 
 function afficherPanier() {
     const liste = document.getElementById("liste-panier");
     const totalElement = document.getElementById("total-panier");
     const nombreElement = document.getElementById("nombrePanier");
-
+    const boutonCommander = document.getElementById("commanderPanier");
+    const boutonVider = document.getElementById("viderPanier");
     let total = 0;
     let nombre = 0;
 
-    liste.innerHTML = "";
+    liste.replaceChildren();
 
     panier.forEach(function(article, index) {
         const sousTotal = article.prix * article.quantite;
-
         total += sousTotal;
         nombre += article.quantite;
 
-        liste.innerHTML +=
-            "<p>✅ <strong>" + article.nom + "</strong>" +
-            "<br>Prix : " + article.prix.toLocaleString("fr-FR") + " FCFA" +
-            "<br>Quantité : " +
-            "<button onclick='diminuerQuantite(" + index + ")'>−</button> " +
-            article.quantite +
-            " <button onclick='augmenterQuantite(" + index + ")'>+</button>" +
-            "<br>Sous-total : " + sousTotal.toLocaleString("fr-FR") + " FCFA" +
-            "<br><button onclick='supprimerArticle(" + index + ")'>🗑️ Supprimer</button></p>";
+        const ligne = document.createElement("div");
+        ligne.className = "article-panier";
+
+        const informations = document.createElement("div");
+        const nom = document.createElement("p");
+        const prix = document.createElement("p");
+        const sousTotalTexte = document.createElement("p");
+
+        nom.innerHTML = "✅ <strong></strong>";
+        nom.querySelector("strong").textContent = article.nom;
+        prix.textContent = "Prix unitaire : " + article.prix.toLocaleString("fr-FR") + " FCFA";
+        sousTotalTexte.textContent = "Sous-total : " + sousTotal.toLocaleString("fr-FR") + " FCFA";
+        informations.append(nom, prix, sousTotalTexte);
+
+        const controles = document.createElement("div");
+        controles.className = "controle-quantite";
+
+        const diminuer = creerBouton("−", "", function() {
+            diminuerQuantite(index);
+        }, "Diminuer la quantité de " + article.nom);
+
+        const quantite = document.createElement("strong");
+        quantite.textContent = article.quantite;
+
+        const augmenter = creerBouton("+", "", function() {
+            augmenterQuantite(index);
+        }, "Augmenter la quantité de " + article.nom);
+
+        const supprimer = creerBouton("🗑️ Supprimer", "supprimer", function() {
+            supprimerArticle(index);
+        }, "Supprimer " + article.nom);
+
+        controles.append(diminuer, quantite, augmenter, supprimer);
+        ligne.append(informations, controles);
+        liste.appendChild(ligne);
     });
 
     if (panier.length === 0) {
-        liste.innerHTML = "<p>Votre panier est vide.</p>";
+        const vide = document.createElement("p");
+        vide.textContent = "Votre panier est vide.";
+        liste.appendChild(vide);
     }
 
-    totalElement.innerText = total.toLocaleString("fr-FR");
-
-    if (nombreElement) {
-        nombreElement.innerText = nombre;
-    }
+    totalElement.textContent = total.toLocaleString("fr-FR");
+    nombreElement.textContent = nombre;
+    boutonCommander.disabled = panier.length === 0;
+    boutonVider.disabled = panier.length === 0;
 }
 
 function augmenterQuantite(index) {
+    if (!panier[index]) return;
     panier[index].quantite++;
+    sauvegarderPanier();
     afficherPanier();
 }
 
 function diminuerQuantite(index) {
+    if (!panier[index]) return;
     panier[index].quantite--;
 
     if (panier[index].quantite <= 0) {
         panier.splice(index, 1);
     }
 
+    sauvegarderPanier();
     afficherPanier();
 }
 
 function supprimerArticle(index) {
+    if (!panier[index]) return;
     panier.splice(index, 1);
+    sauvegarderPanier();
     afficherPanier();
 }
-    </script>
-    <script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
-    navigator.serviceWorker.register('/service-worker.js');
-  });
+
+function viderPanier() {
+    if (panier.length === 0) return;
+
+    if (window.confirm("Voulez-vous vraiment vider votre panier ?")) {
+        panier = [];
+        sauvegarderPanier();
+        afficherPanier();
+    }
 }
-    </script>
-    <script>
+
+function commanderPanierWhatsApp() {
+    if (panier.length === 0) return;
+
+    let total = 0;
+    const lignes = panier.map(function(article) {
+        const sousTotal = article.prix * article.quantite;
+        total += sousTotal;
+        return "• " + article.nom + " — " + article.quantite + " × " + article.prix.toLocaleString("fr-FR") + " FCFA = " + sousTotal.toLocaleString("fr-FR") + " FCFA";
+    });
+
+    const message = [
+        "Bonjour NARELVIR, je souhaite commander :",
+        "",
+        ...lignes,
+        "",
+        "TOTAL : " + total.toLocaleString("fr-FR") + " FCFA",
+        "",
+        "Merci de me confirmer la disponibilité et la livraison."
+    ].join("\n");
+
+    window.open("https://wa.me/" + NUMERO_WHATSAPP + "?text=" + encodeURIComponent(message), "_blank", "noopener");
+}
+
 function ouvrirMenu() {
-    document.getElementById("menuLateral").classList.add("ouvert");
+    const menu = document.getElementById("menuLateral");
+    const fond = document.getElementById("fondMenu");
+    menu.classList.add("ouvert");
+    fond.classList.add("visible");
+    menu.setAttribute("aria-hidden", "false");
+    document.body.classList.add("menu-actif");
 }
 
 function fermerMenu() {
-    document.getElementById("menuLateral").classList.remove("ouvert");
+    const menu = document.getElementById("menuLateral");
+    const fond = document.getElementById("fondMenu");
+    menu.classList.remove("ouvert");
+    fond.classList.remove("visible");
+    menu.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("menu-actif");
 }
-        </script>
+
+document.addEventListener("keydown", function(evenement) {
+    if (evenement.key === "Escape") fermerMenu();
+});
+
+if ((location.hostname === "narelvir.cm" || location.hostname === "www.narelvir.cm") && "serviceWorker" in navigator) {
+    window.addEventListener("load", function() {
+        navigator.serviceWorker.register("/service-worker.js").catch(function(erreur) {
+            console.warn("Service Worker non enregistré :", erreur);
+        });
+    });
+}
+
+afficherPanier();
+initialiserCompteClient();
+</script>
+
 </body>
 </html>
