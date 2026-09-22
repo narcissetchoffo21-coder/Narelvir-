@@ -767,6 +767,21 @@ h2{
     color:#85151a;
 }
 
+.badge-statut.partielle{
+    background:#fff3d6;
+    color:#7a4e00;
+}
+
+.badge-statut.impayee{
+    background:#fde9ea;
+    color:#85151a;
+}
+
+.badge-statut.en_retard{
+    background:#c9141c;
+    color:white;
+}
+
 .bouton-petit{
     display:inline-block;
     min-height:40px;
@@ -796,7 +811,7 @@ h2{
 
 .admin-resume{
     display:grid;
-    grid-template-columns:repeat(3,minmax(0,1fr));
+    grid-template-columns:repeat(auto-fit,minmax(125px,1fr));
     gap:8px;
     margin:14px 0;
 }
@@ -812,6 +827,162 @@ h2{
 .admin-resume strong{
     display:block;
     font-size:22px;
+}
+
+.admin-resume .resume-creances{
+    background:var(--rouge);
+}
+
+.admin-resume .resume-retards{
+    background:#8b1117;
+}
+
+.vente-boutique{
+    margin:18px 0;
+    border:1px solid #cbd7e2;
+    border-radius:12px;
+    background:white;
+    overflow:hidden;
+}
+
+.vente-boutique summary{
+    padding:15px;
+    background:#e8f2fb;
+    color:var(--bleu-fonce);
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.vente-boutique-formulaire{
+    padding:15px;
+}
+
+.vente-boutique-grille{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:11px;
+}
+
+.vente-boutique-formulaire label{
+    display:block;
+    margin-bottom:5px;
+    font-weight:bold;
+}
+
+.vente-boutique-formulaire input,
+.vente-boutique-formulaire select,
+.vente-boutique-formulaire textarea,
+.paiement-commande input{
+    width:100%;
+    min-height:44px;
+    padding:10px 11px;
+    border:1px solid #aebbc7;
+    border-radius:8px;
+    background:white;
+    font:inherit;
+}
+
+.vente-boutique-formulaire textarea{
+    min-height:80px;
+    resize:vertical;
+}
+
+.champ-large{
+    grid-column:1 / -1;
+}
+
+.ligne-article-boutique{
+    display:grid;
+    grid-template-columns:minmax(0,2fr) minmax(80px,.7fr) minmax(100px,1fr) auto;
+    gap:7px;
+    align-items:end;
+    margin:8px 0;
+    padding:10px;
+    border-radius:9px;
+    background:#f6f9fb;
+}
+
+.ligne-article-boutique button{
+    min-height:44px;
+    padding:8px 11px;
+    border:0;
+    border-radius:8px;
+    background:var(--rouge);
+    color:white;
+    font-weight:bold;
+}
+
+.total-vente-boutique{
+    margin:12px 0;
+    padding:12px;
+    border-radius:9px;
+    background:#eef6ff;
+    color:var(--bleu-fonce);
+    font-size:18px;
+    font-weight:bold;
+    text-align:right;
+}
+
+.paiement-commande{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(145px,1fr));
+    gap:7px;
+    align-items:end;
+    width:100%;
+    margin-top:8px;
+}
+
+.paiement-commande label{
+    font-size:13px;
+    font-weight:bold;
+}
+
+.signature-zone{
+    margin-top:12px;
+    padding:12px;
+    border:1px solid #cbd7e2;
+    border-radius:10px;
+    background:#f9fbfd;
+}
+
+.signature-zone canvas{
+    display:block;
+    width:100%;
+    height:150px;
+    margin-top:7px;
+    border:2px dashed #91a4b7;
+    border-radius:8px;
+    background:white;
+    touch-action:none;
+}
+
+.historique-paiements{
+    margin:12px 0;
+    padding:11px;
+    border-radius:9px;
+    background:#eef6ff;
+}
+
+.historique-paiements h5{
+    margin:0 0 8px;
+    color:var(--bleu-fonce);
+}
+
+.paiement-ligne{
+    padding:9px 0;
+    border-top:1px solid #cbd7e2;
+}
+
+.paiement-ligne:first-of-type{
+    border-top:0;
+}
+
+.paiement-ligne p{
+    margin:3px 0;
+}
+
+.bouton-petit.whatsapp-relance{
+    background:#16834b;
 }
 
 .admin-section-titre{
@@ -884,6 +1055,15 @@ h2{
     border:1px solid #aebbc7;
     border-radius:9px;
     font-size:16px;
+}
+
+.admin-outils select{
+    min-height:46px;
+    padding:10px 12px;
+    border:1px solid #aebbc7;
+    border-radius:9px;
+    background:white;
+    font-size:15px;
 }
 
 .admin-outils button{
@@ -977,6 +1157,12 @@ h2{
     }
 
     .espace-client-grille{
+        grid-template-columns:1fr;
+    }
+
+    .vente-boutique-grille,
+    .ligne-article-boutique,
+    .paiement-commande{
         grid-template-columns:1fr;
     }
 }
@@ -1417,7 +1603,75 @@ footer{
                 <div><strong id="totalClientsAdmin">0</strong>Clients</div>
                 <div><strong id="totalCommandesAdmin">0</strong>Commandes</div>
                 <div><strong id="chiffreAffairesAdmin">0</strong>FCFA confirmés</div>
+                <div class="resume-creances"><strong id="totalCreancesAdmin">0</strong>FCFA de créances</div>
+                <div class="resume-retards"><strong id="totalRetardsAdmin">0</strong>FCFA en retard</div>
             </div>
+
+            <details class="vente-boutique" id="zoneVenteBoutique">
+                <summary>➕ Nouvelle vente sur place</summary>
+                <form class="vente-boutique-formulaire" id="formVenteBoutique" onsubmit="enregistrerVenteBoutique(event)">
+                    <div class="vente-boutique-grille">
+                        <div>
+                            <label for="venteBoutiqueNom">Nom du client *</label>
+                            <input type="text" id="venteBoutiqueNom" required placeholder="Ex. Charles">
+                        </div>
+                        <div>
+                            <label for="venteBoutiqueTelephone">Téléphone</label>
+                            <input type="tel" id="venteBoutiqueTelephone" inputmode="tel" placeholder="6XX XXX XXX">
+                        </div>
+                        <div>
+                            <label for="venteBoutiqueVille">Ville</label>
+                            <input type="text" id="venteBoutiqueVille" placeholder="Ex. Yaoundé">
+                        </div>
+                        <div>
+                            <label for="venteBoutiqueAdresse">Adresse</label>
+                            <input type="text" id="venteBoutiqueAdresse" placeholder="Quartier ou lieu de livraison">
+                        </div>
+                    </div>
+
+                    <h4>Articles vendus</h4>
+                    <div id="articlesVenteBoutique"></div>
+                    <button type="button" class="bouton-petit" onclick="ajouterLigneVenteBoutique()">+ Ajouter un article</button>
+                    <div class="total-vente-boutique">Total : <span id="totalVenteBoutique">0</span> FCFA</div>
+
+                    <div class="vente-boutique-grille">
+                        <div>
+                            <label for="venteBoutiqueMontantPaye">Montant déjà payé</label>
+                            <input type="number" id="venteBoutiqueMontantPaye" min="0" step="1" value="0" required>
+                        </div>
+                        <div>
+                            <label for="venteBoutiqueModePaiement">Moyen de paiement</label>
+                            <select id="venteBoutiqueModePaiement">
+                                <option value="Espèces">Espèces</option>
+                                <option value="MTN MoMo">MTN MoMo</option>
+                                <option value="Orange Money">Orange Money</option>
+                                <option value="Virement">Virement</option>
+                                <option value="Crédit">Crédit</option>
+                                <option value="Autre">Autre</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="venteBoutiqueReferencePaiement">Référence du paiement</label>
+                            <input type="text" id="venteBoutiqueReferencePaiement" placeholder="Référence MoMo, OM ou reçu">
+                        </div>
+                        <div>
+                            <label for="venteBoutiqueEcheance">Date limite de paiement</label>
+                            <input type="date" id="venteBoutiqueEcheance">
+                        </div>
+                        <div class="champ-large">
+                            <label for="venteBoutiqueNote">Note</label>
+                            <textarea id="venteBoutiqueNote" placeholder="Informations utiles sur la vente ou la créance"></textarea>
+                        </div>
+                    </div>
+                    <div class="signature-zone">
+                        <strong>Signature du client (facultative)</strong>
+                        <canvas id="signatureVenteBoutique" width="700" height="220" aria-label="Zone de signature du client"></canvas>
+                        <button type="button" class="bouton-petit rouge" onclick="effacerSignatureVenteBoutique()">Effacer la signature</button>
+                    </div>
+                    <div id="messageVenteBoutique" class="admin-message" role="status" aria-live="polite"></div>
+                    <button type="submit" class="auth-bouton">Enregistrer la vente et créer la facture</button>
+                </form>
+            </details>
 
             <h4 class="admin-section-titre">👥 Comptes clients</h4>
             <div class="admin-outils">
@@ -1428,6 +1682,17 @@ footer{
             <div id="listeClientsAdmin" class="admin-liste" aria-live="polite"></div>
 
             <h4 class="admin-section-titre">📦 Gestion des commandes et factures</h4>
+            <div class="admin-outils">
+                <input type="search" id="rechercheCommandesAdmin" placeholder="Rechercher client, téléphone ou numéro" aria-label="Rechercher une commande" oninput="afficherCommandesAdmin()">
+                <select id="filtreCommandesAdmin" aria-label="Filtrer les commandes" onchange="afficherCommandesAdmin()">
+                    <option value="toutes">Toutes</option>
+                    <option value="en_retard">Créances en retard</option>
+                    <option value="creances">Toutes les créances</option>
+                    <option value="payees">Payées</option>
+                    <option value="boutique">Ventes sur place</option>
+                    <option value="site">Commandes en ligne</option>
+                </select>
+            </div>
             <div id="listeCommandesAdmin" class="admin-liste" aria-live="polite">
                 <p class="compte-chargement">Chargement des commandes…</p>
             </div>
@@ -1672,7 +1937,10 @@ function libelleStatutCommande(statut) {
         livree: "Livrée",
         annulee: "Annulée",
         emise: "Émise",
-        payee: "Payée"
+        payee: "Payée",
+        partielle: "Partiellement payée",
+        impayee: "Impayée",
+        en_retard: "En retard"
     };
     return libelles[statut] || statut || "En attente";
 }
@@ -1682,6 +1950,53 @@ function creerBadgeStatut(statut) {
     badge.className = "badge-statut " + (statut || "en_attente");
     badge.textContent = libelleStatutCommande(statut);
     return badge;
+}
+
+function statutPaiementCommande(commande) {
+    const total = Number(commande.total || 0);
+    const paye = Number(commande.montant_paye || 0);
+    const reste = Number(commande.reste_a_payer || Math.max(total - paye, 0));
+    if (reste <= 0) return "payee";
+    if (commande.date_echeance) {
+        const finJourEcheance = new Date(commande.date_echeance + "T23:59:59");
+        if (!Number.isNaN(finJourEcheance.getTime()) && finJourEcheance < new Date()) return "en_retard";
+    }
+    return paye > 0 ? "partielle" : "impayee";
+}
+
+function creerHistoriquePaiements(paiements) {
+    const bloc = document.createElement("div");
+    bloc.className = "historique-paiements";
+    const titre = document.createElement("h5");
+    titre.textContent = "Historique des versements";
+    bloc.appendChild(titre);
+
+    if (!paiements || !paiements.length) {
+        const vide = document.createElement("p");
+        vide.textContent = "Aucun versement enregistré.";
+        bloc.appendChild(vide);
+        return bloc;
+    }
+
+    paiements.slice().sort(function(a, b) {
+        return new Date(b.created_at) - new Date(a.created_at);
+    }).forEach(function(paiement) {
+        const ligne = document.createElement("div");
+        ligne.className = "paiement-ligne";
+        ligne.appendChild(creerLigneAdmin("Date", formaterDateAdmin(paiement.created_at)));
+        ligne.appendChild(creerLigneAdmin("Versement", formaterMontant(paiement.montant) + " FCFA"));
+        ligne.appendChild(creerLigneAdmin("Mode", paiement.mode_paiement));
+        if (paiement.reference) ligne.appendChild(creerLigneAdmin("Référence", paiement.reference));
+        ligne.appendChild(creerLigneAdmin("Solde après paiement", formaterMontant(paiement.solde_apres) + " FCFA"));
+        const recu = document.createElement("button");
+        recu.type = "button";
+        recu.className = "bouton-petit vert";
+        recu.textContent = "Télécharger le reçu";
+        recu.addEventListener("click", function() { telechargerRecuPaiementPDF(paiement.id); });
+        ligne.appendChild(recu);
+        bloc.appendChild(ligne);
+    });
+    return bloc;
 }
 
 function creerListeArticlesCommande(articles) {
@@ -1696,6 +2011,211 @@ function creerListeArticlesCommande(articles) {
     return liste;
 }
 
+let numeroLigneVenteBoutique = 0;
+let signatureVenteBoutiqueTracee = false;
+
+function initialiserSignatureVenteBoutique() {
+    const canvas = document.getElementById("signatureVenteBoutique");
+    if (!canvas) return;
+    const contexte = canvas.getContext("2d");
+    contexte.lineWidth = 3;
+    contexte.lineCap = "round";
+    contexte.lineJoin = "round";
+    contexte.strokeStyle = "#102a43";
+    let dessinActif = false;
+
+    function position(evenement) {
+        const rectangle = canvas.getBoundingClientRect();
+        return {
+            x: (evenement.clientX - rectangle.left) * (canvas.width / rectangle.width),
+            y: (evenement.clientY - rectangle.top) * (canvas.height / rectangle.height)
+        };
+    }
+
+    canvas.addEventListener("pointerdown", function(evenement) {
+        evenement.preventDefault();
+        dessinActif = true;
+        signatureVenteBoutiqueTracee = true;
+        canvas.setPointerCapture(evenement.pointerId);
+        const point = position(evenement);
+        contexte.beginPath();
+        contexte.moveTo(point.x, point.y);
+    });
+    canvas.addEventListener("pointermove", function(evenement) {
+        if (!dessinActif) return;
+        evenement.preventDefault();
+        const point = position(evenement);
+        contexte.lineTo(point.x, point.y);
+        contexte.stroke();
+    });
+    function terminerDessin() {
+        dessinActif = false;
+        contexte.closePath();
+    }
+    canvas.addEventListener("pointerup", terminerDessin);
+    canvas.addEventListener("pointercancel", terminerDessin);
+}
+
+function effacerSignatureVenteBoutique() {
+    const canvas = document.getElementById("signatureVenteBoutique");
+    if (!canvas) return;
+    canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+    signatureVenteBoutiqueTracee = false;
+}
+
+function obtenirSignatureVenteBoutique() {
+    const canvas = document.getElementById("signatureVenteBoutique");
+    return canvas && signatureVenteBoutiqueTracee ? canvas.toDataURL("image/png") : null;
+}
+
+function afficherMessageVenteBoutique(message, type) {
+    const zone = document.getElementById("messageVenteBoutique");
+    zone.textContent = message;
+    zone.className = "admin-message visible " + (type || "info");
+}
+
+function ajouterLigneVenteBoutique(valeurs) {
+    const conteneur = document.getElementById("articlesVenteBoutique");
+    if (!conteneur) return;
+    const article = valeurs || {};
+    numeroLigneVenteBoutique += 1;
+    const numero = numeroLigneVenteBoutique;
+
+    const ligne = document.createElement("div");
+    ligne.className = "ligne-article-boutique";
+
+    const champNom = document.createElement("div");
+    const labelNom = document.createElement("label");
+    labelNom.htmlFor = "venteArticleNom" + numero;
+    labelNom.textContent = "Désignation";
+    const nom = document.createElement("input");
+    nom.type = "text";
+    nom.id = "venteArticleNom" + numero;
+    nom.className = "vente-article-nom";
+    nom.required = true;
+    nom.placeholder = "Nom du produit";
+    nom.value = article.nom || "";
+    champNom.append(labelNom, nom);
+
+    const champQuantite = document.createElement("div");
+    const labelQuantite = document.createElement("label");
+    labelQuantite.htmlFor = "venteArticleQuantite" + numero;
+    labelQuantite.textContent = "Quantité";
+    const quantite = document.createElement("input");
+    quantite.type = "number";
+    quantite.id = "venteArticleQuantite" + numero;
+    quantite.className = "vente-article-quantite";
+    quantite.min = "1";
+    quantite.step = "1";
+    quantite.required = true;
+    quantite.value = article.quantite || 1;
+    quantite.addEventListener("input", calculerTotalVenteBoutique);
+    champQuantite.append(labelQuantite, quantite);
+
+    const champPrix = document.createElement("div");
+    const labelPrix = document.createElement("label");
+    labelPrix.htmlFor = "venteArticlePrix" + numero;
+    labelPrix.textContent = "Prix unitaire";
+    const prix = document.createElement("input");
+    prix.type = "number";
+    prix.id = "venteArticlePrix" + numero;
+    prix.className = "vente-article-prix";
+    prix.min = "0";
+    prix.step = "1";
+    prix.required = true;
+    prix.placeholder = "FCFA";
+    prix.value = article.prix || "";
+    prix.addEventListener("input", calculerTotalVenteBoutique);
+    champPrix.append(labelPrix, prix);
+
+    const supprimer = document.createElement("button");
+    supprimer.type = "button";
+    supprimer.textContent = "Retirer";
+    supprimer.addEventListener("click", function() {
+        ligne.remove();
+        if (!conteneur.children.length) ajouterLigneVenteBoutique();
+        calculerTotalVenteBoutique();
+    });
+
+    ligne.append(champNom, champQuantite, champPrix, supprimer);
+    conteneur.appendChild(ligne);
+    calculerTotalVenteBoutique();
+}
+
+function lireArticlesVenteBoutique() {
+    return Array.from(document.querySelectorAll("#articlesVenteBoutique .ligne-article-boutique")).map(function(ligne) {
+        return {
+            nom: ligne.querySelector(".vente-article-nom").value.trim(),
+            quantite: Number(ligne.querySelector(".vente-article-quantite").value),
+            prix: Number(ligne.querySelector(".vente-article-prix").value)
+        };
+    });
+}
+
+function calculerTotalVenteBoutique() {
+    const total = lireArticlesVenteBoutique().reduce(function(somme, article) {
+        if (!Number.isFinite(article.prix) || !Number.isFinite(article.quantite)) return somme;
+        return somme + article.prix * article.quantite;
+    }, 0);
+    const zone = document.getElementById("totalVenteBoutique");
+    if (zone) zone.textContent = formaterMontant(total);
+    return total;
+}
+
+async function enregistrerVenteBoutique(evenement) {
+    evenement.preventDefault();
+    if (!estAdministrateurNarelvir(utilisateurConnecteNarelvir)) return;
+
+    const formulaire = evenement.currentTarget;
+    const articles = lireArticlesVenteBoutique();
+    const total = calculerTotalVenteBoutique();
+    const montantPaye = Number(document.getElementById("venteBoutiqueMontantPaye").value || 0);
+
+    if (!articles.length || articles.some(function(a) { return !a.nom || a.quantite <= 0 || a.prix < 0; })) {
+        afficherMessageVenteBoutique("Vérifiez le nom, la quantité et le prix de chaque article.", "erreur");
+        return;
+    }
+    if (!Number.isFinite(montantPaye) || montantPaye < 0 || montantPaye > total) {
+        afficherMessageVenteBoutique("Le montant payé doit être compris entre 0 et le total de la vente.", "erreur");
+        return;
+    }
+
+    basculerBoutonFormulaire(formulaire, true);
+    try {
+        const resultat = await clientSupabase.rpc("creer_vente_boutique", {
+            p_articles: articles,
+            p_nom: document.getElementById("venteBoutiqueNom").value.trim(),
+            p_telephone: document.getElementById("venteBoutiqueTelephone").value.trim() || null,
+            p_ville: document.getElementById("venteBoutiqueVille").value.trim() || null,
+            p_adresse: document.getElementById("venteBoutiqueAdresse").value.trim() || null,
+            p_montant_paye: montantPaye,
+            p_mode_paiement: document.getElementById("venteBoutiqueModePaiement").value,
+            p_reference_paiement: document.getElementById("venteBoutiqueReferencePaiement").value.trim() || null,
+            p_date_echeance: document.getElementById("venteBoutiqueEcheance").value || null,
+            p_note: document.getElementById("venteBoutiqueNote").value.trim() || null,
+            p_signature_client: obtenirSignatureVenteBoutique()
+        });
+        if (resultat.error) throw resultat.error;
+
+        const vente = resultat.data || {};
+        formulaire.reset();
+        effacerSignatureVenteBoutique();
+        document.getElementById("articlesVenteBoutique").replaceChildren();
+        ajouterLigneVenteBoutique();
+        afficherMessageVenteBoutique(
+            "Vente " + (vente.numero || "") + " enregistrée. Reste à payer : " +
+            formaterMontant(vente.reste_a_payer || 0) + " FCFA.",
+            "info"
+        );
+        await actualiserAdministration(utilisateurConnecteNarelvir);
+    } catch (erreur) {
+        afficherMessageVenteBoutique("Impossible d’enregistrer la vente. Exécutez le nouveau fichier SQL d’activation.", "erreur");
+        console.error("Vente boutique impossible :", erreur);
+    } finally {
+        basculerBoutonFormulaire(formulaire, false);
+    }
+}
+
 function afficherCommandesAdmin() {
     const conteneur = document.getElementById("listeCommandesAdmin");
     conteneur.replaceChildren();
@@ -1706,32 +2226,71 @@ function afficherCommandesAdmin() {
         return total + (statutsComptabilises.includes(commande.statut) ? Number(commande.total || 0) : 0);
     }, 0);
     document.getElementById("chiffreAffairesAdmin").textContent = formaterMontant(chiffreAffaires);
+    const creances = commandesAdminNarelvir.reduce(function(total, commande) {
+        if (!statutsComptabilises.includes(commande.statut)) return total;
+        return total + Number(commande.reste_a_payer || 0);
+    }, 0);
+    document.getElementById("totalCreancesAdmin").textContent = formaterMontant(creances);
+    const retards = commandesAdminNarelvir.reduce(function(total, commande) {
+        if (!statutsComptabilises.includes(commande.statut) || statutPaiementCommande(commande) !== "en_retard") return total;
+        return total + Number(commande.reste_a_payer || 0);
+    }, 0);
+    document.getElementById("totalRetardsAdmin").textContent = formaterMontant(retards);
 
-    if (!commandesAdminNarelvir.length) {
+    const recherche = (document.getElementById("rechercheCommandesAdmin").value || "").trim().toLowerCase();
+    const filtre = document.getElementById("filtreCommandesAdmin").value;
+    const commandesAffichees = commandesAdminNarelvir.filter(function(commande) {
+        const correspondRecherche = !recherche || [
+            commande.numero, commande.nom_client, commande.telephone, commande.ville
+        ].filter(Boolean).some(function(valeur) {
+            return String(valeur).toLowerCase().includes(recherche);
+        });
+        if (!correspondRecherche) return false;
+        if (filtre === "en_retard") return statutPaiementCommande(commande) === "en_retard";
+        if (filtre === "creances") return Number(commande.reste_a_payer || 0) > 0 && commande.statut !== "annulee";
+        if (filtre === "payees") return Number(commande.reste_a_payer || 0) <= 0;
+        if (filtre === "boutique") return commande.origine === "boutique";
+        if (filtre === "site") return commande.origine !== "boutique";
+        return true;
+    });
+
+    if (!commandesAffichees.length) {
         const vide = document.createElement("p");
         vide.className = "compte-vide";
-        vide.textContent = "Aucune commande enregistrée.";
+        vide.textContent = commandesAdminNarelvir.length
+            ? "Aucune commande ne correspond à ce filtre."
+            : "Aucune commande enregistrée.";
         conteneur.appendChild(vide);
         return;
     }
 
     const statuts = ["en_attente", "confirmee", "preparation", "expediee", "livree", "annulee"];
-    commandesAdminNarelvir.forEach(function(commande) {
+    commandesAffichees.forEach(function(commande) {
         const carte = document.createElement("article");
         carte.className = "commande-carte";
 
         const entete = document.createElement("div");
         entete.className = "commande-entete";
         const titre = document.createElement("h4");
-        titre.textContent = "Commande " + commande.numero;
-        entete.append(titre, creerBadgeStatut(commande.statut));
+        titre.textContent = (commande.origine === "boutique" ? "Vente boutique " : "Commande ") + commande.numero;
+        const origine = document.createElement("span");
+        origine.className = "admin-badge";
+        origine.textContent = commande.origine === "boutique" ? "Sur place" : "En ligne";
+        entete.append(titre, origine, creerBadgeStatut(commande.statut), creerBadgeStatut(statutPaiementCommande(commande)));
         carte.appendChild(entete);
         carte.appendChild(creerLigneAdmin("Client", commande.nom_client || "Client NARELVIR"));
         carte.appendChild(creerLigneAdmin("Téléphone", commande.telephone));
         carte.appendChild(creerLigneAdmin("Ville / adresse", [commande.ville, commande.adresse].filter(Boolean).join(" — ")));
         carte.appendChild(creerLigneAdmin("Date", formaterDateAdmin(commande.created_at)));
         carte.appendChild(creerLigneAdmin("Total", formaterMontant(commande.total) + " FCFA"));
+        carte.appendChild(creerLigneAdmin("Déjà payé", formaterMontant(commande.montant_paye) + " FCFA"));
+        carte.appendChild(creerLigneAdmin("Reste à payer", formaterMontant(commande.reste_a_payer) + " FCFA"));
+        carte.appendChild(creerLigneAdmin("Paiement", commande.mode_paiement));
+        if (commande.date_echeance) {
+            carte.appendChild(creerLigneAdmin("Échéance", new Date(commande.date_echeance + "T00:00:00").toLocaleDateString("fr-FR")));
+        }
         carte.appendChild(creerListeArticlesCommande(commande.articles_commandes));
+        carte.appendChild(creerHistoriquePaiements(commande.paiements_commandes));
 
         const actions = document.createElement("div");
         actions.className = "admin-commande-actions";
@@ -1753,6 +2312,69 @@ function afficherCommandesAdmin() {
             mettreAJourStatutCommande(commande.id, select.value, enregistrer);
         });
         actions.append(select, enregistrer);
+
+        if (commande.statut !== "annulee") {
+            const paiement = document.createElement("div");
+            paiement.className = "paiement-commande";
+            const champVersement = document.createElement("div");
+            const labelVersement = document.createElement("label");
+            labelVersement.textContent = "Nouveau versement";
+            const saisieVersement = document.createElement("input");
+            saisieVersement.type = "number";
+            saisieVersement.min = "1";
+            saisieVersement.max = String(commande.reste_a_payer || 0);
+            saisieVersement.step = "1";
+            saisieVersement.placeholder = "Montant en FCFA";
+            champVersement.append(labelVersement, saisieVersement);
+
+            const champMode = document.createElement("div");
+            const labelMode = document.createElement("label");
+            labelMode.textContent = "Moyen de paiement";
+            const mode = document.createElement("select");
+            ["Espèces", "MTN MoMo", "Orange Money", "Virement", "Autre"].forEach(function(valeur) {
+                const option = document.createElement("option");
+                option.value = valeur;
+                option.textContent = valeur;
+                mode.appendChild(option);
+            });
+            champMode.append(labelMode, mode);
+
+            const champReference = document.createElement("div");
+            const labelReference = document.createElement("label");
+            labelReference.textContent = "Référence";
+            const reference = document.createElement("input");
+            reference.type = "text";
+            reference.placeholder = "MoMo, OM ou reçu";
+            champReference.append(labelReference, reference);
+
+            const enregistrerPaiement = document.createElement("button");
+            enregistrerPaiement.type = "button";
+            enregistrerPaiement.className = "bouton-petit";
+            enregistrerPaiement.textContent = "Enregistrer le versement";
+            enregistrerPaiement.addEventListener("click", function() {
+                enregistrerVersementCommande(commande.id, saisieVersement.value, mode.value, reference.value, enregistrerPaiement);
+            });
+
+            const toutPaye = document.createElement("button");
+            toutPaye.type = "button";
+            toutPaye.className = "bouton-petit vert";
+            toutPaye.textContent = "Tout payé";
+            toutPaye.addEventListener("click", function() {
+                saisieVersement.value = String(Number(commande.reste_a_payer || 0));
+                enregistrerVersementCommande(commande.id, saisieVersement.value, mode.value, reference.value, toutPaye);
+            });
+            paiement.append(champVersement, champMode, champReference, enregistrerPaiement, toutPaye);
+            actions.appendChild(paiement);
+        }
+
+        if (commande.telephone && Number(commande.reste_a_payer || 0) > 0) {
+            const relancer = document.createElement("button");
+            relancer.type = "button";
+            relancer.className = "bouton-petit whatsapp-relance";
+            relancer.textContent = "💬 Relancer sur WhatsApp";
+            relancer.addEventListener("click", function() { relancerClientWhatsApp(commande); });
+            actions.appendChild(relancer);
+        }
 
         const factureExistante = Array.isArray(commande.factures) ? commande.factures[0] : commande.factures;
         if (factureExistante) {
@@ -1782,7 +2404,7 @@ async function chargerCommandesAdmin(utilisateur) {
 
     const resultat = await clientSupabase
         .from("commandes")
-        .select("id,numero,client_id,total,statut,nom_client,telephone,ville,adresse,note,created_at,articles_commandes(id,nom,prix,quantite,sous_total),factures(id,numero,statut)")
+        .select("id,numero,client_id,total,statut,mode_commande,origine,montant_paye,reste_a_payer,date_echeance,mode_paiement,nom_client,telephone,ville,adresse,note,signature_client,created_at,articles_commandes(id,nom,prix,quantite,sous_total),factures(id,numero,statut,montant),paiements_commandes(id,montant,mode_paiement,reference,note,solde_apres,created_at)")
         .order("created_at", { ascending: false });
 
     if (resultat.error) throw resultat.error;
@@ -1819,6 +2441,57 @@ async function mettreAJourStatutCommande(id, statut, bouton) {
     } finally {
         bouton.disabled = false;
     }
+}
+
+async function enregistrerVersementCommande(id, montantVerse, modePaiement, reference, bouton) {
+    const montant = Number(montantVerse);
+    if (!Number.isFinite(montant) || montant <= 0) {
+        afficherMessageAdmin("Saisissez un montant de versement valide.", "erreur");
+        return;
+    }
+    bouton.disabled = true;
+    try {
+        const resultat = await clientSupabase.rpc("enregistrer_versement_admin", {
+            p_commande_id: id,
+            p_montant: montant,
+            p_mode_paiement: modePaiement || null,
+            p_reference: String(reference || "").trim() || null,
+            p_note: null
+        });
+        if (resultat.error) throw resultat.error;
+        const paiement = resultat.data || {};
+        afficherMessageAdmin(
+            "Paiement enregistré. Reste à payer : " + formaterMontant(paiement.reste_a_payer || 0) + " FCFA.",
+            "info"
+        );
+        await chargerCommandesAdmin(utilisateurConnecteNarelvir);
+        await chargerFacturesClient();
+    } catch (erreur) {
+        afficherMessageAdmin("Impossible d’enregistrer ce versement. Vérifiez le montant restant.", "erreur");
+        console.error(erreur);
+    } finally {
+        bouton.disabled = false;
+    }
+}
+
+function relancerClientWhatsApp(commande) {
+    const telephone = String(commande.telephone || "").replace(/\D/g, "");
+    if (!telephone) {
+        afficherMessageAdmin("Le numéro WhatsApp du client n’est pas renseigné.", "erreur");
+        return;
+    }
+    const numero = telephone.startsWith("237") ? telephone : "237" + telephone.replace(/^0+/, "");
+    const echeance = commande.date_echeance
+        ? new Date(commande.date_echeance + "T00:00:00").toLocaleDateString("fr-FR")
+        : "non indiquée";
+    const message = [
+        "Bonjour " + (commande.nom_client || "cher client") + ",",
+        "NARELVIR vous rappelle qu’un solde de " + formaterMontant(commande.reste_a_payer) + " FCFA reste à payer sur la facture liée à " + commande.numero + ".",
+        "Échéance : " + echeance + ".",
+        "Merci de nous contacter au 652 242 847 pour régulariser votre paiement.",
+        "NARELVIR — narelvir.cm"
+    ].join("\n\n");
+    window.open("https://wa.me/" + numero + "?text=" + encodeURIComponent(message), "_blank");
 }
 
 async function creerFactureCommande(commandeId, bouton) {
@@ -1941,11 +2614,14 @@ function afficherCommandesClient() {
         entete.className = "commande-entete";
         const titre = document.createElement("h4");
         titre.textContent = commande.numero;
-        entete.append(titre, creerBadgeStatut(commande.statut));
+        entete.append(titre, creerBadgeStatut(commande.statut), creerBadgeStatut(statutPaiementCommande(commande)));
         carte.appendChild(entete);
         carte.appendChild(creerLigneAdmin("Date", formaterDateAdmin(commande.created_at)));
         carte.appendChild(creerLigneAdmin("Total", formaterMontant(commande.total) + " FCFA"));
+        carte.appendChild(creerLigneAdmin("Déjà payé", formaterMontant(commande.montant_paye) + " FCFA"));
+        carte.appendChild(creerLigneAdmin("Reste à payer", formaterMontant(commande.reste_a_payer) + " FCFA"));
         carte.appendChild(creerListeArticlesCommande(commande.articles_commandes));
+        carte.appendChild(creerHistoriquePaiements(commande.paiements_commandes));
 
         const recommander = document.createElement("button");
         recommander.type = "button";
@@ -1953,15 +2629,32 @@ function afficherCommandesClient() {
         recommander.textContent = "Ajouter de nouveau au panier";
         recommander.addEventListener("click", function() { recommanderCommande(commande); });
         carte.appendChild(recommander);
+        if (Number(commande.reste_a_payer || 0) > 0) {
+            const payer = document.createElement("button");
+            payer.type = "button";
+            payer.className = "bouton-petit whatsapp-relance";
+            payer.textContent = "💬 Contacter NARELVIR pour payer";
+            payer.addEventListener("click", function() { contacterNarelvirPourPaiement(commande); });
+            carte.appendChild(payer);
+        }
         conteneur.appendChild(carte);
     });
+}
+
+function contacterNarelvirPourPaiement(commande) {
+    const message = [
+        "Bonjour NARELVIR, je souhaite effectuer un paiement pour la commande " + commande.numero + ".",
+        "Solde indiqué dans mon compte : " + formaterMontant(commande.reste_a_payer) + " FCFA.",
+        "Merci de m’indiquer la procédure de paiement."
+    ].join("\n\n");
+    window.open("https://wa.me/" + NUMERO_WHATSAPP + "?text=" + encodeURIComponent(message), "_blank");
 }
 
 async function chargerCommandesClient() {
     if (!utilisateurConnecteNarelvir) return;
     const resultat = await clientSupabase
         .from("commandes")
-        .select("id,numero,total,statut,created_at,articles_commandes(id,nom,prix,quantite,sous_total)")
+        .select("id,numero,total,statut,montant_paye,reste_a_payer,date_echeance,created_at,articles_commandes(id,nom,prix,quantite,sous_total),paiements_commandes(id,montant,mode_paiement,reference,note,solde_apres,created_at)")
         .eq("client_id", utilisateurConnecteNarelvir.id)
         .order("created_at", { ascending: false });
     if (resultat.error) throw resultat.error;
@@ -1996,14 +2689,20 @@ function afficherFacturesClient() {
     facturesClientActuel.forEach(function(facture) {
         const carte = document.createElement("article");
         carte.className = "facture-carte";
+        const suivi = Object.assign({ total: facture.montant }, facture.commandes || {});
         const entete = document.createElement("div");
         entete.className = "facture-entete";
         const titre = document.createElement("h4");
         titre.textContent = "Facture " + facture.numero;
-        entete.append(titre, creerBadgeStatut(facture.statut));
+        entete.append(titre, creerBadgeStatut(facture.statut), creerBadgeStatut(statutPaiementCommande(suivi)));
         carte.appendChild(entete);
         carte.appendChild(creerLigneAdmin("Date", formaterDateAdmin(facture.date_emission)));
         carte.appendChild(creerLigneAdmin("Montant", formaterMontant(facture.montant) + " FCFA"));
+        carte.appendChild(creerLigneAdmin("Déjà payé", formaterMontant(suivi.montant_paye) + " FCFA"));
+        carte.appendChild(creerLigneAdmin("Solde dû", formaterMontant(suivi.reste_a_payer) + " FCFA"));
+        if (suivi.date_echeance) {
+            carte.appendChild(creerLigneAdmin("Échéance", new Date(suivi.date_echeance + "T00:00:00").toLocaleDateString("fr-FR")));
+        }
 
         const bouton = document.createElement("button");
         bouton.type = "button";
@@ -2019,7 +2718,7 @@ async function chargerFacturesClient() {
     if (!utilisateurConnecteNarelvir) return;
     const resultat = await clientSupabase
         .from("factures")
-        .select("id,numero,commande_id,montant,statut,date_emission")
+        .select("id,numero,commande_id,montant,statut,date_emission,commandes(montant_paye,reste_a_payer,date_echeance)")
         .eq("client_id", utilisateurConnecteNarelvir.id)
         .order("date_emission", { ascending: false });
     if (resultat.error) throw resultat.error;
@@ -2115,12 +2814,93 @@ async function telechargerFacturePDF(factureId) {
         doc.setFont("helvetica", "bold");
         doc.setFontSize(14);
         doc.text("TOTAL TTC : " + formaterMontant(facture.montant) + " FCFA", 196, y, { align: "right" });
+        y += 8;
+        doc.setFontSize(10);
+        doc.text("MONTANT PAYÉ : " + formaterMontant(commande.montant_paye) + " FCFA", 196, y, { align: "right" });
+        y += 7;
+        doc.setTextColor(Number(commande.reste_a_payer || 0) > 0 ? 227 : 22, Number(commande.reste_a_payer || 0) > 0 ? 27 : 131, Number(commande.reste_a_payer || 0) > 0 ? 35 : 75);
+        doc.text("RESTE À PAYER : " + formaterMontant(commande.reste_a_payer) + " FCFA", 196, y, { align: "right" });
+        doc.setTextColor(30, 30, 30);
         doc.setFontSize(9);
         doc.setFont("helvetica", "normal");
-        doc.text("Merci pour votre confiance.", 14, Math.min(y + 18, 285));
+        doc.text("Mode de paiement : " + (commande.mode_paiement || "Non renseigné"), 14, Math.min(y + 10, 285));
+        let positionMerci = Math.min(y + 18, 290);
+        if (commande.signature_client) {
+            try {
+                if (y > 245) { doc.addPage(); y = 20; }
+                doc.text("Signature du client :", 14, y + 18);
+                doc.addImage(commande.signature_client, "PNG", 14, y + 22, 55, 20);
+                positionMerci = Math.min(y + 50, 290);
+            } catch (erreurSignature) {
+                console.warn("Signature non ajoutée au PDF :", erreurSignature);
+            }
+        }
+        doc.text("Merci pour votre confiance.", 14, positionMerci);
         doc.save("Facture_NARELVIR_" + facture.numero + ".pdf");
     } catch (erreur) {
         afficherMessageAuth("La facture n’a pas pu être téléchargée.", "erreur");
+        console.error(erreur);
+    }
+}
+
+async function telechargerRecuPaiementPDF(paiementId) {
+    try {
+        if (!window.jspdf || !window.jspdf.jsPDF) throw new Error("Générateur PDF indisponible");
+        const paiementResultat = await clientSupabase
+            .from("paiements_commandes")
+            .select("*")
+            .eq("id", paiementId)
+            .single();
+        if (paiementResultat.error) throw paiementResultat.error;
+        const paiement = paiementResultat.data;
+
+        const commandeResultat = await clientSupabase
+            .from("commandes")
+            .select("id,numero,nom_client,telephone,total")
+            .eq("id", paiement.commande_id)
+            .single();
+        if (commandeResultat.error) throw commandeResultat.error;
+        const commande = commandeResultat.data;
+
+        const doc = new window.jspdf.jsPDF({ unit: "mm", format: "a5" });
+        doc.setFillColor(7, 86, 163);
+        doc.rect(0, 0, 148, 30, "F");
+        doc.setTextColor(255, 255, 255);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(22);
+        doc.text("NARELVIR", 12, 15);
+        doc.setFontSize(9);
+        doc.text("Pièces Détachées & Lubrifiants", 12, 23);
+        doc.setTextColor(30, 30, 30);
+        doc.setFontSize(15);
+        doc.text("REÇU DE PAIEMENT", 74, 42, { align: "center" });
+        doc.setFontSize(9);
+        doc.setFont("helvetica", "normal");
+        doc.text("NUI : " + NUI_NARELVIR, 12, 52);
+        doc.text("Nouvelle Route Brique, derrière l’Immeuble Ekan", 12, 58);
+        doc.text("Tél. 652 242 847 / 692 049 233", 12, 64);
+        doc.line(12, 70, 136, 70);
+        doc.setFont("helvetica", "bold");
+        doc.text("Client :", 12, 81);
+        doc.setFont("helvetica", "normal");
+        doc.text(commande.nom_client || "Client NARELVIR", 42, 81);
+        doc.text("Téléphone : " + (commande.telephone || "Non renseigné"), 12, 89);
+        doc.text("Commande : " + commande.numero, 12, 97);
+        doc.text("Date : " + new Date(paiement.created_at).toLocaleString("fr-FR"), 12, 105);
+        doc.setFillColor(232, 242, 251);
+        doc.roundedRect(12, 114, 124, 42, 4, 4, "F");
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(14);
+        doc.text("VERSEMENT : " + formaterMontant(paiement.montant) + " FCFA", 74, 128, { align: "center" });
+        doc.setFontSize(10);
+        doc.text("SOLDE RESTANT : " + formaterMontant(paiement.solde_apres) + " FCFA", 74, 140, { align: "center" });
+        doc.setFont("helvetica", "normal");
+        doc.text("Mode : " + (paiement.mode_paiement || "Non renseigné"), 12, 168);
+        doc.text("Référence : " + (paiement.reference || "Non renseignée"), 12, 176);
+        doc.text("Merci pour votre paiement.", 74, 195, { align: "center" });
+        doc.save("Recu_NARELVIR_" + commande.numero + "_" + paiement.id + ".pdf");
+    } catch (erreur) {
+        afficherMessageAuth("Le reçu de paiement n’a pas pu être téléchargé.", "erreur");
         console.error(erreur);
     }
 }
@@ -2173,6 +2953,9 @@ async function afficherEtatCompte(utilisateur) {
 
     if (estAdministrateurNarelvir(utilisateur)) {
         administration.classList.remove("cache");
+        if (!document.getElementById("articlesVenteBoutique").children.length) {
+            ajouterLigneVenteBoutique();
+        }
         await actualiserAdministration(utilisateur);
     } else {
         administration.classList.add("cache");
@@ -2680,6 +3463,7 @@ if ((location.hostname === "narelvir.cm" || location.hostname === "www.narelvir.
 }
 
 afficherPanier();
+initialiserSignatureVenteBoutique();
 initialiserCompteClient();
 </script>
 
