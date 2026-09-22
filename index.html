@@ -522,6 +522,22 @@ h2{
     font-size:16px;
 }
 
+.auth-formulaire textarea,
+.auth-formulaire select{
+    width:100%;
+    min-height:48px;
+    padding:12px 14px;
+    border:1px solid #b9c2ca;
+    border-radius:9px;
+    font-size:16px;
+    background:white;
+}
+
+.auth-formulaire textarea{
+    min-height:88px;
+    resize:vertical;
+}
+
 .auth-formulaire input:focus{
     border-color:var(--bleu);
     outline:3px solid rgba(7,86,163,0.15);
@@ -593,7 +609,7 @@ h2{
 }
 
 .compte-connecte{
-    max-width:560px;
+    max-width:920px;
     margin:auto;
 }
 
@@ -621,6 +637,204 @@ h2{
 .liens-compte a{
     color:var(--bleu);
     font-weight:bold;
+}
+
+.tableau-compte{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:12px;
+    margin:18px 0;
+}
+
+.compte-indicateur{
+    padding:16px 10px;
+    border-radius:12px;
+    background:linear-gradient(135deg,var(--bleu),var(--bleu-fonce));
+    color:white;
+    text-align:center;
+}
+
+.compte-indicateur strong{
+    display:block;
+    margin-bottom:4px;
+    font-size:24px;
+}
+
+.espace-client-grille{
+    display:grid;
+    grid-template-columns:minmax(260px,0.85fr) minmax(0,1.35fr);
+    gap:16px;
+    margin-top:18px;
+    text-align:left;
+}
+
+.compte-bloc{
+    padding:18px;
+    border:1px solid #cbd7e2;
+    border-radius:14px;
+    background:#fff;
+    box-shadow:0 2px 7px rgba(0,0,0,0.07);
+}
+
+.compte-bloc h3{
+    margin:0 0 12px;
+    color:var(--bleu);
+}
+
+.compte-bloc-large{
+    grid-column:1 / -1;
+}
+
+.compte-chargement,
+.compte-vide{
+    padding:16px;
+    border-radius:10px;
+    background:#f4f7fa;
+    color:#526273;
+    text-align:center;
+}
+
+.commande-carte,
+.facture-carte{
+    margin:10px 0;
+    padding:15px;
+    border:1px solid #d7e0e7;
+    border-left:5px solid var(--bleu);
+    border-radius:10px;
+    background:white;
+}
+
+.commande-entete,
+.facture-entete{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+.commande-entete h4,
+.facture-entete h4{
+    margin:0;
+    color:var(--bleu-fonce);
+}
+
+.commande-carte p,
+.facture-carte p{
+    margin:6px 0;
+}
+
+.commande-articles{
+    margin:10px 0 0;
+    padding:10px 12px;
+    border-radius:8px;
+    background:#f6f9fb;
+}
+
+.commande-articles li{
+    margin:5px 0;
+}
+
+.badge-statut{
+    display:inline-block;
+    padding:5px 9px;
+    border-radius:20px;
+    background:#fff3d6;
+    color:#7a4e00;
+    font-size:13px;
+    font-weight:bold;
+}
+
+.badge-statut.confirmee,
+.badge-statut.payee{
+    background:#e5f7eb;
+    color:#125c2b;
+}
+
+.badge-statut.preparation,
+.badge-statut.expediee{
+    background:#e8f2fb;
+    color:#174f7d;
+}
+
+.badge-statut.livree{
+    background:#dcf7ee;
+    color:#086147;
+}
+
+.badge-statut.annulee{
+    background:#fde9ea;
+    color:#85151a;
+}
+
+.bouton-petit{
+    display:inline-block;
+    min-height:40px;
+    margin:6px 5px 0 0;
+    padding:9px 13px;
+    border:0;
+    border-radius:22px;
+    background:var(--bleu);
+    color:white;
+    font-weight:bold;
+    text-decoration:none;
+    cursor:pointer;
+}
+
+.bouton-petit.rouge{
+    background:var(--rouge);
+}
+
+.bouton-petit.vert{
+    background:#16834b;
+}
+
+.bouton-petit:disabled{
+    opacity:0.5;
+    cursor:wait;
+}
+
+.admin-resume{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:8px;
+    margin:14px 0;
+}
+
+.admin-resume div{
+    padding:13px 8px;
+    border-radius:10px;
+    background:var(--bleu);
+    color:white;
+    text-align:center;
+}
+
+.admin-resume strong{
+    display:block;
+    font-size:22px;
+}
+
+.admin-section-titre{
+    margin:22px 0 10px;
+    padding-top:15px;
+    border-top:1px solid #cbd7e2;
+    color:var(--bleu-fonce);
+}
+
+.admin-commande-actions{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    flex-wrap:wrap;
+    margin-top:10px;
+}
+
+.admin-commande-actions select{
+    min-height:40px;
+    padding:8px 10px;
+    border:1px solid #aebbc7;
+    border-radius:8px;
+    background:white;
 }
 
 .admin-narelvir{
@@ -754,6 +968,15 @@ h2{
 
 @media (max-width:560px){
     .admin-outils{
+        grid-template-columns:1fr;
+    }
+
+    .tableau-compte,
+    .admin-resume{
+        grid-template-columns:1fr;
+    }
+
+    .espace-client-grille{
         grid-template-columns:1fr;
     }
 }
@@ -1076,8 +1299,8 @@ footer{
 
 <section id="factures">
     <h2>🧾 Factures</h2>
-    <p>Après confirmation de votre commande, NARELVIR peut préparer et vous transmettre votre facture.</p>
-    <a class="bouton-bleu" href="https://wa.me/237652242847?text=Bonjour%20NARELVIR%2C%20je%20souhaite%20recevoir%20ma%20facture">Demander une facture</a>
+    <p>Connectez-vous à votre compte pour retrouver et télécharger vos factures NARELVIR en PDF.</p>
+    <a class="bouton-bleu" href="#connexion">Accéder à mes factures</a>
 </section>
 
 <section id="messages">
@@ -1132,23 +1355,82 @@ footer{
             <p><strong>Nom :</strong> <span id="profilNom">Client NARELVIR</span></p>
             <p><strong>E-mail :</strong> <span id="profilEmail"></span></p>
             <p id="ligneProfilTelephone"><strong>Téléphone :</strong> <span id="profilTelephone"></span></p>
+            <p id="ligneProfilLocalisation"><strong>Localisation :</strong> <span id="profilLocalisation"></span></p>
         </div>
+
+        <div class="tableau-compte" aria-label="Résumé du compte">
+            <div class="compte-indicateur"><strong id="nombreCommandesClient">0</strong>Commande(s)</div>
+            <div class="compte-indicateur"><strong id="nombreCommandesCoursClient">0</strong>En cours</div>
+            <div class="compte-indicateur"><strong id="nombreFacturesClient">0</strong>Facture(s)</div>
+        </div>
+
         <div class="liens-compte">
             <a href="#panier">Voir mon panier</a>
-            <a href="#factures">Demander une facture</a>
+            <a href="#mesCommandesClient">Mes commandes</a>
+            <a href="#mesFacturesClient">Mes factures</a>
             <a href="#messages">Contacter NARELVIR</a>
+        </div>
+
+        <div class="espace-client-grille">
+            <div class="compte-bloc">
+                <h3>✏️ Mes coordonnées</h3>
+                <form id="formProfilClient" class="auth-formulaire" onsubmit="enregistrerProfilClient(event)">
+                    <label for="profilNomChamp">Nom complet</label>
+                    <input type="text" id="profilNomChamp" autocomplete="name" required maxlength="80">
+
+                    <label for="profilTelephoneChamp">Téléphone / WhatsApp</label>
+                    <input type="tel" id="profilTelephoneChamp" autocomplete="tel" required maxlength="25">
+
+                    <label for="profilVilleChamp">Ville</label>
+                    <input type="text" id="profilVilleChamp" autocomplete="address-level2" maxlength="80" placeholder="Ex. Yaoundé">
+
+                    <label for="profilAdresseChamp">Adresse ou quartier</label>
+                    <textarea id="profilAdresseChamp" autocomplete="street-address" maxlength="250" placeholder="Quartier, point de repère…"></textarea>
+
+                    <button type="submit" class="auth-bouton">Enregistrer mes informations</button>
+                </form>
+                <div id="messageProfilClient" class="admin-message" role="status" aria-live="polite"></div>
+            </div>
+
+            <div class="compte-bloc" id="mesCommandesClient">
+                <h3>📦 Mes commandes</h3>
+                <p>Retrouvez ici vos commandes et leur état de traitement.</p>
+                <button type="button" class="bouton-petit" onclick="actualiserEspaceClient()">Actualiser le suivi</button>
+                <div id="listeCommandesClient" aria-live="polite">
+                    <p class="compte-chargement">Chargement des commandes…</p>
+                </div>
+            </div>
+
+            <div class="compte-bloc compte-bloc-large" id="mesFacturesClient">
+                <h3>🧾 Mes factures</h3>
+                <p>Les factures créées par NARELVIR peuvent être téléchargées en PDF.</p>
+                <div id="listeFacturesClient" aria-live="polite">
+                    <p class="compte-chargement">Chargement des factures…</p>
+                </div>
+            </div>
         </div>
 
         <div id="zoneAdminNarelvir" class="admin-narelvir cache" aria-labelledby="titreAdminNarelvir">
             <h3 id="titreAdminNarelvir">🛡️ Administration NARELVIR</h3>
-            <p class="admin-intro">Cette liste privée est réservée au propriétaire de NARELVIR. Les mots de passe ne sont jamais affichés.</p>
-            <p class="admin-total"><span id="totalClientsAdmin">0</span> compte(s) client(s)</p>
+            <p class="admin-intro">Espace privé réservé au propriétaire : clients, commandes, suivi et facturation. Les mots de passe ne sont jamais affichés.</p>
+            <div class="admin-resume">
+                <div><strong id="totalClientsAdmin">0</strong>Clients</div>
+                <div><strong id="totalCommandesAdmin">0</strong>Commandes</div>
+                <div><strong id="chiffreAffairesAdmin">0</strong>FCFA confirmés</div>
+            </div>
+
+            <h4 class="admin-section-titre">👥 Comptes clients</h4>
             <div class="admin-outils">
                 <input type="search" id="rechercheClientsAdmin" placeholder="Rechercher nom, e-mail ou téléphone" aria-label="Rechercher un client" oninput="filtrerClientsAdmin()">
-                <button type="button" id="actualiserClientsAdmin" onclick="chargerClientsAdmin()">Actualiser</button>
+                <button type="button" id="actualiserClientsAdmin" onclick="actualiserAdministration()">Actualiser</button>
             </div>
             <div id="messageAdminNarelvir" class="admin-message" role="status" aria-live="polite"></div>
             <div id="listeClientsAdmin" class="admin-liste" aria-live="polite"></div>
+
+            <h4 class="admin-section-titre">📦 Gestion des commandes et factures</h4>
+            <div id="listeCommandesAdmin" class="admin-liste" aria-live="polite">
+                <p class="compte-chargement">Chargement des commandes…</p>
+            </div>
         </div>
 
         <button type="button" class="auth-bouton rouge" onclick="deconnecterClient()">Se déconnecter</button>
@@ -1184,15 +1466,23 @@ footer{
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js" crossorigin="anonymous"></script>
 <script>
 const NUMERO_WHATSAPP = "237652242847";
 const CLE_PANIER = "narelvir-panier";
 const SUPABASE_URL = "https://jyitudbysxfadgjcubgh.supabase.co";
 const SUPABASE_CLE_PUBLIQUE = "sb_publishable_PsnwN6TTzw_mZWvWcq-dFQ_39uprhHX";
 const EMAIL_ADMIN_NARELVIR = "narcissetchoffo21@gmail.com";
+const NUI_NARELVIR = "P079818495940G";
 const clientSupabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_CLE_PUBLIQUE) : null;
 let panier = chargerPanier();
 let clientsAdminNarelvir = [];
+let commandesAdminNarelvir = [];
+let utilisateurConnecteNarelvir = null;
+let profilClientActuel = null;
+let commandesClientActuel = [];
+let facturesClientActuel = [];
+let commandeEnCours = false;
 
 function afficherMessageAuth(message, type) {
     const zone = document.getElementById("messageAuth");
@@ -1351,17 +1641,17 @@ async function chargerClientsAdmin(utilisateur) {
     try {
         const resultat = await clientSupabase
             .from("profils_clients")
-            .select("id,email,nom,telephone,date_inscription,derniere_connexion,email_confirme")
+            .select("id,email,nom,telephone,ville,adresse,date_inscription,derniere_connexion,email_confirme")
             .order("date_inscription", { ascending: false });
 
         if (resultat.error) throw resultat.error;
         clientsAdminNarelvir = resultat.data || [];
         afficherClientsAdmin(clientsAdminNarelvir);
-        afficherMessageAdmin("Liste des clients actualisée.", "info");
+        afficherMessageAdmin("Données administrateur actualisées.", "info");
     } catch (erreur) {
         clientsAdminNarelvir = [];
         afficherClientsAdmin([]);
-        afficherMessageAdmin("L’espace administrateur doit encore être activé dans Supabase.", "erreur");
+        afficherMessageAdmin("La base du compte client doit être activée avec le fichier SQL fourni.", "erreur");
         console.error("Chargement des clients impossible :", erreur);
     } finally {
         bouton.disabled = false;
@@ -1369,11 +1659,478 @@ async function chargerClientsAdmin(utilisateur) {
     }
 }
 
-function afficherEtatCompte(utilisateur) {
+function formaterMontant(valeur) {
+    return Number(valeur || 0).toLocaleString("fr-FR");
+}
+
+function libelleStatutCommande(statut) {
+    const libelles = {
+        en_attente: "En attente",
+        confirmee: "Confirmée",
+        preparation: "En préparation",
+        expediee: "Expédiée",
+        livree: "Livrée",
+        annulee: "Annulée",
+        emise: "Émise",
+        payee: "Payée"
+    };
+    return libelles[statut] || statut || "En attente";
+}
+
+function creerBadgeStatut(statut) {
+    const badge = document.createElement("span");
+    badge.className = "badge-statut " + (statut || "en_attente");
+    badge.textContent = libelleStatutCommande(statut);
+    return badge;
+}
+
+function creerListeArticlesCommande(articles) {
+    const liste = document.createElement("ul");
+    liste.className = "commande-articles";
+    (articles || []).forEach(function(article) {
+        const ligne = document.createElement("li");
+        ligne.textContent = article.nom + " — " + article.quantite + " × " +
+            formaterMontant(article.prix) + " FCFA";
+        liste.appendChild(ligne);
+    });
+    return liste;
+}
+
+function afficherCommandesAdmin() {
+    const conteneur = document.getElementById("listeCommandesAdmin");
+    conteneur.replaceChildren();
+    document.getElementById("totalCommandesAdmin").textContent = String(commandesAdminNarelvir.length);
+
+    const statutsComptabilises = ["confirmee", "preparation", "expediee", "livree"];
+    const chiffreAffaires = commandesAdminNarelvir.reduce(function(total, commande) {
+        return total + (statutsComptabilises.includes(commande.statut) ? Number(commande.total || 0) : 0);
+    }, 0);
+    document.getElementById("chiffreAffairesAdmin").textContent = formaterMontant(chiffreAffaires);
+
+    if (!commandesAdminNarelvir.length) {
+        const vide = document.createElement("p");
+        vide.className = "compte-vide";
+        vide.textContent = "Aucune commande enregistrée.";
+        conteneur.appendChild(vide);
+        return;
+    }
+
+    const statuts = ["en_attente", "confirmee", "preparation", "expediee", "livree", "annulee"];
+    commandesAdminNarelvir.forEach(function(commande) {
+        const carte = document.createElement("article");
+        carte.className = "commande-carte";
+
+        const entete = document.createElement("div");
+        entete.className = "commande-entete";
+        const titre = document.createElement("h4");
+        titre.textContent = "Commande " + commande.numero;
+        entete.append(titre, creerBadgeStatut(commande.statut));
+        carte.appendChild(entete);
+        carte.appendChild(creerLigneAdmin("Client", commande.nom_client || "Client NARELVIR"));
+        carte.appendChild(creerLigneAdmin("Téléphone", commande.telephone));
+        carte.appendChild(creerLigneAdmin("Ville / adresse", [commande.ville, commande.adresse].filter(Boolean).join(" — ")));
+        carte.appendChild(creerLigneAdmin("Date", formaterDateAdmin(commande.created_at)));
+        carte.appendChild(creerLigneAdmin("Total", formaterMontant(commande.total) + " FCFA"));
+        carte.appendChild(creerListeArticlesCommande(commande.articles_commandes));
+
+        const actions = document.createElement("div");
+        actions.className = "admin-commande-actions";
+        const select = document.createElement("select");
+        select.setAttribute("aria-label", "Statut de la commande " + commande.numero);
+        statuts.forEach(function(statut) {
+            const option = document.createElement("option");
+            option.value = statut;
+            option.textContent = libelleStatutCommande(statut);
+            option.selected = statut === commande.statut;
+            select.appendChild(option);
+        });
+
+        const enregistrer = document.createElement("button");
+        enregistrer.type = "button";
+        enregistrer.className = "bouton-petit";
+        enregistrer.textContent = "Mettre à jour";
+        enregistrer.addEventListener("click", function() {
+            mettreAJourStatutCommande(commande.id, select.value, enregistrer);
+        });
+        actions.append(select, enregistrer);
+
+        const factureExistante = Array.isArray(commande.factures) ? commande.factures[0] : commande.factures;
+        if (factureExistante) {
+            const telecharger = document.createElement("button");
+            telecharger.type = "button";
+            telecharger.className = "bouton-petit vert";
+            telecharger.textContent = "Télécharger " + factureExistante.numero;
+            telecharger.addEventListener("click", function() { telechargerFacturePDF(factureExistante.id); });
+            actions.appendChild(telecharger);
+        } else {
+            const facturer = document.createElement("button");
+            facturer.type = "button";
+            facturer.className = "bouton-petit rouge";
+            facturer.textContent = "Créer la facture";
+            facturer.addEventListener("click", function() { creerFactureCommande(commande.id, facturer); });
+            actions.appendChild(facturer);
+        }
+
+        carte.appendChild(actions);
+        conteneur.appendChild(carte);
+    });
+}
+
+async function chargerCommandesAdmin(utilisateur) {
+    const utilisateurActuel = utilisateur || utilisateurConnecteNarelvir;
+    if (!clientSupabase || !estAdministrateurNarelvir(utilisateurActuel)) return;
+
+    const resultat = await clientSupabase
+        .from("commandes")
+        .select("id,numero,client_id,total,statut,nom_client,telephone,ville,adresse,note,created_at,articles_commandes(id,nom,prix,quantite,sous_total),factures(id,numero,statut)")
+        .order("created_at", { ascending: false });
+
+    if (resultat.error) throw resultat.error;
+    commandesAdminNarelvir = resultat.data || [];
+    afficherCommandesAdmin();
+}
+
+async function actualiserAdministration(utilisateur) {
+    const utilisateurActuel = utilisateur || utilisateurConnecteNarelvir;
+    if (!estAdministrateurNarelvir(utilisateurActuel)) return;
+    try {
+        await chargerClientsAdmin(utilisateurActuel);
+        await chargerCommandesAdmin(utilisateurActuel);
+    } catch (erreur) {
+        afficherMessageAdmin("La base complète doit encore être activée avec le fichier SQL.", "erreur");
+        console.error("Administration indisponible :", erreur);
+    }
+}
+
+async function mettreAJourStatutCommande(id, statut, bouton) {
+    bouton.disabled = true;
+    try {
+        const resultat = await clientSupabase
+            .from("commandes")
+            .update({ statut: statut, updated_at: new Date().toISOString() })
+            .eq("id", id);
+        if (resultat.error) throw resultat.error;
+        afficherMessageAdmin("Statut de la commande mis à jour.", "info");
+        await chargerCommandesAdmin(utilisateurConnecteNarelvir);
+        await chargerCommandesClient();
+    } catch (erreur) {
+        afficherMessageAdmin("Impossible de modifier cette commande.", "erreur");
+        console.error(erreur);
+    } finally {
+        bouton.disabled = false;
+    }
+}
+
+async function creerFactureCommande(commandeId, bouton) {
+    bouton.disabled = true;
+    bouton.textContent = "Création…";
+    try {
+        const resultat = await clientSupabase.rpc("creer_facture_admin", { p_commande_id: commandeId });
+        if (resultat.error) throw resultat.error;
+        afficherMessageAdmin("Facture créée et disponible dans le compte du client.", "info");
+        await chargerCommandesAdmin(utilisateurConnecteNarelvir);
+        await chargerFacturesClient();
+    } catch (erreur) {
+        afficherMessageAdmin("La facture n’a pas pu être créée.", "erreur");
+        console.error(erreur);
+    } finally {
+        bouton.disabled = false;
+        bouton.textContent = "Créer la facture";
+    }
+}
+
+function appliquerProfilDansInterface(profil, utilisateur) {
+    const metadata = utilisateur.user_metadata || {};
+    const nom = profil.nom || metadata.nom || "Client NARELVIR";
+    const telephone = profil.telephone || metadata.telephone || "";
+    const ville = profil.ville || metadata.ville || "";
+    const adresse = profil.adresse || metadata.adresse || "";
+    const localisation = [ville, adresse].filter(Boolean).join(" — ");
+
+    document.getElementById("profilNom").textContent = nom;
+    document.getElementById("profilEmail").textContent = utilisateur.email || profil.email || "";
+    document.getElementById("profilTelephone").textContent = telephone;
+    document.getElementById("ligneProfilTelephone").style.display = telephone ? "block" : "none";
+    document.getElementById("profilLocalisation").textContent = localisation;
+    document.getElementById("ligneProfilLocalisation").style.display = localisation ? "block" : "none";
+    document.getElementById("profilNomChamp").value = nom === "Client NARELVIR" ? "" : nom;
+    document.getElementById("profilTelephoneChamp").value = telephone;
+    document.getElementById("profilVilleChamp").value = ville;
+    document.getElementById("profilAdresseChamp").value = adresse;
+}
+
+async function chargerProfilClient(utilisateur) {
+    const resultat = await clientSupabase
+        .from("profils_clients")
+        .select("id,email,nom,telephone,ville,adresse,date_inscription,email_confirme")
+        .eq("id", utilisateur.id)
+        .maybeSingle();
+    if (resultat.error) throw resultat.error;
+
+    const metadata = utilisateur.user_metadata || {};
+    profilClientActuel = resultat.data || {
+        id: utilisateur.id,
+        email: utilisateur.email || "",
+        nom: metadata.nom || "",
+        telephone: metadata.telephone || "",
+        ville: metadata.ville || "",
+        adresse: metadata.adresse || ""
+    };
+
+    if (!resultat.data) {
+        const creation = await clientSupabase.from("profils_clients").upsert(profilClientActuel);
+        if (creation.error) throw creation.error;
+    }
+    appliquerProfilDansInterface(profilClientActuel, utilisateur);
+}
+
+async function enregistrerProfilClient(evenement) {
+    evenement.preventDefault();
+    if (!utilisateurConnecteNarelvir) return;
+    const formulaire = evenement.currentTarget;
+    const nom = document.getElementById("profilNomChamp").value.trim();
+    const telephone = document.getElementById("profilTelephoneChamp").value.trim();
+    const ville = document.getElementById("profilVilleChamp").value.trim();
+    const adresse = document.getElementById("profilAdresseChamp").value.trim();
+    const message = document.getElementById("messageProfilClient");
+    basculerBoutonFormulaire(formulaire, true);
+    message.className = "admin-message";
+
+    try {
+        const profil = { nom: nom, telephone: telephone, ville: ville, adresse: adresse, updated_at: new Date().toISOString() };
+        const resultatProfil = await clientSupabase.from("profils_clients").update(profil).eq("id", utilisateurConnecteNarelvir.id);
+        if (resultatProfil.error) throw resultatProfil.error;
+
+        const resultatAuth = await clientSupabase.auth.updateUser({ data: { nom: nom, telephone: telephone, ville: ville, adresse: adresse } });
+        if (resultatAuth.error) throw resultatAuth.error;
+
+        profilClientActuel = Object.assign({}, profilClientActuel || {}, profil);
+        utilisateurConnecteNarelvir = resultatAuth.data.user || utilisateurConnecteNarelvir;
+        appliquerProfilDansInterface(profilClientActuel, utilisateurConnecteNarelvir);
+        message.textContent = "Vos coordonnées ont été enregistrées.";
+        message.className = "admin-message visible info";
+    } catch (erreur) {
+        message.textContent = "Impossible d’enregistrer vos coordonnées. Vérifiez l’activation de la base.";
+        message.className = "admin-message visible erreur";
+        console.error(erreur);
+    } finally {
+        basculerBoutonFormulaire(formulaire, false);
+    }
+}
+
+function afficherCommandesClient() {
+    const conteneur = document.getElementById("listeCommandesClient");
+    conteneur.replaceChildren();
+    document.getElementById("nombreCommandesClient").textContent = String(commandesClientActuel.length);
+    document.getElementById("nombreCommandesCoursClient").textContent = String(
+        commandesClientActuel.filter(function(c) { return !["livree", "annulee"].includes(c.statut); }).length
+    );
+
+    if (!commandesClientActuel.length) {
+        const vide = document.createElement("p");
+        vide.className = "compte-vide";
+        vide.textContent = "Vous n’avez encore aucune commande enregistrée.";
+        conteneur.appendChild(vide);
+        return;
+    }
+
+    commandesClientActuel.forEach(function(commande) {
+        const carte = document.createElement("article");
+        carte.className = "commande-carte";
+        const entete = document.createElement("div");
+        entete.className = "commande-entete";
+        const titre = document.createElement("h4");
+        titre.textContent = commande.numero;
+        entete.append(titre, creerBadgeStatut(commande.statut));
+        carte.appendChild(entete);
+        carte.appendChild(creerLigneAdmin("Date", formaterDateAdmin(commande.created_at)));
+        carte.appendChild(creerLigneAdmin("Total", formaterMontant(commande.total) + " FCFA"));
+        carte.appendChild(creerListeArticlesCommande(commande.articles_commandes));
+
+        const recommander = document.createElement("button");
+        recommander.type = "button";
+        recommander.className = "bouton-petit";
+        recommander.textContent = "Ajouter de nouveau au panier";
+        recommander.addEventListener("click", function() { recommanderCommande(commande); });
+        carte.appendChild(recommander);
+        conteneur.appendChild(carte);
+    });
+}
+
+async function chargerCommandesClient() {
+    if (!utilisateurConnecteNarelvir) return;
+    const resultat = await clientSupabase
+        .from("commandes")
+        .select("id,numero,total,statut,created_at,articles_commandes(id,nom,prix,quantite,sous_total)")
+        .eq("client_id", utilisateurConnecteNarelvir.id)
+        .order("created_at", { ascending: false });
+    if (resultat.error) throw resultat.error;
+    commandesClientActuel = resultat.data || [];
+    afficherCommandesClient();
+}
+
+function recommanderCommande(commande) {
+    (commande.articles_commandes || []).forEach(function(article) {
+        const present = panier.find(function(item) { return item.nom === article.nom; });
+        if (present) present.quantite += Number(article.quantite || 1);
+        else panier.push({ nom: article.nom, prix: Number(article.prix), quantite: Number(article.quantite || 1) });
+    });
+    sauvegarderPanier();
+    afficherPanier();
+    document.getElementById("panier").scrollIntoView({ behavior: "smooth" });
+}
+
+function afficherFacturesClient() {
+    const conteneur = document.getElementById("listeFacturesClient");
+    conteneur.replaceChildren();
+    document.getElementById("nombreFacturesClient").textContent = String(facturesClientActuel.length);
+
+    if (!facturesClientActuel.length) {
+        const vide = document.createElement("p");
+        vide.className = "compte-vide";
+        vide.textContent = "Aucune facture disponible pour le moment.";
+        conteneur.appendChild(vide);
+        return;
+    }
+
+    facturesClientActuel.forEach(function(facture) {
+        const carte = document.createElement("article");
+        carte.className = "facture-carte";
+        const entete = document.createElement("div");
+        entete.className = "facture-entete";
+        const titre = document.createElement("h4");
+        titre.textContent = "Facture " + facture.numero;
+        entete.append(titre, creerBadgeStatut(facture.statut));
+        carte.appendChild(entete);
+        carte.appendChild(creerLigneAdmin("Date", formaterDateAdmin(facture.date_emission)));
+        carte.appendChild(creerLigneAdmin("Montant", formaterMontant(facture.montant) + " FCFA"));
+
+        const bouton = document.createElement("button");
+        bouton.type = "button";
+        bouton.className = "bouton-petit vert";
+        bouton.textContent = "Télécharger le PDF";
+        bouton.addEventListener("click", function() { telechargerFacturePDF(facture.id); });
+        carte.appendChild(bouton);
+        conteneur.appendChild(carte);
+    });
+}
+
+async function chargerFacturesClient() {
+    if (!utilisateurConnecteNarelvir) return;
+    const resultat = await clientSupabase
+        .from("factures")
+        .select("id,numero,commande_id,montant,statut,date_emission")
+        .eq("client_id", utilisateurConnecteNarelvir.id)
+        .order("date_emission", { ascending: false });
+    if (resultat.error) throw resultat.error;
+    facturesClientActuel = resultat.data || [];
+    afficherFacturesClient();
+}
+
+async function actualiserEspaceClient() {
+    if (!utilisateurConnecteNarelvir) return;
+    try {
+        await chargerCommandesClient();
+        await chargerFacturesClient();
+        afficherMessageAuth("Le suivi de votre compte a été actualisé.", "info");
+    } catch (erreur) {
+        afficherMessageAuth("Impossible d’actualiser le suivi pour le moment.", "erreur");
+        console.error(erreur);
+    }
+}
+
+async function telechargerFacturePDF(factureId) {
+    try {
+        if (!window.jspdf || !window.jspdf.jsPDF) throw new Error("Générateur PDF indisponible");
+        const factureResultat = await clientSupabase.from("factures").select("*").eq("id", factureId).single();
+        if (factureResultat.error) throw factureResultat.error;
+        const facture = factureResultat.data;
+
+        const commandeResultat = await clientSupabase.from("commandes").select("*").eq("id", facture.commande_id).single();
+        if (commandeResultat.error) throw commandeResultat.error;
+        const commande = commandeResultat.data;
+
+        const articlesResultat = await clientSupabase
+            .from("articles_commandes")
+            .select("nom,prix,quantite,sous_total")
+            .eq("commande_id", commande.id)
+            .order("id", { ascending: true });
+        if (articlesResultat.error) throw articlesResultat.error;
+
+        const doc = new window.jspdf.jsPDF({ unit: "mm", format: "a4" });
+        doc.setFillColor(7, 86, 163);
+        doc.rect(0, 0, 210, 34, "F");
+        doc.setTextColor(255, 255, 255);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(24);
+        doc.text("NARELVIR", 14, 17);
+        doc.setFontSize(10);
+        doc.text("Pièces Détachées & Lubrifiants", 14, 25);
+        doc.setTextColor(30, 30, 30);
+        doc.setFontSize(16);
+        doc.text("FACTURE " + facture.numero, 196, 18, { align: "right" });
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(9);
+        doc.text("NUI : " + NUI_NARELVIR, 14, 43);
+        doc.text("Nouvelle Route Brique, derrière l’Immeuble Ekan", 14, 49);
+        doc.text("Tél. 652 242 847 / 692 049 233 — narelvir.cm", 14, 55);
+        doc.setDrawColor(220, 220, 220);
+        doc.line(14, 61, 196, 61);
+
+        doc.setFont("helvetica", "bold");
+        doc.text("CLIENT", 14, 70);
+        doc.setFont("helvetica", "normal");
+        doc.text("Nom : " + (commande.nom_client || "Client NARELVIR"), 14, 77);
+        doc.text("Téléphone : " + (commande.telephone || "Non renseigné"), 14, 83);
+        doc.text("Adresse : " + ([commande.ville, commande.adresse].filter(Boolean).join(" — ") || "Non renseignée"), 14, 89);
+        doc.text("Commande : " + commande.numero, 196, 77, { align: "right" });
+        doc.text("Date : " + new Date(facture.date_emission).toLocaleDateString("fr-FR"), 196, 83, { align: "right" });
+
+        let y = 103;
+        doc.setFillColor(227, 27, 35);
+        doc.rect(14, y - 6, 182, 9, "F");
+        doc.setTextColor(255, 255, 255);
+        doc.setFont("helvetica", "bold");
+        doc.text("Désignation", 17, y);
+        doc.text("Qté", 132, y, { align: "right" });
+        doc.text("P.U.", 158, y, { align: "right" });
+        doc.text("Total", 193, y, { align: "right" });
+        doc.setTextColor(30, 30, 30);
+        doc.setFont("helvetica", "normal");
+        y += 10;
+
+        (articlesResultat.data || []).forEach(function(article) {
+            if (y > 267) { doc.addPage(); y = 20; }
+            const nom = String(article.nom || "Article").slice(0, 54);
+            doc.text(nom, 17, y);
+            doc.text(String(article.quantite), 132, y, { align: "right" });
+            doc.text(formaterMontant(article.prix), 158, y, { align: "right" });
+            doc.text(formaterMontant(article.sous_total), 193, y, { align: "right" });
+            doc.setDrawColor(235, 235, 235);
+            doc.line(14, y + 3, 196, y + 3);
+            y += 10;
+        });
+
+        y += 5;
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(14);
+        doc.text("TOTAL TTC : " + formaterMontant(facture.montant) + " FCFA", 196, y, { align: "right" });
+        doc.setFontSize(9);
+        doc.setFont("helvetica", "normal");
+        doc.text("Merci pour votre confiance.", 14, Math.min(y + 18, 285));
+        doc.save("Facture_NARELVIR_" + facture.numero + ".pdf");
+    } catch (erreur) {
+        afficherMessageAuth("La facture n’a pas pu être téléchargée.", "erreur");
+        console.error(erreur);
+    }
+}
+
+async function afficherEtatCompte(utilisateur) {
     const invite = document.getElementById("zoneAuthInvite");
     const compte = document.getElementById("zoneCompteConnecte");
     const reinitialisation = document.getElementById("zoneNouveauMotDePasse");
     const administration = document.getElementById("zoneAdminNarelvir");
+    utilisateurConnecteNarelvir = utilisateur || null;
 
     if (!utilisateur) {
         invite.classList.remove("cache");
@@ -1381,24 +2138,46 @@ function afficherEtatCompte(utilisateur) {
         reinitialisation.classList.add("cache");
         administration.classList.add("cache");
         clientsAdminNarelvir = [];
+        commandesAdminNarelvir = [];
+        commandesClientActuel = [];
+        facturesClientActuel = [];
+        profilClientActuel = null;
         return;
     }
 
     const metadata = utilisateur.user_metadata || {};
-    document.getElementById("profilNom").textContent = metadata.nom || "Client NARELVIR";
-    document.getElementById("profilEmail").textContent = utilisateur.email || "";
-    document.getElementById("profilTelephone").textContent = metadata.telephone || "";
-    document.getElementById("ligneProfilTelephone").style.display = metadata.telephone ? "block" : "none";
+    appliquerProfilDansInterface({
+        email: utilisateur.email || "",
+        nom: metadata.nom || "",
+        telephone: metadata.telephone || "",
+        ville: metadata.ville || "",
+        adresse: metadata.adresse || ""
+    }, utilisateur);
     invite.classList.add("cache");
     compte.classList.remove("cache");
     reinitialisation.classList.add("cache");
 
+    try {
+        await chargerProfilClient(utilisateur);
+        await synchroniserPanierCompte();
+        await chargerCommandesClient();
+        await chargerFacturesClient();
+    } catch (erreur) {
+        commandesClientActuel = [];
+        facturesClientActuel = [];
+        afficherCommandesClient();
+        afficherFacturesClient();
+        afficherMessageAuth("Compte connecté. Exécutez le fichier SQL fourni pour activer le panier synchronisé, les commandes et les factures.", "erreur");
+        console.error("Espace client incomplet :", erreur);
+    }
+
     if (estAdministrateurNarelvir(utilisateur)) {
         administration.classList.remove("cache");
-        chargerClientsAdmin(utilisateur);
+        await actualiserAdministration(utilisateur);
     } else {
         administration.classList.add("cache");
         clientsAdminNarelvir = [];
+        commandesAdminNarelvir = [];
     }
 }
 
@@ -1532,7 +2311,7 @@ async function initialiserCompteClient() {
     }
 
     const resultat = await clientSupabase.auth.getSession();
-    afficherEtatCompte(resultat.data.session ? resultat.data.session.user : null);
+    await afficherEtatCompte(resultat.data.session ? resultat.data.session.user : null);
 
     clientSupabase.auth.onAuthStateChange(function(evenement, session) {
         if (evenement === "PASSWORD_RECOVERY") {
@@ -1544,7 +2323,9 @@ async function initialiserCompteClient() {
             return;
         }
 
-        afficherEtatCompte(session ? session.user : null);
+        window.setTimeout(function() {
+            afficherEtatCompte(session ? session.user : null);
+        }, 0);
     });
 }
 
@@ -1593,11 +2374,68 @@ function chargerPanier() {
     }
 }
 
+function normaliserArticlesPanier(articles) {
+    if (!Array.isArray(articles)) return [];
+    return articles.filter(function(article) {
+        return article && typeof article.nom === "string" && Number(article.prix) >= 0 && Number(article.quantite) > 0;
+    }).map(function(article) {
+        return {
+            nom: article.nom.trim(),
+            prix: Number(article.prix),
+            quantite: Math.floor(Number(article.quantite))
+        };
+    });
+}
+
+async function sauvegarderPanierServeur() {
+    if (!clientSupabase || !utilisateurConnecteNarelvir) return;
+    const resultat = await clientSupabase.from("paniers_clients").upsert({
+        client_id: utilisateurConnecteNarelvir.id,
+        articles: normaliserArticlesPanier(panier),
+        updated_at: new Date().toISOString()
+    }, { onConflict: "client_id" });
+    if (resultat.error) throw resultat.error;
+}
+
+async function synchroniserPanierCompte() {
+    if (!clientSupabase || !utilisateurConnecteNarelvir) return;
+    const resultat = await clientSupabase
+        .from("paniers_clients")
+        .select("articles")
+        .eq("client_id", utilisateurConnecteNarelvir.id)
+        .maybeSingle();
+    if (resultat.error) throw resultat.error;
+
+    const distant = normaliserArticlesPanier(resultat.data ? resultat.data.articles : []);
+    const local = normaliserArticlesPanier(panier);
+    const fusion = new Map();
+
+    distant.concat(local).forEach(function(article) {
+        const existant = fusion.get(article.nom);
+        if (!existant) {
+            fusion.set(article.nom, Object.assign({}, article));
+        } else {
+            existant.prix = article.prix;
+            existant.quantite = Math.max(existant.quantite, article.quantite);
+        }
+    });
+
+    panier = Array.from(fusion.values());
+    localStorage.setItem(CLE_PANIER, JSON.stringify(panier));
+    afficherPanier();
+    await sauvegarderPanierServeur();
+}
+
 function sauvegarderPanier() {
     try {
         localStorage.setItem(CLE_PANIER, JSON.stringify(panier));
     } catch (erreur) {
         console.warn("Le panier n'a pas pu être sauvegardé.");
+    }
+    if (utilisateurConnecteNarelvir) {
+        sauvegarderPanierServeur().catch(function(erreur) {
+            console.warn("Le panier n’a pas pu être synchronisé.", erreur);
+        });
     }
 }
 
@@ -1731,27 +2569,84 @@ function viderPanier() {
     }
 }
 
-function commanderPanierWhatsApp() {
-    if (panier.length === 0) return;
+async function commanderPanierWhatsApp() {
+    if (panier.length === 0 || commandeEnCours) return;
 
-    let total = 0;
-    const lignes = panier.map(function(article) {
-        const sousTotal = article.prix * article.quantite;
-        total += sousTotal;
-        return "• " + article.nom + " — " + article.quantite + " × " + article.prix.toLocaleString("fr-FR") + " FCFA = " + sousTotal.toLocaleString("fr-FR") + " FCFA";
-    });
+    if (!utilisateurConnecteNarelvir) {
+        afficherMessageAuth("Connectez-vous ou créez un compte pour enregistrer et suivre votre commande.", "info");
+        document.getElementById("connexion").scrollIntoView({ behavior: "smooth" });
+        return;
+    }
 
-    const message = [
-        "Bonjour NARELVIR, je souhaite commander :",
-        "",
-        ...lignes,
-        "",
-        "TOTAL : " + total.toLocaleString("fr-FR") + " FCFA",
-        "",
-        "Merci de me confirmer la disponibilité et la livraison."
-    ].join("\n");
+    if (!profilClientActuel || !profilClientActuel.telephone) {
+        afficherMessageAuth("Ajoutez votre numéro de téléphone dans vos coordonnées avant de commander.", "info");
+        document.getElementById("profilTelephoneChamp").focus();
+        document.getElementById("connexion").scrollIntoView({ behavior: "smooth" });
+        return;
+    }
 
-    window.open("https://wa.me/" + NUMERO_WHATSAPP + "?text=" + encodeURIComponent(message), "_blank", "noopener");
+    commandeEnCours = true;
+    const bouton = document.getElementById("commanderPanier");
+    bouton.disabled = true;
+    bouton.textContent = "Enregistrement de la commande…";
+    const fenetreWhatsApp = window.open("about:blank", "_blank");
+
+    const articlesAvantCommande = normaliserArticlesPanier(panier);
+
+    try {
+        const resultat = await clientSupabase.rpc("creer_commande", {
+            p_articles: articlesAvantCommande,
+            p_nom: profilClientActuel.nom || null,
+            p_telephone: profilClientActuel.telephone || null,
+            p_ville: profilClientActuel.ville || null,
+            p_adresse: profilClientActuel.adresse || null,
+            p_note: "Commande envoyée depuis narelvir.cm"
+        });
+        if (resultat.error) throw resultat.error;
+
+        const commande = resultat.data || {};
+        let total = 0;
+        const lignes = articlesAvantCommande.map(function(article) {
+            const sousTotal = article.prix * article.quantite;
+            total += sousTotal;
+            return "• " + article.nom + " — " + article.quantite + " × " +
+                formaterMontant(article.prix) + " FCFA = " + formaterMontant(sousTotal) + " FCFA";
+        });
+
+        const localisation = [profilClientActuel.ville, profilClientActuel.adresse].filter(Boolean).join(" — ");
+        const message = [
+            "Bonjour NARELVIR, je souhaite confirmer ma commande " + (commande.numero || ""),
+            "",
+            ...lignes,
+            "",
+            "TOTAL : " + formaterMontant(commande.total || total) + " FCFA",
+            "Client : " + (profilClientActuel.nom || "Client NARELVIR"),
+            "Téléphone : " + profilClientActuel.telephone,
+            localisation ? "Livraison : " + localisation : "",
+            "",
+            "Merci de confirmer la disponibilité et la livraison."
+        ].filter(Boolean).join("\n");
+
+        panier = [];
+        localStorage.setItem(CLE_PANIER, "[]");
+        afficherPanier();
+        await chargerCommandesClient();
+        if (estAdministrateurNarelvir(utilisateurConnecteNarelvir)) await chargerCommandesAdmin(utilisateurConnecteNarelvir);
+        afficherMessageAuth("Commande " + (commande.numero || "") + " enregistrée. Vous pouvez la suivre dans votre compte.", "succes");
+
+        const urlWhatsApp = "https://wa.me/" + NUMERO_WHATSAPP + "?text=" + encodeURIComponent(message);
+        if (fenetreWhatsApp) fenetreWhatsApp.location.replace(urlWhatsApp);
+        else window.location.href = urlWhatsApp;
+    } catch (erreur) {
+        if (fenetreWhatsApp) fenetreWhatsApp.close();
+        afficherMessageAuth("La commande n’a pas pu être enregistrée. Vérifiez que le fichier SQL a bien été exécuté.", "erreur");
+        document.getElementById("connexion").scrollIntoView({ behavior: "smooth" });
+        console.error("Commande impossible :", erreur);
+    } finally {
+        commandeEnCours = false;
+        bouton.textContent = "💬 Commander le panier sur WhatsApp";
+        bouton.disabled = panier.length === 0;
+    }
 }
 
 function ouvrirMenu() {
