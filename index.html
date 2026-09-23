@@ -459,6 +459,29 @@ h2{
     cursor:not-allowed;
 }
 
+.consentement-whatsapp{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    max-width:760px;
+    margin:14px auto;
+    padding:12px 14px;
+    border:1px solid #b9d7c5;
+    border-radius:10px;
+    background:#effaf3;
+    color:#174d2c;
+    line-height:1.4;
+    text-align:left;
+}
+
+.consentement-whatsapp input{
+    width:22px !important;
+    min-width:22px;
+    min-height:22px !important;
+    margin:1px 0 0;
+    accent-color:#16834b;
+}
+
 /* ===== COMPTE CLIENT ===== */
 .compte-intro{
     max-width:620px;
@@ -1477,8 +1500,9 @@ footer{
         <p>Votre panier est vide.</p>
     </div>
     <p class="total-panier"><strong>Total : <span id="total-panier">0</span> FCFA</strong></p>
+    <p>Votre commande sera enregistrée dans votre compte. NARELVIR pourra ensuite vous envoyer son compte rendu sur WhatsApp.</p>
     <div class="actions-panier">
-        <button type="button" id="commanderPanier" class="commander-panier" onclick="commanderPanierWhatsApp()" disabled>💬 Commander le panier sur WhatsApp</button>
+        <button type="button" id="commanderPanier" class="commander-panier" onclick="commanderPanierWhatsApp()" disabled>✅ Enregistrer ma commande</button>
         <button type="button" id="viderPanier" class="vider-panier" onclick="viderPanier()" disabled>🗑️ Vider le panier</button>
     </div>
 </section>
@@ -1608,9 +1632,16 @@ footer{
             </div>
 
             <details class="vente-boutique" id="zoneVenteBoutique">
-                <summary>➕ Nouvelle vente sur place</summary>
+                <summary>➕ Nouvelle facture — client sur place ou à distance</summary>
                 <form class="vente-boutique-formulaire" id="formVenteBoutique" onsubmit="enregistrerVenteBoutique(event)">
                     <div class="vente-boutique-grille">
+                        <div>
+                            <label for="venteBoutiqueOrigine">Type de vente *</label>
+                            <select id="venteBoutiqueOrigine" required onchange="adapterFormulaireVenteDistance()">
+                                <option value="distance">Client à distance</option>
+                                <option value="boutique">Client sur place</option>
+                            </select>
+                        </div>
                         <div>
                             <label for="venteBoutiqueNom">Nom du client *</label>
                             <input type="text" id="venteBoutiqueNom" required placeholder="Ex. Charles">
@@ -1626,6 +1657,10 @@ footer{
                         <div>
                             <label for="venteBoutiqueAdresse">Adresse</label>
                             <input type="text" id="venteBoutiqueAdresse" placeholder="Quartier ou lieu de livraison">
+                        </div>
+                        <div>
+                            <label for="venteBoutiqueTransport">Frais de transport</label>
+                            <input type="number" id="venteBoutiqueTransport" min="0" step="1" value="0" inputmode="numeric" oninput="calculerTotalVenteBoutique()">
                         </div>
                     </div>
 
@@ -1663,13 +1698,17 @@ footer{
                             <textarea id="venteBoutiqueNote" placeholder="Informations utiles sur la vente ou la créance"></textarea>
                         </div>
                     </div>
-                    <div class="signature-zone">
-                        <strong>Signature du client (facultative)</strong>
+                    <label class="consentement-whatsapp" id="zoneAccordWhatsAppVente" for="venteBoutiqueAccordWhatsApp">
+                        <input type="checkbox" id="venteBoutiqueAccordWhatsApp">
+                        <span>Le client accepte de recevoir son compte rendu sur WhatsApp (envoi manuel).</span>
+                    </label>
+                    <div class="signature-zone" id="zoneSignatureVenteBoutique">
+                        <strong>Signature du client sur place (facultative)</strong>
                         <canvas id="signatureVenteBoutique" width="700" height="220" aria-label="Zone de signature du client"></canvas>
                         <button type="button" class="bouton-petit rouge" onclick="effacerSignatureVenteBoutique()">Effacer la signature</button>
                     </div>
                     <div id="messageVenteBoutique" class="admin-message" role="status" aria-live="polite"></div>
-                    <button type="submit" class="auth-bouton">Enregistrer la vente et créer la facture</button>
+                    <button type="submit" class="auth-bouton">Enregistrer et créer la facture</button>
                 </form>
             </details>
 
@@ -1689,6 +1728,7 @@ footer{
                     <option value="en_retard">Créances en retard</option>
                     <option value="creances">Toutes les créances</option>
                     <option value="payees">Payées</option>
+                    <option value="distance">Clients à distance</option>
                     <option value="boutique">Ventes sur place</option>
                     <option value="site">Commandes en ligne</option>
                 </select>
@@ -1945,6 +1985,21 @@ function libelleStatutCommande(statut) {
     return libelles[statut] || statut || "En attente";
 }
 
+function libelleOrigineCommande(origine) {
+    const libelles = {
+        distance: "À distance",
+        boutique: "Sur place",
+        site: "Site web"
+    };
+    return libelles[origine] || "En ligne";
+}
+
+function titreOrigineCommande(origine) {
+    if (origine === "distance") return "Vente à distance ";
+    if (origine === "boutique") return "Vente sur place ";
+    return "Commande ";
+}
+
 function creerBadgeStatut(statut) {
     const badge = document.createElement("span");
     badge.className = "badge-statut " + (statut || "en_attente");
@@ -2013,6 +2068,30 @@ function creerListeArticlesCommande(articles) {
 
 let numeroLigneVenteBoutique = 0;
 let signatureVenteBoutiqueTracee = false;
+
+function adapterFormulaireVenteDistance() {
+    const origine = document.getElementById("venteBoutiqueOrigine");
+    if (!origine) return;
+    const aDistance = origine.value === "distance";
+    const telephone = document.getElementById("venteBoutiqueTelephone");
+    const ville = document.getElementById("venteBoutiqueVille");
+    const adresse = document.getElementById("venteBoutiqueAdresse");
+    const zoneSignature = document.getElementById("zoneSignatureVenteBoutique");
+    const zoneAccordWhatsApp = document.getElementById("zoneAccordWhatsAppVente");
+    const accordWhatsApp = document.getElementById("venteBoutiqueAccordWhatsApp");
+    telephone.required = aDistance;
+    ville.required = aDistance;
+    telephone.placeholder = aDistance ? "WhatsApp du client *" : "6XX XXX XXX";
+    ville.placeholder = aDistance ? "Ville de livraison *" : "Ex. Yaoundé";
+    adresse.placeholder = aDistance ? "Quartier, agence ou lieu de livraison" : "Quartier du client";
+    if (zoneSignature) zoneSignature.classList.toggle("cache", aDistance);
+    if (zoneAccordWhatsApp) zoneAccordWhatsApp.classList.toggle("cache", !aDistance);
+    if (accordWhatsApp) {
+        accordWhatsApp.required = false;
+        if (!aDistance) accordWhatsApp.checked = false;
+    }
+    if (aDistance) effacerSignatureVenteBoutique();
+}
 
 function initialiserSignatureVenteBoutique() {
     const canvas = document.getElementById("signatureVenteBoutique");
@@ -2153,10 +2232,13 @@ function lireArticlesVenteBoutique() {
 }
 
 function calculerTotalVenteBoutique() {
-    const total = lireArticlesVenteBoutique().reduce(function(somme, article) {
+    const sousTotalArticles = lireArticlesVenteBoutique().reduce(function(somme, article) {
         if (!Number.isFinite(article.prix) || !Number.isFinite(article.quantite)) return somme;
         return somme + article.prix * article.quantite;
     }, 0);
+    const champTransport = document.getElementById("venteBoutiqueTransport");
+    const transport = Math.max(Number(champTransport ? champTransport.value : 0) || 0, 0);
+    const total = sousTotalArticles + transport;
     const zone = document.getElementById("totalVenteBoutique");
     if (zone) zone.textContent = formaterMontant(total);
     return total;
@@ -2167,11 +2249,18 @@ async function enregistrerVenteBoutique(evenement) {
     if (!estAdministrateurNarelvir(utilisateurConnecteNarelvir)) return;
 
     const formulaire = evenement.currentTarget;
-    const articles = lireArticlesVenteBoutique();
+    const articlesSaisis = lireArticlesVenteBoutique();
+    const fraisTransport = Math.max(Number(document.getElementById("venteBoutiqueTransport").value || 0), 0);
+    const articles = articlesSaisis.slice();
+    if (fraisTransport > 0) {
+        articles.push({ nom: "Frais de transport", quantite: 1, prix: fraisTransport });
+    }
     const total = calculerTotalVenteBoutique();
     const montantPaye = Number(document.getElementById("venteBoutiqueMontantPaye").value || 0);
+    const origineVente = document.getElementById("venteBoutiqueOrigine").value;
+    const accordWhatsApp = document.getElementById("venteBoutiqueAccordWhatsApp").checked;
 
-    if (!articles.length || articles.some(function(a) { return !a.nom || a.quantite <= 0 || a.prix < 0; })) {
+    if (!articlesSaisis.length || articlesSaisis.some(function(a) { return !a.nom || a.quantite <= 0 || a.prix < 0; })) {
         afficherMessageVenteBoutique("Vérifiez le nom, la quantité et le prix de chaque article.", "erreur");
         return;
     }
@@ -2182,8 +2271,9 @@ async function enregistrerVenteBoutique(evenement) {
 
     basculerBoutonFormulaire(formulaire, true);
     try {
-        const resultat = await clientSupabase.rpc("creer_vente_boutique", {
+        const resultat = await clientSupabase.rpc("creer_vente_admin", {
             p_articles: articles,
+            p_origine: origineVente,
             p_nom: document.getElementById("venteBoutiqueNom").value.trim(),
             p_telephone: document.getElementById("venteBoutiqueTelephone").value.trim() || null,
             p_ville: document.getElementById("venteBoutiqueVille").value.trim() || null,
@@ -2198,18 +2288,23 @@ async function enregistrerVenteBoutique(evenement) {
         if (resultat.error) throw resultat.error;
 
         const vente = resultat.data || {};
+        const resultatWhatsApp = origineVente === "distance" && accordWhatsApp
+            ? " Retrouvez cette commande ci-dessous et appuyez sur « Préparer le compte rendu WhatsApp » pour l’envoyer."
+            : "";
         formulaire.reset();
         effacerSignatureVenteBoutique();
         document.getElementById("articlesVenteBoutique").replaceChildren();
         ajouterLigneVenteBoutique();
+        adapterFormulaireVenteDistance();
         afficherMessageVenteBoutique(
-            "Vente " + (vente.numero || "") + " enregistrée. Reste à payer : " +
-            formaterMontant(vente.reste_a_payer || 0) + " FCFA.",
+            "Vente " + (vente.numero || "") + " enregistrée et facture " +
+            (vente.facture_numero || "") + " créée. Reste à payer : " +
+            formaterMontant(vente.reste_a_payer || 0) + " FCFA. Vous pouvez la télécharger ci-dessous." + resultatWhatsApp,
             "info"
         );
         await actualiserAdministration(utilisateurConnecteNarelvir);
     } catch (erreur) {
-        afficherMessageVenteBoutique("Impossible d’enregistrer la vente. Exécutez le nouveau fichier SQL d’activation.", "erreur");
+        afficherMessageVenteBoutique("Impossible d’enregistrer la vente. Exécutez le fichier SQL mis à jour dans Supabase.", "erreur");
         console.error("Vente boutique impossible :", erreur);
     } finally {
         basculerBoutonFormulaire(formulaire, false);
@@ -2249,8 +2344,9 @@ function afficherCommandesAdmin() {
         if (filtre === "en_retard") return statutPaiementCommande(commande) === "en_retard";
         if (filtre === "creances") return Number(commande.reste_a_payer || 0) > 0 && commande.statut !== "annulee";
         if (filtre === "payees") return Number(commande.reste_a_payer || 0) <= 0;
+        if (filtre === "distance") return commande.origine === "distance";
         if (filtre === "boutique") return commande.origine === "boutique";
-        if (filtre === "site") return commande.origine !== "boutique";
+        if (filtre === "site") return commande.origine === "site";
         return true;
     });
 
@@ -2272,10 +2368,10 @@ function afficherCommandesAdmin() {
         const entete = document.createElement("div");
         entete.className = "commande-entete";
         const titre = document.createElement("h4");
-        titre.textContent = (commande.origine === "boutique" ? "Vente boutique " : "Commande ") + commande.numero;
+        titre.textContent = titreOrigineCommande(commande.origine) + commande.numero;
         const origine = document.createElement("span");
         origine.className = "admin-badge";
-        origine.textContent = commande.origine === "boutique" ? "Sur place" : "En ligne";
+        origine.textContent = libelleOrigineCommande(commande.origine);
         entete.append(titre, origine, creerBadgeStatut(commande.statut), creerBadgeStatut(statutPaiementCommande(commande)));
         carte.appendChild(entete);
         carte.appendChild(creerLigneAdmin("Client", commande.nom_client || "Client NARELVIR"));
@@ -2312,6 +2408,15 @@ function afficherCommandesAdmin() {
             mettreAJourStatutCommande(commande.id, select.value, enregistrer);
         });
         actions.append(select, enregistrer);
+
+        if (commande.origine === "distance" && commande.telephone) {
+            const compteRendu = document.createElement("button");
+            compteRendu.type = "button";
+            compteRendu.className = "bouton-petit whatsapp-relance";
+            compteRendu.textContent = "💬 Préparer le compte rendu WhatsApp";
+            compteRendu.addEventListener("click", function() { envoyerCompteRenduManuelWhatsApp(commande); });
+            actions.appendChild(compteRendu);
+        }
 
         if (commande.statut !== "annulee") {
             const paiement = document.createElement("div");
@@ -2384,6 +2489,14 @@ function afficherCommandesAdmin() {
             telecharger.textContent = "Télécharger " + factureExistante.numero;
             telecharger.addEventListener("click", function() { telechargerFacturePDF(factureExistante.id); });
             actions.appendChild(telecharger);
+            if (commande.telephone) {
+                const envoyer = document.createElement("button");
+                envoyer.type = "button";
+                envoyer.className = "bouton-petit whatsapp-relance";
+                envoyer.textContent = "💬 Envoyer au client";
+                envoyer.addEventListener("click", function() { envoyerFactureWhatsApp(commande, factureExistante); });
+                actions.appendChild(envoyer);
+            }
         } else {
             const facturer = document.createElement("button");
             facturer.type = "button";
@@ -2492,6 +2605,71 @@ function relancerClientWhatsApp(commande) {
         "NARELVIR — narelvir.cm"
     ].join("\n\n");
     window.open("https://wa.me/" + numero + "?text=" + encodeURIComponent(message), "_blank");
+}
+
+function envoyerFactureWhatsApp(commande, facture) {
+    const telephone = String(commande.telephone || "").replace(/\D/g, "");
+    if (!telephone) {
+        afficherMessageAdmin("Le numéro WhatsApp du client n’est pas renseigné.", "erreur");
+        return;
+    }
+    const numero = telephone.startsWith("237") ? telephone : "237" + telephone.replace(/^0+/, "");
+    const message = [
+        "Bonjour " + (commande.nom_client || "cher client") + ",",
+        "Votre facture NARELVIR " + (facture.numero || "") + " est prête.",
+        "Montant total : " + formaterMontant(commande.total) + " FCFA.",
+        "Montant payé : " + formaterMontant(commande.montant_paye) + " FCFA.",
+        "Reste à payer : " + formaterMontant(commande.reste_a_payer) + " FCFA.",
+        "Nous vous envoyons le document PDF dans cette conversation.",
+        "NARELVIR — narelvir.cm — 652 242 847"
+    ].join("\n\n");
+    window.open("https://wa.me/" + numero + "?text=" + encodeURIComponent(message), "_blank");
+}
+
+function envoyerCompteRenduManuelWhatsApp(commande) {
+    const chiffres = String(commande.telephone || "").replace(/\D/g, "");
+    const numero = chiffres.startsWith("237") ? chiffres : "237" + chiffres.replace(/^0+/, "");
+    if (!/^2376\d{8}$/.test(numero)) {
+        afficherMessageAdmin("Vérifiez le numéro WhatsApp camerounais du client avant l’envoi.", "erreur");
+        return;
+    }
+    const articles = (commande.articles_commandes || []).map(function(article) {
+        const quantite = Number(article.quantite || 0);
+        const prix = Number(article.prix || 0);
+        return "• " + article.nom + " : " + quantite + " × " + formaterMontant(prix) +
+            " = " + formaterMontant(quantite * prix) + " FCFA";
+    });
+    const message = [
+        "Bonjour " + (commande.nom_client || "cher client") + ",",
+        "Voici le compte rendu de votre commande NARELVIR " + (commande.numero || "") + " :",
+        articles.length ? articles.join("\n") : "Articles : consultez votre commande sur narelvir.cm.",
+        "Total : " + formaterMontant(commande.total) + " FCFA",
+        "Déjà payé : " + formaterMontant(commande.montant_paye) + " FCFA",
+        "Reste à payer : " + formaterMontant(commande.reste_a_payer) + " FCFA",
+        commande.date_echeance ? "Date limite : " + new Date(commande.date_echeance + "T00:00:00").toLocaleDateString("fr-FR") : "",
+        "NARELVIR — narelvir.cm — 652 242 847"
+    ].filter(Boolean).join("\n\n");
+    window.open("https://wa.me/" + numero + "?text=" + encodeURIComponent(message), "_blank");
+}
+
+async function autoriserEtEnvoyerCompteRenduWhatsApp(commandeId) {
+    if (!clientSupabase || !utilisateurConnecteNarelvir) {
+        throw new Error("Connexion au compte requise");
+    }
+
+    const autorisation = await clientSupabase.rpc("autoriser_whatsapp_commande", {
+        p_commande_id: commandeId
+    });
+    if (autorisation.error) throw autorisation.error;
+
+    const envoi = await clientSupabase.functions.invoke("envoyer-compte-rendu-whatsapp", {
+        body: { commande_id: commandeId }
+    });
+    if (envoi.error) throw envoi.error;
+    if (!envoi.data || envoi.data.ok !== true) {
+        throw new Error(envoi.data && envoi.data.error ? envoi.data.error : "Envoi WhatsApp refusé");
+    }
+    return envoi.data;
 }
 
 async function creerFactureCommande(commandeId, bouton) {
@@ -2956,6 +3134,7 @@ async function afficherEtatCompte(utilisateur) {
         if (!document.getElementById("articlesVenteBoutique").children.length) {
             ajouterLigneVenteBoutique();
         }
+        adapterFormulaireVenteDistance();
         await actualiserAdministration(utilisateur);
     } else {
         administration.classList.add("cache");
@@ -3372,7 +3551,6 @@ async function commanderPanierWhatsApp() {
     const bouton = document.getElementById("commanderPanier");
     bouton.disabled = true;
     bouton.textContent = "Enregistrement de la commande…";
-    const fenetreWhatsApp = window.open("about:blank", "_blank");
 
     const articlesAvantCommande = normaliserArticlesPanier(panier);
 
@@ -3388,46 +3566,22 @@ async function commanderPanierWhatsApp() {
         if (resultat.error) throw resultat.error;
 
         const commande = resultat.data || {};
-        let total = 0;
-        const lignes = articlesAvantCommande.map(function(article) {
-            const sousTotal = article.prix * article.quantite;
-            total += sousTotal;
-            return "• " + article.nom + " — " + article.quantite + " × " +
-                formaterMontant(article.prix) + " FCFA = " + formaterMontant(sousTotal) + " FCFA";
-        });
-
-        const localisation = [profilClientActuel.ville, profilClientActuel.adresse].filter(Boolean).join(" — ");
-        const message = [
-            "Bonjour NARELVIR, je souhaite confirmer ma commande " + (commande.numero || ""),
-            "",
-            ...lignes,
-            "",
-            "TOTAL : " + formaterMontant(commande.total || total) + " FCFA",
-            "Client : " + (profilClientActuel.nom || "Client NARELVIR"),
-            "Téléphone : " + profilClientActuel.telephone,
-            localisation ? "Livraison : " + localisation : "",
-            "",
-            "Merci de confirmer la disponibilité et la livraison."
-        ].filter(Boolean).join("\n");
-
         panier = [];
         localStorage.setItem(CLE_PANIER, "[]");
         afficherPanier();
         await chargerCommandesClient();
         if (estAdministrateurNarelvir(utilisateurConnecteNarelvir)) await chargerCommandesAdmin(utilisateurConnecteNarelvir);
-        afficherMessageAuth("Commande " + (commande.numero || "") + " enregistrée. Vous pouvez la suivre dans votre compte.", "succes");
-
-        const urlWhatsApp = "https://wa.me/" + NUMERO_WHATSAPP + "?text=" + encodeURIComponent(message);
-        if (fenetreWhatsApp) fenetreWhatsApp.location.replace(urlWhatsApp);
-        else window.location.href = urlWhatsApp;
+        afficherMessageAuth(
+            "Commande " + (commande.numero || "") + " enregistrée. NARELVIR pourra vous envoyer le compte rendu sur WhatsApp après vérification.",
+            "info"
+        );
     } catch (erreur) {
-        if (fenetreWhatsApp) fenetreWhatsApp.close();
         afficherMessageAuth("La commande n’a pas pu être enregistrée. Vérifiez que le fichier SQL a bien été exécuté.", "erreur");
         document.getElementById("connexion").scrollIntoView({ behavior: "smooth" });
         console.error("Commande impossible :", erreur);
     } finally {
         commandeEnCours = false;
-        bouton.textContent = "💬 Commander le panier sur WhatsApp";
+        bouton.textContent = "✅ Enregistrer ma commande";
         bouton.disabled = panier.length === 0;
     }
 }
@@ -3464,6 +3618,7 @@ if ((location.hostname === "narelvir.cm" || location.hostname === "www.narelvir.
 
 afficherPanier();
 initialiserSignatureVenteBoutique();
+adapterFormulaireVenteDistance();
 initialiserCompteClient();
 </script>
 
