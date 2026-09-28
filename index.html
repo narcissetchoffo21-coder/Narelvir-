@@ -4,12 +4,58 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="NARELVIR : pièces détachées moto, lubrifiants et équipements motorisés à Yaoundé.">
+<meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="theme-color" content="#0756a3">
+<link rel="canonical" href="https://www.narelvir.cm/">
 <link rel="manifest" href="https://narelvir.cm/manifest.json">
 <link rel="icon" type="image/png" sizes="512x512" href="https://narelvir.cm/icon-512.png">
 <link rel="apple-touch-icon" href="https://narelvir.cm/icon-512.png">
 
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_CM">
+<meta property="og:site_name" content="NARELVIR">
+<meta property="og:title" content="NARELVIR - Pièces Détachées &amp; Lubrifiants">
+<meta property="og:description" content="Pièces moto, lubrifiants et équipements motorisés à Yaoundé. Vente en gros et détail, commande rapide sur WhatsApp.">
+<meta property="og:url" content="https://www.narelvir.cm/">
+<meta property="og:image" content="https://www.narelvir.cm/icon-512.png">
+<meta property="og:image:alt" content="Logo NARELVIR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="NARELVIR - Pièces Détachées &amp; Lubrifiants">
+<meta name="twitter:description" content="Pièces moto, lubrifiants et équipements motorisés à Yaoundé.">
+<meta name="twitter:image" content="https://www.narelvir.cm/icon-512.png">
+
 <title>NARELVIR - Pièces Détachées &amp; Lubrifiants</title>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "AutoPartsStore",
+  "name": "NARELVIR - Pièces Détachées & Lubrifiants",
+  "url": "https://www.narelvir.cm/",
+  "logo": "https://www.narelvir.cm/icon-512.png",
+  "image": "https://www.narelvir.cm/icon-512.png",
+  "description": "Vente de pièces détachées moto, lubrifiants et équipements motorisés en gros et détail.",
+  "telephone": ["+237652242847", "+237692049233"],
+  "priceRange": "FCFA",
+  "currenciesAccepted": "XAF",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Nouvelle Route Brique, derrière l’Immeuble Ekan",
+    "addressLocality": "Yaoundé",
+    "addressCountry": "CM"
+  },
+  "areaServed": {
+    "@type": "Country",
+    "name": "Cameroun"
+  },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "+237652242847",
+    "contactType": "sales",
+    "availableLanguage": "French"
+  }
+}
+</script>
 
 <style>
 :root{
@@ -109,7 +155,8 @@ h2{
 #factures,
 #messages,
 #connexion,
-#panier{
+#panier,
+#commander{
     background:white;
     margin:20px auto;
     padding:25px 20px;
@@ -288,6 +335,7 @@ h2{
 .produit{
     display:flex;
     flex-direction:column;
+    position:relative;
     min-width:0;
     background:white;
     padding:14px;
@@ -379,6 +427,44 @@ h2{
     margin-top:20px;
 }
 
+.statut-produit,
+.produit::before{
+    align-self:center;
+    display:inline-block;
+    margin:-2px 0 10px;
+    padding:5px 9px;
+    border-radius:999px;
+    background:#fff4d8;
+    color:#775000;
+    border:1px solid #efce78;
+    font-size:12px;
+    font-weight:bold;
+}
+
+.produit::before{
+    content:"Disponibilité à confirmer";
+}
+
+.etapes-commande{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:14px;
+    margin-top:20px;
+}
+
+.etape-commande{
+    padding:18px 14px;
+    border-radius:12px;
+    background:#f3f8fc;
+    border:1px solid #c7dced;
+}
+
+.etape-commande strong{
+    display:block;
+    color:var(--bleu);
+    margin-bottom:7px;
+}
+
 /* ===== PANIER ===== */
 .article-panier{
     display:grid;
@@ -436,6 +522,7 @@ h2{
 }
 
 .commander-panier,
+.panier-whatsapp,
 .vider-panier{
     border:0;
     padding:14px 20px;
@@ -446,6 +533,10 @@ h2{
 }
 
 .commander-panier{
+    background:var(--bleu);
+}
+
+.panier-whatsapp{
     background:var(--vert);
 }
 
@@ -454,6 +545,7 @@ h2{
 }
 
 .commander-panier:disabled,
+.panier-whatsapp:disabled,
 .vider-panier:disabled{
     opacity:0.45;
     cursor:not-allowed;
@@ -1212,6 +1304,67 @@ h2{
     text-decoration:none;
 }
 
+.contact-actions{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:12px;
+}
+
+.contact-actions .whatsapp,
+.contact-actions .itineraire{
+    margin-top:0;
+}
+
+.itineraire{
+    display:inline-block;
+    background:white;
+    color:var(--bleu);
+    padding:15px 25px;
+    border-radius:30px;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.infos-pratiques{
+    max-width:900px;
+    margin:22px auto 0;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+}
+
+.info-pratique{
+    padding:14px;
+    border:1px solid rgba(255,255,255,0.35);
+    border-radius:10px;
+    background:rgba(255,255,255,0.1);
+}
+
+.info-pratique strong{
+    display:block;
+    margin-bottom:5px;
+}
+
+.whatsapp-flottant{
+    position:fixed;
+    right:16px;
+    bottom:16px;
+    z-index:9999;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:58px;
+    height:58px;
+    border-radius:50%;
+    background:var(--vert);
+    color:white;
+    text-decoration:none;
+    font-size:27px;
+    box-shadow:0 4px 14px rgba(0,0,0,0.3);
+}
+
 .catalogue{
     text-align:center;
     margin:30px;
@@ -1275,6 +1428,11 @@ footer{
         grid-template-columns:1fr;
     }
 
+    .etapes-commande,
+    .infos-pratiques{
+        grid-template-columns:1fr;
+    }
+
     .controle-quantite{
         justify-content:flex-start;
     }
@@ -1332,8 +1490,9 @@ footer{
 <section id="apropos">
     <h2>À propos de NARELVIR</h2>
     <p>
-        NARELVIR est votre spécialiste des pièces détachées,
-        lubrifiants et équipements motorisés.
+        NARELVIR est votre spécialiste à Yaoundé des pièces détachées moto,
+        lubrifiants et équipements motorisés. Nous servons les particuliers,
+        mécaniciens, revendeurs et professionnels en gros comme au détail.
     </p>
 </section>
 
@@ -1341,7 +1500,8 @@ footer{
     <h2>Nos Services</h2>
     <p>
         Vente de pièces détachées, lubrifiants, équipements motorisés
-        et accompagnement de nos clients dans le choix de leurs produits.
+        et accompagnement de nos clients dans le choix des références compatibles.
+        Commandez en ligne puis confirmez la disponibilité, la livraison et le paiement avec NARELVIR.
     </p>
 </section>
 
@@ -1360,6 +1520,24 @@ footer{
     </a>
 </section>
 
+<section id="commander">
+    <h2>Comment commander ?</h2>
+    <div class="etapes-commande">
+        <div class="etape-commande">
+            <strong>1. Choisissez vos articles</strong>
+            Ajoutez les produits et les quantités souhaitées au panier.
+        </div>
+        <div class="etape-commande">
+            <strong>2. Envoyez le panier</strong>
+            Transmettez toute la liste à NARELVIR directement sur WhatsApp, même sans compte.
+        </div>
+        <div class="etape-commande">
+            <strong>3. Recevez la confirmation</strong>
+            Nous confirmons la disponibilité, les frais de livraison et le mode de paiement.
+        </div>
+    </div>
+</section>
+
 <div class="recherche-zone">
     <label for="recherche" style="position:absolute;left:-9999px;">Rechercher un produit</label>
     <input
@@ -1371,6 +1549,7 @@ footer{
 
 <section id="produits">
 <h2>Nos produits</h2>
+<p style="text-align:center;">Prix en FCFA. Contactez NARELVIR pour confirmer la disponibilité avant paiement.</p>
 
 <div class="produits">
 
@@ -1409,6 +1588,100 @@ footer{
     <p>Machines et pièces de rechange</p>
     <div class="actions">
         <a href="https://wa.me/237652242847?text=Bonjour%20NARELVIR%2C%20je%20souhaite%20conna%C3%AEtre%20le%20prix%20des%20motopompes" class="whatsapp">💬 Demander le prix</a>
+    </div>
+</article>
+
+<article class="produit">
+    <h3>🌿 Carburateur débroussailleuse</h3>
+    <div class="produit-visuel" role="img" aria-label="Carburateur de débroussailleuse">⚙️</div>
+    <p>Modèles 40.5 et 44.5</p>
+    <p><strong>Détail : 6 500 FCFA</strong></p>
+    <p>Gros : 5 000 FCFA</p>
+    <div class="actions">
+        <button type="button" class="btn-panier" onclick="ajouterPanier('Carburateur débroussailleuse 40.5/44.5', 6500)">🛒 Ajouter au panier</button>
+        <a href="https://wa.me/237652242847?text=Bonjour%20NARELVIR%2C%20je%20souhaite%20commander%20un%20carburateur%20de%20d%C3%A9broussailleuse%2040.5%2F44.5" class="whatsapp">💬 Commander sur WhatsApp</a>
+    </div>
+</article>
+
+<article class="produit">
+    <h3>🌿 Lanceur débroussailleuse</h3>
+    <div class="produit-visuel" role="img" aria-label="Lanceur de débroussailleuse">🔧</div>
+    <p>Modèles 40.5 et 44.5</p>
+    <p><strong>Détail : 4 500 FCFA</strong></p>
+    <p>Gros : 3 000 FCFA</p>
+    <div class="actions">
+        <button type="button" class="btn-panier" onclick="ajouterPanier('Lanceur débroussailleuse 40.5/44.5', 4500)">🛒 Ajouter au panier</button>
+        <a href="https://wa.me/237652242847?text=Bonjour%20NARELVIR%2C%20je%20souhaite%20commander%20un%20lanceur%20de%20d%C3%A9broussailleuse%2040.5%2F44.5" class="whatsapp">💬 Commander sur WhatsApp</a>
+    </div>
+</article>
+
+<article class="produit">
+    <h3>🌿 Tête débroussailleuse 9T</h3>
+    <div class="produit-visuel" role="img" aria-label="Tête de débroussailleuse 9 dents">⚙️</div>
+    <p>Tête complète 9 dents</p>
+    <p><strong>Détail : 7 500 FCFA</strong></p>
+    <p>Gros : 5 000 FCFA</p>
+    <div class="actions">
+        <button type="button" class="btn-panier" onclick="ajouterPanier('Tête débroussailleuse 9T', 7500)">🛒 Ajouter au panier</button>
+        <a href="https://wa.me/237652242847?text=Bonjour%20NARELVIR%2C%20je%20souhaite%20commander%20une%20t%C3%AAte%20de%20d%C3%A9broussailleuse%209T" class="whatsapp">💬 Commander sur WhatsApp</a>
+    </div>
+</article>
+
+<article class="produit">
+    <h3>🪚 Carburateur tronçonneuse Stihl</h3>
+    <div class="produit-visuel" role="img" aria-label="Carburateur de tronçonneuse">⚙️</div>
+    <p>Qualité 2e choix</p>
+    <p><strong>Prix : 6 000 FCFA</strong></p>
+    <div class="actions">
+        <button type="button" class="btn-panier" onclick="ajouterPanier('Carburateur tronçonneuse Stihl 2e', 6000)">🛒 Ajouter au panier</button>
+        <a href="https://wa.me/237652242847?text=Bonjour%20NARELVIR%2C%20je%20souhaite%20commander%20un%20carburateur%20de%20tron%C3%A7onneuse%20Stihl" class="whatsapp">💬 Commander sur WhatsApp</a>
+    </div>
+</article>
+
+<article class="produit">
+    <h3>🪚 Vilebrequin tronçonneuse Franco</h3>
+    <div class="produit-visuel" role="img" aria-label="Vilebrequin de tronçonneuse">🔩</div>
+    <p>Vilebrequin complet Franco</p>
+    <p><strong>Prix : 10 000 FCFA</strong></p>
+    <div class="actions">
+        <button type="button" class="btn-panier" onclick="ajouterPanier('Vilebrequin tronçonneuse Franco', 10000)">🛒 Ajouter au panier</button>
+        <a href="https://wa.me/237652242847?text=Bonjour%20NARELVIR%2C%20je%20souhaite%20commander%20un%20vilebrequin%20de%20tron%C3%A7onneuse%20Franco" class="whatsapp">💬 Commander sur WhatsApp</a>
+    </div>
+</article>
+
+<article class="produit">
+    <h3>🏍️ Pneu CST 250-18</h3>
+    <div class="produit-visuel" role="img" aria-label="Pneu moto CST 250-18">🛞</div>
+    <p>Pneu moto CST 250-18</p>
+    <p><strong>Détail : 9 500 FCFA</strong></p>
+    <p>Gros : 8 800 FCFA</p>
+    <div class="actions">
+        <button type="button" class="btn-panier" onclick="ajouterPanier('Pneu CST 250-18', 9500)">🛒 Ajouter au panier</button>
+        <a href="https://wa.me/237652242847?text=Bonjour%20NARELVIR%2C%20je%20souhaite%20commander%20un%20pneu%20CST%20250-18" class="whatsapp">💬 Commander sur WhatsApp</a>
+    </div>
+</article>
+
+<article class="produit">
+    <h3>🔋 Batterie moto 12N5</h3>
+    <div class="produit-visuel" role="img" aria-label="Batterie moto 12N5">🔋</div>
+    <p>Batterie moto 12N5</p>
+    <p><strong>Détail : 5 500 FCFA</strong></p>
+    <p>Gros : 5 000 FCFA</p>
+    <div class="actions">
+        <button type="button" class="btn-panier" onclick="ajouterPanier('Batterie moto 12N5', 5500)">🛒 Ajouter au panier</button>
+        <a href="https://wa.me/237652242847?text=Bonjour%20NARELVIR%2C%20je%20souhaite%20commander%20une%20batterie%20moto%2012N5" class="whatsapp">💬 Commander sur WhatsApp</a>
+    </div>
+</article>
+
+<article class="produit">
+    <h3>🏍️ Anti-crevaison JYC</h3>
+    <div class="produit-visuel" role="img" aria-label="Produit anti-crevaison JYC">🧴</div>
+    <p>Protection anti-crevaison pour pneu</p>
+    <p><strong>Détail : 1 000 FCFA</strong></p>
+    <p>Gros : 500 FCFA</p>
+    <div class="actions">
+        <button type="button" class="btn-panier" onclick="ajouterPanier('Anti-crevaison JYC', 1000)">🛒 Ajouter au panier</button>
+        <a href="https://wa.me/237652242847?text=Bonjour%20NARELVIR%2C%20je%20souhaite%20commander%20un%20anti-crevaison%20JYC" class="whatsapp">💬 Commander sur WhatsApp</a>
     </div>
 </article>
 
@@ -1500,9 +1773,10 @@ footer{
         <p>Votre panier est vide.</p>
     </div>
     <p class="total-panier"><strong>Total : <span id="total-panier">0</span> FCFA</strong></p>
-    <p>Votre commande sera enregistrée dans votre compte. NARELVIR pourra ensuite vous envoyer son compte rendu sur WhatsApp.</p>
+    <p>Envoyez votre panier immédiatement sur WhatsApp, ou connectez-vous pour l’enregistrer et suivre son traitement.</p>
     <div class="actions-panier">
-        <button type="button" id="commanderPanier" class="commander-panier" onclick="commanderPanierWhatsApp()" disabled>✅ Enregistrer ma commande</button>
+        <button type="button" id="envoyerPanierWhatsApp" class="panier-whatsapp" onclick="envoyerPanierWhatsApp()" disabled>💬 Commander le panier sur WhatsApp</button>
+        <button type="button" id="commanderPanier" class="commander-panier" onclick="commanderPanierWhatsApp()" disabled>✅ Enregistrer dans mon compte</button>
         <button type="button" id="viderPanier" class="vider-panier" onclick="viderPanier()" disabled>🗑️ Vider le panier</button>
     </div>
 </section>
@@ -1756,7 +2030,24 @@ footer{
     <p>📍 Nouvelle Route Brique, derrière l’Immeuble Ekan</p>
     <p>📞 <a href="tel:+237652242847">652 242 847</a></p>
     <p>📞 <a href="tel:+237692049233">692 049 233</a></p>
-    <a class="whatsapp" href="https://wa.me/237652242847?text=Bonjour%20NARELVIR">💬 Commander sur WhatsApp</a>
+    <div class="contact-actions">
+        <a class="whatsapp" href="https://wa.me/237652242847?text=Bonjour%20NARELVIR">💬 Commander sur WhatsApp</a>
+        <a class="itineraire" href="https://www.google.com/maps/search/?api=1&amp;query=NARELVIR%20Nouvelle%20Route%20Brique%20Yaound%C3%A9" target="_blank" rel="noopener">📍 Voir l’itinéraire</a>
+    </div>
+    <div class="infos-pratiques">
+        <div class="info-pratique">
+            <strong>📦 Livraison</strong>
+            Frais et délai confirmés selon votre destination.
+        </div>
+        <div class="info-pratique">
+            <strong>💳 Paiement</strong>
+            Modalités communiquées après vérification de la commande.
+        </div>
+        <div class="info-pratique">
+            <strong>🛡️ Avant paiement</strong>
+            Vérifiez la disponibilité et le montant final avec NARELVIR.
+        </div>
+    </div>
 </div>
 
 <div class="catalogue">
@@ -1767,8 +2058,11 @@ footer{
 </main>
 
 <footer>
-    NARELVIR © 2026 — Pièces Détachées &amp; Lubrifiants
+    NARELVIR © 2026 — Pièces Détachées &amp; Lubrifiants<br>
+    NUI : P079818495940G
 </footer>
+
+<a class="whatsapp-flottant" href="https://wa.me/237652242847?text=Bonjour%20NARELVIR" aria-label="Contacter NARELVIR sur WhatsApp" title="WhatsApp NARELVIR">💬</a>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js" crossorigin="anonymous"></script>
@@ -3435,6 +3729,7 @@ function afficherPanier() {
     const totalElement = document.getElementById("total-panier");
     const nombreElement = document.getElementById("nombrePanier");
     const boutonCommander = document.getElementById("commanderPanier");
+    const boutonWhatsApp = document.getElementById("envoyerPanierWhatsApp");
     const boutonVider = document.getElementById("viderPanier");
     let total = 0;
     let nombre = 0;
@@ -3492,6 +3787,7 @@ function afficherPanier() {
     totalElement.textContent = total.toLocaleString("fr-FR");
     nombreElement.textContent = nombre;
     boutonCommander.disabled = panier.length === 0;
+    boutonWhatsApp.disabled = panier.length === 0;
     boutonVider.disabled = panier.length === 0;
 }
 
@@ -3529,6 +3825,30 @@ function viderPanier() {
         sauvegarderPanier();
         afficherPanier();
     }
+}
+
+function envoyerPanierWhatsApp() {
+    if (panier.length === 0) return;
+
+    const lignes = panier.map(function(article) {
+        const sousTotal = article.prix * article.quantite;
+        return "• " + article.quantite + " × " + article.nom + " — " + sousTotal.toLocaleString("fr-FR") + " FCFA";
+    });
+    const total = panier.reduce(function(somme, article) {
+        return somme + article.prix * article.quantite;
+    }, 0);
+    const message = [
+        "Bonjour NARELVIR, je souhaite commander :",
+        "",
+        lignes.join("\n"),
+        "",
+        "Total indicatif : " + total.toLocaleString("fr-FR") + " FCFA",
+        "",
+        "Merci de confirmer la disponibilité, le montant final, la livraison et le paiement."
+    ].join("\n");
+    const lien = "https://wa.me/" + NUMERO_WHATSAPP + "?text=" + encodeURIComponent(message);
+    const fenetreWhatsApp = window.open(lien, "_blank", "noopener,noreferrer");
+    if (!fenetreWhatsApp) window.location.href = lien;
 }
 
 async function commanderPanierWhatsApp() {
@@ -3581,7 +3901,7 @@ async function commanderPanierWhatsApp() {
         console.error("Commande impossible :", erreur);
     } finally {
         commandeEnCours = false;
-        bouton.textContent = "✅ Enregistrer ma commande";
+        bouton.textContent = "✅ Enregistrer dans mon compte";
         bouton.disabled = panier.length === 0;
     }
 }
