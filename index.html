@@ -38,6 +38,8 @@
   "telephone": ["+237652242847", "+237692049233"],
   "priceRange": "FCFA",
   "currenciesAccepted": "XAF",
+  "paymentAccepted": "MTN Mobile Money, Orange Money",
+  "openingHours": ["Mo-Tu 07:30-17:00", "We 12:00-17:00", "Th-Sa 07:30-17:00"],
   "address": {
     "@type": "PostalAddress",
     "streetAddress": "Nouvelle Route Brique, derrière l’Immeuble Ekan",
@@ -1437,6 +1439,13 @@ footer{
         justify-content:flex-start;
     }
 }
+@media (min-width: 769px){
+    .topbar button{display:none;}
+    .menu-lateral,.fond-menu{display:none;}
+}
+@media (max-width: 768px){
+    nav[aria-label="Navigation rapide"]{display:none;}
+}
 </style>
 </head>
 
@@ -1453,12 +1462,12 @@ footer{
     <h2>NARELVIR</h2>
 
     <a href="#accueil" onclick="fermerMenu()">Accueil ›</a>
-    <a href="#produits" onclick="fermerMenu()">Produits ›</a>
-    <a href="#panier" onclick="fermerMenu()">Commandes ›</a>
-    <a href="#factures" onclick="fermerMenu()">Factures ›</a>
-    <a href="#messages" onclick="fermerMenu()">Messages ›</a>
-    <a href="#connexion" onclick="fermerMenu()">Mon compte ›</a>
     <a href="#apropos" onclick="fermerMenu()">À propos ›</a>
+    <a href="#services" onclick="fermerMenu()">Services ›</a>
+    <a href="#produits" onclick="fermerMenu()">Produits ›</a>
+    <a href="#contact" onclick="fermerMenu()">Contact ›</a>
+    <a href="#panier" onclick="fermerMenu()">🛒 Panier ›</a>
+    <a href="#overseas" onclick="fermerMenu()">Overseas Store ›</a>
 </aside>
 
 <div id="fondMenu" class="fond-menu" onclick="fermerMenu()" aria-hidden="true"></div>
@@ -2036,16 +2045,25 @@ footer{
     </div>
     <div class="infos-pratiques">
         <div class="info-pratique">
-            <strong>📦 Livraison</strong>
-            Frais et délai confirmés selon votre destination.
+            <strong>🕒 Horaires d’ouverture</strong>
+            Lundi, mardi, jeudi, vendredi et samedi : 7h30 à 17h00.<br>
+            Mercredi : 12h00 à 17h00.
         </div>
         <div class="info-pratique">
-            <strong>💳 Paiement</strong>
-            Modalités communiquées après vérification de la commande.
+            <strong>📦 Livraison partout au Cameroun</strong>
+            Livraison selon la destination du client. Les frais et le délai sont confirmés avec le client avant l’expédition.
+        </div>
+        <div class="info-pratique">
+            <strong>💳 Paiement en ligne</strong>
+            Orange Money (OM) et MTN Mobile Money.
+        </div>
+        <div class="info-pratique">
+            <strong>↩️ Retour / problème sur une pièce</strong>
+            Une pièce présentant un problème peut être retournée dans un délai de 3 jours. Le client doit prévenir NARELVIR avant tout retour.
         </div>
         <div class="info-pratique">
             <strong>🛡️ Avant paiement</strong>
-            Vérifiez la disponibilité et le montant final avec NARELVIR.
+            Vérifiez la disponibilité, les frais de livraison et le montant final avec NARELVIR.
         </div>
     </div>
 </div>
