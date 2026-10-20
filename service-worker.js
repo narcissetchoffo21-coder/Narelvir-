@@ -1,4 +1,4 @@
-const CACHE_NAME = "narelvir-v4";
+const CACHE_NAME = "narelvir-v5";
 
 const urlsToCache = [
   "/",
@@ -6,7 +6,17 @@ const urlsToCache = [
   "/manifest.json",
   "/images/lanceur-debroussailleuse-4500.jpg",
   "/images/poulie-jaune-3-gorges-30000.jpg",
-  "/images/huile-benzol-5l-15w40.webp"
+  "/images/huile-benzol-5l-15w40.webp",
+  "/images/debroussailleuse-honda-4t-complete.webp",
+  "/images/catcheur-4t.webp",
+  "/images/catcheur-2t.webp",
+  "/images/motoculteur-complet.webp",
+  "/images/semoir.webp",
+  "/images/tariere-2t-63cc-trois-meches.webp",
+  "/images/tariere-2t-52cc-trois-meches.webp",
+  "/images/tariere-4t-gx35-trois-meches.webp",
+  "/images/tronconneuse-070-complete.webp",
+  "/images/jeu-cles-males-allen.webp"
 ];
 
 self.addEventListener("install", function(event) {
