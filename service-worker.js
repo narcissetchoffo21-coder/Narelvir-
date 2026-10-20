@@ -1,4 +1,4 @@
-const CACHE_NAME = "narelvir-v6";
+const CACHE_NAME = "narelvir-v7";
 
 const urlsToCache = [
   "/",
@@ -27,7 +27,19 @@ const urlsToCache = [
   "/images/ampoule-phare-laser.webp",
   "/images/ressort-frein-long.webp",
   "/images/serre-cables-paquet.webp",
-  "/images/chaine-moteur-cd110.webp"
+  "/images/chaine-moteur-cd110.webp",
+  "/images/huile-direction-atf-yomaxx.webp",
+  "/images/huile-bocom-1l.webp",
+  "/images/chambre-air-275-18.webp",
+  "/images/chambre-air-300-17.webp",
+  "/images/chambre-air-300-18.webp",
+  "/images/chambre-air-350-16.webp",
+  "/images/chambre-air-500-12.webp",
+  "/images/carburateur-gaz-gx390.webp",
+  "/images/atomiseur-stihl-420.webp",
+  "/images/atomiseur-stihl-5600.webp",
+  "/images/demi-pont-reducteur-tricycle.webp",
+  "/images/huile-yamalube-1l.webp"
 ];
 
 self.addEventListener("install", function(event) {
