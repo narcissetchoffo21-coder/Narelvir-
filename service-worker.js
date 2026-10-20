@@ -1,9 +1,10 @@
-const CACHE_NAME = "narelvir-v1";
+const CACHE_NAME = "narelvir-v2";
 
 const urlsToCache = [
   "/",
   "/index.html",
-  "/manifest.json"
+  "/manifest.json",
+  "/images/lanceur-debroussailleuse-4500.jpg"
 ];
 
 self.addEventListener("install", function(event) {
