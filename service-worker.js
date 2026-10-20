@@ -1,4 +1,4 @@
-const CACHE_NAME = "narelvir-v5";
+const CACHE_NAME = "narelvir-v6";
 
 const urlsToCache = [
   "/",
@@ -16,7 +16,18 @@ const urlsToCache = [
   "/images/tariere-2t-52cc-trois-meches.webp",
   "/images/tariere-4t-gx35-trois-meches.webp",
   "/images/tronconneuse-070-complete.webp",
-  "/images/jeu-cles-males-allen.webp"
+  "/images/jeu-cles-males-allen.webp",
+  "/images/bavette-plastique-couleurs.webp",
+  "/images/tige-frein-tvs.webp",
+  "/images/debroussailleuse-2t.webp",
+  "/images/pompette-stihl-complete.webp",
+  "/images/courroies-a35-a77.webp",
+  "/images/huile-frein-topish-gm.webp",
+  "/images/huile-frein-topish-pm.webp",
+  "/images/ampoule-phare-laser.webp",
+  "/images/ressort-frein-long.webp",
+  "/images/serre-cables-paquet.webp",
+  "/images/chaine-moteur-cd110.webp"
 ];
 
 self.addEventListener("install", function(event) {
