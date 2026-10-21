@@ -758,7 +758,7 @@ h2{
 
 .tableau-compte{
     display:grid;
-    grid-template-columns:repeat(3,minmax(0,1fr));
+    grid-template-columns:repeat(4,minmax(0,1fr));
     gap:12px;
     margin:18px 0;
 }
@@ -2245,10 +2245,12 @@ footer{
         </div>
 
         <div class="tableau-compte" aria-label="Résumé du compte">
-            <div class="compte-indicateur"><strong id="nombreCommandesClient">0</strong>Commande(s)</div>
+            <div class="compte-indicateur"><strong id="nombreAchatsClient">0</strong>Achat(s) effectué(s)</div>
+            <div class="compte-indicateur"><strong id="montantAchatsClient">0</strong>FCFA achetés</div>
             <div class="compte-indicateur"><strong id="nombreCommandesCoursClient">0</strong>En cours</div>
             <div class="compte-indicateur"><strong id="nombreFacturesClient">0</strong>Facture(s)</div>
         </div>
+        <p class="admin-intro">Les achats faits sur place, à distance ou sur le site apparaissent ici dès qu’ils sont reliés à votre compte.</p>
 
         <div class="liens-compte">
             <a href="#panier">Voir mon panier</a>
@@ -2317,6 +2319,13 @@ footer{
                                 <option value="distance">Client à distance</option>
                                 <option value="boutique">Client sur place</option>
                             </select>
+                        </div>
+                        <div>
+                            <label for="venteBoutiqueClientId">Compte client enregistré</label>
+                            <select id="venteBoutiqueClientId" onchange="selectionnerClientVente()">
+                                <option value="">Aucun compte sélectionné</option>
+                            </select>
+                            <small>Choisissez le compte pour que l’achat apparaisse automatiquement chez le client.</small>
                         </div>
                         <div>
                             <label for="venteBoutiqueNom">Nom du client *</label>
@@ -2591,16 +2600,29 @@ function afficherClientsAdmin(liste) {
         return;
     }
 
+    const statutsAchat = ["confirmee", "preparation", "expediee", "livree"];
     liste.forEach(function(client) {
+        const achats = commandesAdminNarelvir.filter(function(commande) {
+            return commande.client_id === client.id && statutsAchat.includes(commande.statut);
+        });
+        const montantAchats = achats.reduce(function(total, commande) {
+            return total + Number(commande.total || 0);
+        }, 0);
+        const dernierAchat = achats.reduce(function(date, commande) {
+            return !date || new Date(commande.created_at) > new Date(date) ? commande.created_at : date;
+        }, null);
+
         const carte = document.createElement("article");
         carte.className = "admin-client";
-
         const nom = document.createElement("p");
         nom.className = "admin-client-nom";
         nom.textContent = client.nom || "Client NARELVIR";
         carte.appendChild(nom);
         carte.appendChild(creerLigneAdmin("E-mail", client.email));
         carte.appendChild(creerLigneAdmin("Téléphone", client.telephone));
+        carte.appendChild(creerLigneAdmin("Nombre d’achats", String(achats.length)));
+        carte.appendChild(creerLigneAdmin("Total acheté", formaterMontant(montantAchats) + " FCFA"));
+        carte.appendChild(creerLigneAdmin("Dernier achat", dernierAchat ? formaterDateAdmin(dernierAchat) : "Aucun"));
         carte.appendChild(creerLigneAdmin("Inscription", formaterDateAdmin(client.date_inscription)));
         carte.appendChild(creerLigneAdmin("Dernière connexion", formaterDateAdmin(client.derniere_connexion)));
 
@@ -2608,6 +2630,14 @@ function afficherClientsAdmin(liste) {
         badge.className = "admin-badge" + (client.email_confirme ? "" : " attente");
         badge.textContent = client.email_confirme ? "E-mail confirmé" : "Confirmation en attente";
         carte.appendChild(badge);
+        if (client.telephone) {
+            const relier = document.createElement("button");
+            relier.type = "button";
+            relier.className = "bouton-petit";
+            relier.textContent = "Relier ses anciens achats";
+            relier.addEventListener("click", function() { relierAchatsClientAdmin(client.id, relier); });
+            carte.appendChild(relier);
+        }
         conteneur.appendChild(carte);
     });
 }
@@ -2627,6 +2657,57 @@ function filtrerClientsAdmin() {
             .some(function(valeur) { return String(valeur).toLowerCase().includes(recherche); });
     });
     afficherClientsAdmin(resultat);
+}
+
+function actualiserSelectClientsVente() {
+    const select = document.getElementById("venteBoutiqueClientId");
+    if (!select) return;
+    const valeurActuelle = select.value;
+    select.replaceChildren();
+    const vide = document.createElement("option");
+    vide.value = "";
+    vide.textContent = "Aucun compte sélectionné";
+    select.appendChild(vide);
+    clientsAdminNarelvir.slice().sort(function(a, b) {
+        return String(a.nom || "").localeCompare(String(b.nom || ""), "fr");
+    }).forEach(function(client) {
+        const option = document.createElement("option");
+        option.value = client.id;
+        option.textContent = (client.nom || client.email || "Client NARELVIR") +
+            (client.telephone ? " — " + client.telephone : "");
+        select.appendChild(option);
+    });
+    if (clientsAdminNarelvir.some(function(client) { return client.id === valeurActuelle; })) select.value = valeurActuelle;
+}
+
+function selectionnerClientVente() {
+    const clientId = document.getElementById("venteBoutiqueClientId").value;
+    const client = clientsAdminNarelvir.find(function(element) { return element.id === clientId; });
+    if (!client) return;
+    document.getElementById("venteBoutiqueNom").value = client.nom || "";
+    document.getElementById("venteBoutiqueTelephone").value = client.telephone || "";
+    document.getElementById("venteBoutiqueVille").value = client.ville || "";
+    document.getElementById("venteBoutiqueAdresse").value = client.adresse || "";
+}
+
+async function relierAchatsClientAdmin(clientId, bouton) {
+    if (!clientSupabase || !estAdministrateurNarelvir(utilisateurConnecteNarelvir)) return;
+    if (!window.confirm("Relier à ce compte toutes les ventes ayant le même numéro de téléphone ?")) return;
+    bouton.disabled = true;
+    bouton.textContent = "Recherche…";
+    try {
+        const resultat = await clientSupabase.rpc("relier_achats_client_admin", { p_client_id: clientId });
+        if (resultat.error) throw resultat.error;
+        const nombre = Number((resultat.data || {}).achats_relies || 0);
+        afficherMessageAdmin(nombre ? nombre + " ancien(s) achat(s) relié(s) au compte." : "Aucun autre achat correspondant trouvé.", "info");
+        await chargerCommandesAdmin(utilisateurConnecteNarelvir);
+    } catch (erreur) {
+        afficherMessageAdmin("Impossible de relier les anciens achats de ce client.", "erreur");
+        console.error("Liaison des achats impossible :", erreur);
+    } finally {
+        bouton.disabled = false;
+        bouton.textContent = "Relier ses anciens achats";
+    }
 }
 
 async function chargerClientsAdmin(utilisateur) {
@@ -2656,6 +2737,7 @@ async function chargerClientsAdmin(utilisateur) {
 
         if (resultat.error) throw resultat.error;
         clientsAdminNarelvir = resultat.data || [];
+        actualiserSelectClientsVente();
         afficherClientsAdmin(clientsAdminNarelvir);
         afficherMessageAdmin("Données administrateur actualisées.", "info");
     } catch (erreur) {
@@ -2988,7 +3070,9 @@ async function enregistrerVenteBoutique(evenement) {
             p_reference_paiement: document.getElementById("venteBoutiqueReferencePaiement").value.trim() || null,
             p_date_echeance: document.getElementById("venteBoutiqueEcheance").value || null,
             p_note: document.getElementById("venteBoutiqueNote").value.trim() || null,
-            p_signature_client: obtenirSignatureVenteBoutique()
+            p_signature_client: obtenirSignatureVenteBoutique(),
+            p_client_id: document.getElementById("venteBoutiqueClientId").value || null,
+            p_source_saisie: "site_admin"
         });
         if (resultat.error) throw resultat.error;
 
@@ -3083,6 +3167,12 @@ function afficherCommandesAdmin() {
         carte.appendChild(creerLigneAdmin("Téléphone", commande.telephone));
         carte.appendChild(creerLigneAdmin("Ville / adresse", [commande.ville, commande.adresse].filter(Boolean).join(" — ")));
         carte.appendChild(creerLigneAdmin("Date", formaterDateAdmin(commande.created_at)));
+        carte.appendChild(creerLigneAdmin("Saisie via", ({
+            site: "Site web",
+            site_admin: "Administration du site",
+            logiciel: "NARELVIR Gestion",
+            chatgpt: "ChatGPT"
+        })[commande.source_saisie] || "Administration du site"));
         carte.appendChild(creerLigneAdmin("Total", formaterMontant(commande.total) + " FCFA"));
         carte.appendChild(creerLigneAdmin("Déjà payé", formaterMontant(commande.montant_paye) + " FCFA"));
         carte.appendChild(creerLigneAdmin("Reste à payer", formaterMontant(commande.reste_a_payer) + " FCFA"));
@@ -3222,12 +3312,14 @@ async function chargerCommandesAdmin(utilisateur) {
 
     const resultat = await clientSupabase
         .from("commandes")
-        .select("id,numero,client_id,total,statut,mode_commande,origine,montant_paye,reste_a_payer,date_echeance,mode_paiement,nom_client,telephone,ville,adresse,note,signature_client,created_at,articles_commandes(id,nom,prix,quantite,sous_total),factures(id,numero,statut,montant),paiements_commandes(id,montant,mode_paiement,reference,note,solde_apres,created_at)")
+        .select("id,numero,client_id,total,statut,mode_commande,origine,source_saisie,montant_paye,reste_a_payer,date_echeance,mode_paiement,nom_client,telephone,ville,adresse,note,signature_client,created_at,articles_commandes(id,nom,prix,quantite,sous_total),factures(id,numero,statut,montant),paiements_commandes(id,montant,mode_paiement,reference,note,solde_apres,created_at)")
         .order("created_at", { ascending: false });
 
     if (resultat.error) throw resultat.error;
     commandesAdminNarelvir = resultat.data || [];
     afficherCommandesAdmin();
+    filtrerClientsAdmin();
+    actualiserSelectClientsVente();
 }
 
 async function actualiserAdministration(utilisateur) {
@@ -3477,7 +3569,13 @@ async function enregistrerProfilClient(evenement) {
 function afficherCommandesClient() {
     const conteneur = document.getElementById("listeCommandesClient");
     conteneur.replaceChildren();
-    document.getElementById("nombreCommandesClient").textContent = String(commandesClientActuel.length);
+    const statutsAchat = ["confirmee", "preparation", "expediee", "livree"];
+    const achats = commandesClientActuel.filter(function(c) { return statutsAchat.includes(c.statut); });
+    const totalAchats = achats.reduce(function(total, commande) {
+        return total + Number(commande.total || 0);
+    }, 0);
+    document.getElementById("nombreAchatsClient").textContent = String(achats.length);
+    document.getElementById("montantAchatsClient").textContent = formaterMontant(totalAchats);
     document.getElementById("nombreCommandesCoursClient").textContent = String(
         commandesClientActuel.filter(function(c) { return !["livree", "annulee"].includes(c.statut); }).length
     );
@@ -3485,7 +3583,7 @@ function afficherCommandesClient() {
     if (!commandesClientActuel.length) {
         const vide = document.createElement("p");
         vide.className = "compte-vide";
-        vide.textContent = "Vous n’avez encore aucune commande enregistrée.";
+        vide.textContent = "Vous n’avez encore aucun achat ou commande relié à ce compte.";
         conteneur.appendChild(vide);
         return;
     }
