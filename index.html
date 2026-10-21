@@ -1000,6 +1000,92 @@ h2{
     background:#8b1117;
 }
 
+
+/* ===== STOCK MAGASIN ET STOCK DE VENTE ===== */
+.stock-admin-panneau{
+    margin:18px 0;
+    border:1px solid #cbd7e2;
+    border-radius:12px;
+    background:white;
+    overflow:hidden;
+}
+.stock-admin-panneau > summary{
+    padding:15px;
+    background:#e9f7ef;
+    color:#145a32;
+    font-weight:bold;
+    cursor:pointer;
+}
+.stock-admin-contenu{padding:15px;}
+.stock-admin-grille{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:12px;
+}
+.stock-formulaire{
+    padding:14px;
+    border:1px solid #d6e0e8;
+    border-radius:10px;
+    background:#f8fbfd;
+}
+.stock-formulaire h4{margin:0 0 10px;color:var(--bleu-fonce);}
+.stock-formulaire label{display:block;margin:9px 0 4px;font-weight:bold;}
+.stock-formulaire input,
+.stock-formulaire select,
+.stock-formulaire textarea{
+    width:100%;
+    min-height:44px;
+    padding:10px 11px;
+    border:1px solid #aebbc7;
+    border-radius:8px;
+    background:white;
+    font:inherit;
+}
+.stock-formulaire textarea{min-height:72px;resize:vertical;}
+.stock-formulaire .auth-bouton{margin-top:13px;}
+.stock-cartes{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+    gap:10px;
+    margin-top:12px;
+}
+.stock-carte{
+    padding:13px;
+    border:1px solid #cbd7e2;
+    border-left:5px solid var(--bleu);
+    border-radius:10px;
+    background:white;
+}
+.stock-carte.alerte{border-left-color:var(--rouge);background:#fff7f7;}
+.stock-carte h5{margin:0 0 7px;color:var(--bleu-fonce);font-size:16px;}
+.stock-carte p{margin:4px 0;}
+.stock-valeurs{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:7px;
+    margin-top:8px;
+}
+.stock-valeur{
+    padding:9px;
+    border-radius:8px;
+    background:#edf5fc;
+    text-align:center;
+}
+.stock-valeur.magasin{background:#fff4d8;}
+.stock-valeur strong{display:block;font-size:19px;}
+.stock-mouvements{display:grid;gap:7px;margin-top:10px;}
+.stock-mouvement{
+    padding:10px;
+    border-left:4px solid #16834b;
+    border-radius:8px;
+    background:#f4faf6;
+}
+.stock-mouvement p{margin:3px 0;}
+.stock-vide{padding:14px;border-radius:9px;background:#f4f6f8;color:#556;}
+.ligne-article-boutique{
+    grid-template-columns:minmax(150px,1.2fr) minmax(150px,1.5fr) minmax(80px,.65fr) minmax(100px,.8fr) auto;
+}
+
 .vente-boutique{
     margin:18px 0;
     border:1px solid #cbd7e2;
@@ -1326,7 +1412,9 @@ h2{
 
     .vente-boutique-grille,
     .ligne-article-boutique,
-    .paiement-commande{
+    .paiement-commande,
+    .stock-admin-grille,
+    .stock-valeurs{
         grid-template-columns:1fr;
     }
 }
@@ -2365,6 +2453,9 @@ footer{
             <div class="admin-resume">
                 <div><strong id="totalClientsAdmin">0</strong>Clients</div>
                 <div><strong id="totalCommandesAdmin">0</strong>Commandes</div>
+                <div><strong id="totalStockMagasinAdmin">0</strong>Unités magasin</div>
+                <div><strong id="totalStockVenteAdmin">0</strong>Unités en vente</div>
+                <div class="resume-retards"><strong id="totalAlertesStockAdmin">0</strong>Alertes stock</div>
                 <div><strong id="totalAchatsPayesAdmin">0</strong>Achats payés</div>
                 <div class="resume-creances"><strong id="totalAchatsNonPayesAdmin">0</strong>Achats non payés</div>
                 <div><strong id="chiffreAffairesAdmin">0</strong>FCFA confirmés</div>
@@ -2458,6 +2549,87 @@ footer{
                     <div id="messageVenteBoutique" class="admin-message" role="status" aria-live="polite"></div>
                     <button type="submit" class="auth-bouton">Enregistrer et créer la facture</button>
                 </form>
+            </details>
+
+
+            <details class="stock-admin-panneau" id="zoneGestionStock">
+                <summary>📦 Stock magasin, stock de vente et arrivages</summary>
+                <div class="stock-admin-contenu">
+                    <p class="admin-intro">Les arrivages entrent d’abord au magasin. Transférez ensuite la quantité souhaitée vers le stock de vente. Cet espace est visible uniquement par l’administrateur.</p>
+
+                    <div class="stock-admin-grille">
+                        <form class="stock-formulaire" id="formArrivageStock" onsubmit="enregistrerArrivageStock(event)">
+                            <h4>🚚 Enregistrer un arrivage</h4>
+                            <label for="arrivageNom">Produit *</label>
+                            <input id="arrivageNom" type="text" required placeholder="Ex. Chambre à air 275-18">
+
+                            <label for="arrivageReference">Référence</label>
+                            <input id="arrivageReference" type="text" placeholder="Ex. 275-18">
+
+                            <label for="arrivageUnite">Unité</label>
+                            <select id="arrivageUnite">
+                                <option value="pièce">Pièce</option>
+                                <option value="bouteille">Bouteille</option>
+                                <option value="bidon">Bidon</option>
+                                <option value="carton">Carton</option>
+                                <option value="paquet">Paquet</option>
+                                <option value="jeu">Jeu</option>
+                                <option value="unité">Autre unité</option>
+                            </select>
+
+                            <label for="arrivageQuantite">Quantité reçue *</label>
+                            <input id="arrivageQuantite" type="number" min="0.001" step="0.001" required inputmode="decimal">
+
+                            <label for="arrivagePrixAchat">Prix d’achat unitaire</label>
+                            <input id="arrivagePrixAchat" type="number" min="0" step="1" inputmode="numeric" placeholder="FCFA">
+
+                            <label for="arrivagePrixVente">Prix de vente unitaire</label>
+                            <input id="arrivagePrixVente" type="number" min="0" step="1" inputmode="numeric" placeholder="FCFA">
+
+                            <label for="arrivageSeuil">Alerte quand le stock de vente atteint</label>
+                            <input id="arrivageSeuil" type="number" min="0" step="0.001" value="3" inputmode="decimal">
+
+                            <label for="arrivageFournisseur">Fournisseur</label>
+                            <input id="arrivageFournisseur" type="text" placeholder="Nom du fournisseur">
+
+                            <label for="arrivageNumero">Référence de l’arrivage</label>
+                            <input id="arrivageNumero" type="text" placeholder="Bon, facture ou conteneur">
+
+                            <label for="arrivageNote">Note</label>
+                            <textarea id="arrivageNote" placeholder="Informations utiles"></textarea>
+
+                            <button type="submit" class="auth-bouton">Ajouter au stock magasin</button>
+                        </form>
+
+                        <form class="stock-formulaire" id="formTransfertStock" onsubmit="transfererStockVente(event)">
+                            <h4>↔️ Transférer vers la vente</h4>
+                            <label for="transfertArticleStock">Produit *</label>
+                            <select id="transfertArticleStock" required>
+                                <option value="">Aucun produit enregistré</option>
+                            </select>
+
+                            <label for="transfertQuantiteStock">Quantité à transférer *</label>
+                            <input id="transfertQuantiteStock" type="number" min="0.001" step="0.001" required inputmode="decimal">
+
+                            <label for="transfertNoteStock">Note</label>
+                            <textarea id="transfertNoteStock" placeholder="Ex. Mise en rayon boutique"></textarea>
+
+                            <button type="submit" class="auth-bouton">Transférer au stock de vente</button>
+                        </form>
+                    </div>
+
+                    <div id="messageStockAdmin" class="admin-message" role="status" aria-live="polite"></div>
+
+                    <h4 class="admin-section-titre">État actuel des stocks</h4>
+                    <div id="listeArticlesStockAdmin" class="stock-cartes" aria-live="polite">
+                        <p class="stock-vide">Chargement du stock…</p>
+                    </div>
+
+                    <h4 class="admin-section-titre">Derniers mouvements</h4>
+                    <div id="listeMouvementsStockAdmin" class="stock-mouvements" aria-live="polite">
+                        <p class="stock-vide">Chargement de l’historique…</p>
+                    </div>
+                </div>
             </details>
 
             <h4 class="admin-section-titre">👥 Comptes clients</h4>
@@ -2560,6 +2732,8 @@ const clientSupabase = window.supabase ? window.supabase.createClient(SUPABASE_U
 let panier = chargerPanier();
 let clientsAdminNarelvir = [];
 let commandesAdminNarelvir = [];
+let articlesStockNarelvir = [];
+let mouvementsStockNarelvir = [];
 let utilisateurConnecteNarelvir = null;
 let profilClientActuel = null;
 let commandesClientActuel = [];
@@ -3003,6 +3177,24 @@ function afficherMessageVenteBoutique(message, type) {
     zone.className = "admin-message visible " + (type || "info");
 }
 
+function remplirSelectStockLigne(select, valeurSelectionnee) {
+    if (!select) return;
+    const valeur = valeurSelectionnee || select.value || "";
+    select.replaceChildren();
+    const libre = document.createElement("option");
+    libre.value = "";
+    libre.textContent = "Article hors stock / saisie libre";
+    select.appendChild(libre);
+    articlesStockNarelvir.filter(function(article) { return article.actif !== false; }).forEach(function(article) {
+        const option = document.createElement("option");
+        option.value = article.id;
+        option.textContent = article.nom + " — vente : " + formaterQuantiteStock(article.stock_vente) + " " + (article.unite || "pièce");
+        option.disabled = Number(article.stock_vente || 0) <= 0;
+        select.appendChild(option);
+    });
+    select.value = valeur;
+}
+
 function ajouterLigneVenteBoutique(valeurs) {
     const conteneur = document.getElementById("articlesVenteBoutique");
     if (!conteneur) return;
@@ -3012,6 +3204,15 @@ function ajouterLigneVenteBoutique(valeurs) {
 
     const ligne = document.createElement("div");
     ligne.className = "ligne-article-boutique";
+
+    const champStock = document.createElement("div");
+    const labelStock = document.createElement("label");
+    labelStock.htmlFor = "venteArticleStock" + numero;
+    labelStock.textContent = "Produit du stock";
+    const stock = document.createElement("select");
+    stock.id = "venteArticleStock" + numero;
+    stock.className = "vente-article-stock";
+    remplirSelectStockLigne(stock, article.stock_id || "");
 
     const champNom = document.createElement("div");
     const labelNom = document.createElement("label");
@@ -3057,6 +3258,19 @@ function ajouterLigneVenteBoutique(valeurs) {
     prix.addEventListener("input", calculerTotalVenteBoutique);
     champPrix.append(labelPrix, prix);
 
+    stock.addEventListener("change", function() {
+        const selection = articlesStockNarelvir.find(function(item) { return item.id === stock.value; });
+        if (!selection) {
+            quantite.removeAttribute("max");
+            return;
+        }
+        nom.value = selection.nom || "";
+        if (selection.prix_vente !== null && selection.prix_vente !== undefined) prix.value = selection.prix_vente;
+        quantite.max = String(selection.stock_vente || 0);
+        calculerTotalVenteBoutique();
+    });
+    champStock.append(labelStock, stock);
+
     const supprimer = document.createElement("button");
     supprimer.type = "button";
     supprimer.textContent = "Retirer";
@@ -3066,14 +3280,16 @@ function ajouterLigneVenteBoutique(valeurs) {
         calculerTotalVenteBoutique();
     });
 
-    ligne.append(champNom, champQuantite, champPrix, supprimer);
+    ligne.append(champStock, champNom, champQuantite, champPrix, supprimer);
     conteneur.appendChild(ligne);
+    if (stock.value) stock.dispatchEvent(new Event("change"));
     calculerTotalVenteBoutique();
 }
 
 function lireArticlesVenteBoutique() {
     return Array.from(document.querySelectorAll("#articlesVenteBoutique .ligne-article-boutique")).map(function(ligne) {
         return {
+            stock_id: ligne.querySelector(".vente-article-stock").value || null,
             nom: ligne.querySelector(".vente-article-nom").value.trim(),
             quantite: Number(ligne.querySelector(".vente-article-quantite").value),
             prix: Number(ligne.querySelector(".vente-article-prix").value)
@@ -3156,10 +3372,234 @@ async function enregistrerVenteBoutique(evenement) {
         );
         await actualiserAdministration(utilisateurConnecteNarelvir);
     } catch (erreur) {
-        afficherMessageVenteBoutique("Impossible d’enregistrer la vente. Exécutez le fichier SQL mis à jour dans Supabase.", "erreur");
+        afficherMessageVenteBoutique(erreur && erreur.message ? erreur.message : "Impossible d’enregistrer la vente.", "erreur");
         console.error("Vente boutique impossible :", erreur);
     } finally {
         basculerBoutonFormulaire(formulaire, false);
+    }
+}
+
+
+function formaterQuantiteStock(valeur) {
+    return Number(valeur || 0).toLocaleString("fr-FR", { maximumFractionDigits: 3 });
+}
+
+function libelleMouvementStock(type) {
+    const libelles = {
+        arrivage: "Arrivage au magasin",
+        transfert_vers_vente: "Transfert magasin → vente",
+        vente: "Sortie par vente",
+        retour_vente: "Retour au stock de vente",
+        ajustement_magasin: "Ajustement magasin",
+        ajustement_vente: "Ajustement vente"
+    };
+    return libelles[type] || type || "Mouvement";
+}
+
+function afficherMessageStock(message, type) {
+    const zone = document.getElementById("messageStockAdmin");
+    if (!zone) return;
+    zone.textContent = message || "";
+    zone.className = message ? "admin-message visible " + (type || "info") : "admin-message";
+}
+
+function actualiserSelectTransfertStock() {
+    const select = document.getElementById("transfertArticleStock");
+    if (!select) return;
+    const valeur = select.value;
+    select.replaceChildren();
+    const vide = document.createElement("option");
+    vide.value = "";
+    vide.textContent = articlesStockNarelvir.length ? "Choisissez un produit" : "Aucun produit enregistré";
+    select.appendChild(vide);
+    articlesStockNarelvir.filter(function(article) { return article.actif !== false; }).forEach(function(article) {
+        const option = document.createElement("option");
+        option.value = article.id;
+        option.textContent = article.nom + " — magasin : " + formaterQuantiteStock(article.stock_magasin) + " " + (article.unite || "pièce");
+        option.disabled = Number(article.stock_magasin || 0) <= 0;
+        select.appendChild(option);
+    });
+    select.value = valeur;
+}
+
+function actualiserSelectsStockVente() {
+    document.querySelectorAll(".vente-article-stock").forEach(function(select) {
+        remplirSelectStockLigne(select, select.value);
+    });
+}
+
+function afficherStockAdmin() {
+    const liste = document.getElementById("listeArticlesStockAdmin");
+    const historique = document.getElementById("listeMouvementsStockAdmin");
+    if (!liste || !historique) return;
+
+    const totalMagasin = articlesStockNarelvir.reduce(function(total, article) {
+        return total + Number(article.stock_magasin || 0);
+    }, 0);
+    const totalVente = articlesStockNarelvir.reduce(function(total, article) {
+        return total + Number(article.stock_vente || 0);
+    }, 0);
+    const alertes = articlesStockNarelvir.filter(function(article) {
+        return article.actif !== false && Number(article.stock_vente || 0) <= Number(article.seuil_alerte || 0);
+    });
+
+    document.getElementById("totalStockMagasinAdmin").textContent = formaterQuantiteStock(totalMagasin);
+    document.getElementById("totalStockVenteAdmin").textContent = formaterQuantiteStock(totalVente);
+    document.getElementById("totalAlertesStockAdmin").textContent = String(alertes.length);
+
+    liste.replaceChildren();
+    if (!articlesStockNarelvir.length) {
+        const vide = document.createElement("p");
+        vide.className = "stock-vide";
+        vide.textContent = "Aucun produit en stock. Enregistrez votre premier arrivage ci-dessus.";
+        liste.appendChild(vide);
+    } else {
+        articlesStockNarelvir.forEach(function(article) {
+            const alerte = Number(article.stock_vente || 0) <= Number(article.seuil_alerte || 0);
+            const carte = document.createElement("article");
+            carte.className = "stock-carte" + (alerte ? " alerte" : "");
+            const titre = document.createElement("h5");
+            titre.textContent = (alerte ? "⚠️ " : "📦 ") + article.nom;
+            carte.appendChild(titre);
+            if (article.reference) carte.appendChild(creerLigneAdmin("Référence", article.reference));
+            carte.appendChild(creerLigneAdmin("Prix d’achat", article.prix_achat === null ? "Non renseigné" : formaterMontant(article.prix_achat) + " FCFA"));
+            carte.appendChild(creerLigneAdmin("Prix de vente", article.prix_vente === null ? "Non renseigné" : formaterMontant(article.prix_vente) + " FCFA"));
+
+            const valeurs = document.createElement("div");
+            valeurs.className = "stock-valeurs";
+            const magasin = document.createElement("div");
+            magasin.className = "stock-valeur magasin";
+            magasin.innerHTML = "<strong>" + formaterQuantiteStock(article.stock_magasin) + "</strong>Magasin";
+            const vente = document.createElement("div");
+            vente.className = "stock-valeur";
+            vente.innerHTML = "<strong>" + formaterQuantiteStock(article.stock_vente) + "</strong>Vente";
+            valeurs.append(magasin, vente);
+            carte.appendChild(valeurs);
+
+            const seuil = document.createElement("p");
+            seuil.textContent = "Seuil d’alerte : " + formaterQuantiteStock(article.seuil_alerte) + " " + (article.unite || "pièce");
+            carte.appendChild(seuil);
+            liste.appendChild(carte);
+        });
+    }
+
+    historique.replaceChildren();
+    if (!mouvementsStockNarelvir.length) {
+        const vide = document.createElement("p");
+        vide.className = "stock-vide";
+        vide.textContent = "Aucun mouvement enregistré.";
+        historique.appendChild(vide);
+    } else {
+        mouvementsStockNarelvir.forEach(function(mouvement) {
+            const ligne = document.createElement("article");
+            ligne.className = "stock-mouvement";
+            const article = mouvement.articles_stock || {};
+            ligne.appendChild(creerLigneAdmin("Date", formaterDateAdmin(mouvement.created_at)));
+            ligne.appendChild(creerLigneAdmin("Mouvement", libelleMouvementStock(mouvement.type_mouvement)));
+            ligne.appendChild(creerLigneAdmin("Produit", article.nom || "Produit"));
+            ligne.appendChild(creerLigneAdmin("Quantité", formaterQuantiteStock(mouvement.quantite) + " " + (article.unite || "")));
+            ligne.appendChild(creerLigneAdmin(
+                "Après le mouvement",
+                "Magasin " + formaterQuantiteStock(mouvement.stock_magasin_apres) +
+                " • Vente " + formaterQuantiteStock(mouvement.stock_vente_apres)
+            ));
+            if (mouvement.fournisseur) ligne.appendChild(creerLigneAdmin("Fournisseur", mouvement.fournisseur));
+            if (mouvement.reference_mouvement) ligne.appendChild(creerLigneAdmin("Référence", mouvement.reference_mouvement));
+            historique.appendChild(ligne);
+        });
+    }
+
+    actualiserSelectTransfertStock();
+    actualiserSelectsStockVente();
+}
+
+async function chargerStockAdmin(utilisateur) {
+    const utilisateurActuel = utilisateur || utilisateurConnecteNarelvir;
+    if (!clientSupabase || !estAdministrateurNarelvir(utilisateurActuel)) return;
+
+    const resultats = await Promise.all([
+        clientSupabase.from("articles_stock")
+            .select("id,nom,reference,unite,stock_magasin,stock_vente,seuil_alerte,prix_achat,prix_vente,actif,updated_at")
+            .order("nom", { ascending: true }),
+        clientSupabase.from("mouvements_stock")
+            .select("id,type_mouvement,quantite,stock_magasin_apres,stock_vente_apres,prix_achat_unit,fournisseur,reference_mouvement,note,created_at,articles_stock(nom,unite)")
+            .order("created_at", { ascending: false })
+            .limit(30)
+    ]);
+
+    if (resultats[0].error) throw resultats[0].error;
+    if (resultats[1].error) throw resultats[1].error;
+    articlesStockNarelvir = resultats[0].data || [];
+    mouvementsStockNarelvir = resultats[1].data || [];
+    afficherStockAdmin();
+}
+
+async function enregistrerArrivageStock(evenement) {
+    evenement.preventDefault();
+    if (!estAdministrateurNarelvir(utilisateurConnecteNarelvir)) return;
+    const formulaire = evenement.currentTarget;
+    const bouton = formulaire.querySelector("button[type='submit']");
+    bouton.disabled = true;
+    afficherMessageStock("", "info");
+    try {
+        const resultat = await clientSupabase.rpc("enregistrer_arrivage_admin", {
+            p_nom: document.getElementById("arrivageNom").value.trim(),
+            p_reference: document.getElementById("arrivageReference").value.trim() || null,
+            p_unite: document.getElementById("arrivageUnite").value,
+            p_quantite: Number(document.getElementById("arrivageQuantite").value),
+            p_prix_achat: document.getElementById("arrivagePrixAchat").value === "" ? null : Number(document.getElementById("arrivagePrixAchat").value),
+            p_prix_vente: document.getElementById("arrivagePrixVente").value === "" ? null : Number(document.getElementById("arrivagePrixVente").value),
+            p_fournisseur: document.getElementById("arrivageFournisseur").value.trim() || null,
+            p_reference_arrivage: document.getElementById("arrivageNumero").value.trim() || null,
+            p_note: document.getElementById("arrivageNote").value.trim() || null,
+            p_seuil_alerte: Number(document.getElementById("arrivageSeuil").value || 3)
+        });
+        if (resultat.error) throw resultat.error;
+        const arrivee = resultat.data || {};
+        formulaire.reset();
+        document.getElementById("arrivageSeuil").value = "3";
+        afficherMessageStock(
+            "Arrivage enregistré pour " + (arrivee.nom || "le produit") +
+            ". Stock magasin : " + formaterQuantiteStock(arrivee.stock_magasin) + ".",
+            "info"
+        );
+        await chargerStockAdmin(utilisateurConnecteNarelvir);
+    } catch (erreur) {
+        afficherMessageStock(erreur && erreur.message ? erreur.message : "Impossible d’enregistrer l’arrivage.", "erreur");
+        console.error("Arrivage impossible :", erreur);
+    } finally {
+        bouton.disabled = false;
+    }
+}
+
+async function transfererStockVente(evenement) {
+    evenement.preventDefault();
+    if (!estAdministrateurNarelvir(utilisateurConnecteNarelvir)) return;
+    const formulaire = evenement.currentTarget;
+    const bouton = formulaire.querySelector("button[type='submit']");
+    bouton.disabled = true;
+    afficherMessageStock("", "info");
+    try {
+        const resultat = await clientSupabase.rpc("transferer_stock_vente_admin", {
+            p_article_id: document.getElementById("transfertArticleStock").value,
+            p_quantite: Number(document.getElementById("transfertQuantiteStock").value),
+            p_note: document.getElementById("transfertNoteStock").value.trim() || null
+        });
+        if (resultat.error) throw resultat.error;
+        const transfert = resultat.data || {};
+        formulaire.reset();
+        afficherMessageStock(
+            "Transfert effectué pour " + (transfert.nom || "le produit") +
+            ". Magasin : " + formaterQuantiteStock(transfert.stock_magasin) +
+            " • Vente : " + formaterQuantiteStock(transfert.stock_vente) + ".",
+            "info"
+        );
+        await chargerStockAdmin(utilisateurConnecteNarelvir);
+    } catch (erreur) {
+        afficherMessageStock(erreur && erreur.message ? erreur.message : "Impossible de transférer ce stock.", "erreur");
+        console.error("Transfert impossible :", erreur);
+    } finally {
+        bouton.disabled = false;
     }
 }
 
@@ -3433,8 +3873,11 @@ async function actualiserAdministration(utilisateur) {
     const utilisateurActuel = utilisateur || utilisateurConnecteNarelvir;
     if (!estAdministrateurNarelvir(utilisateurActuel)) return;
     try {
-        await chargerClientsAdmin(utilisateurActuel);
-        await chargerCommandesAdmin(utilisateurActuel);
+        await Promise.all([
+            chargerClientsAdmin(utilisateurActuel),
+            chargerCommandesAdmin(utilisateurActuel),
+            chargerStockAdmin(utilisateurActuel)
+        ]);
     } catch (erreur) {
         afficherMessageAdmin("La base complète doit encore être activée avec le fichier SQL.", "erreur");
         console.error("Administration indisponible :", erreur);
