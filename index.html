@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' https://narelvir.cm https://www.narelvir.cm data: blob:; font-src 'self' data:; connect-src 'self' https://jyitudbysxfadgjcubgh.supabase.co wss://jyitudbysxfadgjcubgh.supabase.co; manifest-src 'self'; worker-src 'self' blob:; media-src 'none'; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=(), usb=()">
 <meta name="description" content="NARELVIR : pièces détachées moto, lubrifiants et équipements motorisés à Yaoundé.">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="theme-color" content="#0756a3">
@@ -2444,7 +2447,7 @@ footer{
             <input type="email" id="emailConnexion" autocomplete="email" inputmode="email" required placeholder="exemple@email.com">
 
             <label for="motDePasseConnexion">Mot de passe</label>
-            <input type="password" id="motDePasseConnexion" autocomplete="current-password" required minlength="6" placeholder="Votre mot de passe">
+            <input type="password" id="motDePasseConnexion" autocomplete="current-password" required maxlength="128" placeholder="Votre mot de passe">
 
             <button type="submit" class="auth-bouton">Se connecter</button>
             <button type="button" class="mot-de-passe-oublie" onclick="motDePasseOublie()">Mot de passe oublié ?</button>
@@ -2461,7 +2464,7 @@ footer{
             <input type="email" id="emailInscription" autocomplete="email" inputmode="email" required placeholder="exemple@email.com">
 
             <label for="motDePasseInscription">Mot de passe</label>
-            <input type="password" id="motDePasseInscription" autocomplete="new-password" required minlength="6" placeholder="Au moins 6 caractères">
+            <input type="password" id="motDePasseInscription" autocomplete="new-password" required minlength="12" maxlength="128" placeholder="Au moins 12 caractères">
 
             <button type="submit" class="auth-bouton">Créer mon compte</button>
         </form>
@@ -2828,7 +2831,7 @@ footer{
         <h3>Choisir un nouveau mot de passe</h3>
         <form class="auth-formulaire" onsubmit="enregistrerNouveauMotDePasse(event)">
             <label for="nouveauMotDePasse">Nouveau mot de passe</label>
-            <input type="password" id="nouveauMotDePasse" autocomplete="new-password" required minlength="6" placeholder="Au moins 6 caractères">
+            <input type="password" id="nouveauMotDePasse" autocomplete="new-password" required minlength="12" maxlength="128" placeholder="Au moins 12 caractères">
             <button type="submit" class="auth-bouton">Enregistrer le nouveau mot de passe</button>
         </form>
     </div>
@@ -2841,7 +2844,7 @@ footer{
     <p>📞 <a href="tel:+237692049233">692 049 233</a></p>
     <div class="contact-actions">
         <a class="whatsapp" href="https://wa.me/237652242847?text=Bonjour%20NARELVIR">💬 Commander sur WhatsApp</a>
-        <a class="itineraire" href="https://www.google.com/maps/search/?api=1&amp;query=NARELVIR%20Nouvelle%20Route%20Brique%20Yaound%C3%A9" target="_blank" rel="noopener">📍 Voir l’itinéraire</a>
+        <a class="itineraire" href="https://www.google.com/maps/search/?api=1&amp;query=NARELVIR%20Nouvelle%20Route%20Brique%20Yaound%C3%A9" target="_blank" rel="noopener noreferrer">📍 Voir l’itinéraire</a>
     </div>
     <div class="infos-pratiques">
         <div class="info-pratique">
@@ -2869,7 +2872,7 @@ footer{
 </div>
 
 <div class="catalogue">
-    <a href="https://narelvir.cm/Catalogue_NARELVIR_2026_MAJ.pdf" target="_blank" rel="noopener">
+    <a href="https://narelvir.cm/Catalogue_NARELVIR_2026_MAJ.pdf" target="_blank" rel="noopener noreferrer">
         📕 VOIR NOTRE CATALOGUE NARELVIR
     </a>
 </div>
@@ -2882,14 +2885,13 @@ footer{
 
 <a class="whatsapp-flottant" href="https://wa.me/237652242847?text=Bonjour%20NARELVIR" aria-label="Contacter NARELVIR sur WhatsApp" title="WhatsApp NARELVIR">💬</a>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@4.1.0/dist/jspdf.umd.min.js" crossorigin="anonymous"></script>
 <script>
 const NUMERO_WHATSAPP = "237652242847";
 const CLE_PANIER = "narelvir-panier";
 const SUPABASE_URL = "https://jyitudbysxfadgjcubgh.supabase.co";
 const SUPABASE_CLE_PUBLIQUE = "sb_publishable_PsnwN6TTzw_mZWvWcq-dFQ_39uprhHX";
-const EMAIL_ADMIN_NARELVIR = "narcissetchoffo21@gmail.com";
 const NUI_NARELVIR = "P079818495940G";
 const clientSupabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_CLE_PUBLIQUE) : null;
 let panier = chargerPanier();
@@ -2898,6 +2900,7 @@ let commandesAdminNarelvir = [];
 let articlesStockNarelvir = [];
 let mouvementsStockNarelvir = [];
 let utilisateurConnecteNarelvir = null;
+let estAdministrateurActuelNarelvir = false;
 let profilClientActuel = null;
 let commandesClientActuel = [];
 let facturesClientActuel = [];
@@ -2949,9 +2952,21 @@ function basculerBoutonFormulaire(formulaire, chargement) {
 function estAdministrateurNarelvir(utilisateur) {
     return Boolean(
         utilisateur &&
-        utilisateur.email &&
-        utilisateur.email.trim().toLowerCase() === EMAIL_ADMIN_NARELVIR
+        utilisateurConnecteNarelvir &&
+        utilisateur.id === utilisateurConnecteNarelvir.id &&
+        estAdministrateurActuelNarelvir
     );
+}
+
+async function verifierAutorisationAdministrateur() {
+    if (!clientSupabase || !utilisateurConnecteNarelvir) return false;
+    try {
+        const resultat = await clientSupabase.rpc("est_admin_narelvir");
+        return !resultat.error && resultat.data === true;
+    } catch (erreur) {
+        console.error("Vérification administrateur impossible :", erreur);
+        return false;
+    }
 }
 
 function afficherMessageAdmin(message, type) {
@@ -3797,10 +3812,14 @@ function afficherStockAdmin() {
             valeurs.className = "stock-valeurs";
             const magasin = document.createElement("div");
             magasin.className = "stock-valeur magasin";
-            magasin.innerHTML = "<strong>" + formaterQuantiteStock(article.stock_magasin) + "</strong>Magasin";
+            const magasinQuantite = document.createElement("strong");
+            magasinQuantite.textContent = formaterQuantiteStock(article.stock_magasin);
+            magasin.append(magasinQuantite, document.createTextNode("Magasin"));
             const vente = document.createElement("div");
             vente.className = "stock-valeur";
-            vente.innerHTML = "<strong>" + formaterQuantiteStock(article.stock_vente) + "</strong>Vente";
+            const venteQuantite = document.createElement("strong");
+            venteQuantite.textContent = formaterQuantiteStock(article.stock_vente);
+            vente.append(venteQuantite, document.createTextNode("Vente"));
             valeurs.append(magasin, vente);
             carte.appendChild(valeurs);
 
@@ -4407,7 +4426,7 @@ async function chargerProfilClient(utilisateur) {
     };
 
     if (!resultat.data) {
-        const creation = await clientSupabase.from("profils_clients").upsert(profilClientActuel);
+        const creation = await clientSupabase.from("profils_clients").insert(profilClientActuel);
         if (creation.error) throw creation.error;
     }
     appliquerProfilDansInterface(profilClientActuel, utilisateur);
@@ -4818,6 +4837,7 @@ async function afficherEtatCompte(utilisateur) {
     const reinitialisation = document.getElementById("zoneNouveauMotDePasse");
     const administration = document.getElementById("zoneAdminNarelvir");
     utilisateurConnecteNarelvir = utilisateur || null;
+    estAdministrateurActuelNarelvir = false;
 
     if (!utilisateur) {
         invite.classList.remove("cache");
@@ -4831,6 +4851,8 @@ async function afficherEtatCompte(utilisateur) {
         profilClientActuel = null;
         return;
     }
+
+    estAdministrateurActuelNarelvir = await verifierAutorisationAdministrateur();
 
     const metadata = utilisateur.user_metadata || {};
     appliquerProfilDansInterface({
@@ -4903,7 +4925,7 @@ async function inscrireClient(evenement) {
 
         formulaire.reset();
         if (resultat.data.session) {
-            afficherEtatCompte(resultat.data.user);
+            await afficherEtatCompte(resultat.data.user);
             afficherMessageAuth("Votre compte NARELVIR a été créé et vous êtes connecté.", "succes");
         } else {
             afficherFormulaireAuth("connexion");
@@ -4934,7 +4956,7 @@ async function connecterClient(evenement) {
         const resultat = await clientSupabase.auth.signInWithPassword({ email: email, password: motDePasse });
         if (resultat.error) throw resultat.error;
         formulaire.reset();
-        afficherEtatCompte(resultat.data.user);
+        await afficherEtatCompte(resultat.data.user);
         afficherMessageAuth("Connexion réussie. Bienvenue dans votre espace NARELVIR.", "succes");
     } catch (erreur) {
         afficherMessageAuth(traduireErreurAuth(erreur.message), "erreur");
@@ -5185,8 +5207,10 @@ function afficherPanier() {
         const prix = document.createElement("p");
         const sousTotalTexte = document.createElement("p");
 
-        nom.innerHTML = "✅ <strong></strong>";
-        nom.querySelector("strong").textContent = article.nom;
+        nom.append(document.createTextNode("✅ "));
+        const nomArticle = document.createElement("strong");
+        nomArticle.textContent = article.nom;
+        nom.appendChild(nomArticle);
         prix.textContent = "Prix unitaire : " + article.prix.toLocaleString("fr-FR") + " FCFA";
         sousTotalTexte.textContent = "Sous-total : " + sousTotal.toLocaleString("fr-FR") + " FCFA";
         informations.append(nom, prix, sousTotalTexte);
