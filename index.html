@@ -1000,6 +1000,95 @@ h2{
     background:#8b1117;
 }
 
+/* ===== MENU DES FONCTIONS ADMINISTRATEUR ===== */
+.admin-menu-fonctions{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(155px,1fr));
+    gap:10px;
+    margin:18px 0;
+}
+
+.admin-fonction-bouton{
+    position:relative;
+    min-height:94px;
+    padding:14px 10px;
+    border:2px solid #c8d7e5;
+    border-radius:13px;
+    background:white;
+    color:var(--bleu-fonce);
+    font:inherit;
+    font-weight:bold;
+    text-align:center;
+    cursor:pointer;
+    transition:transform .15s ease,border-color .15s ease,box-shadow .15s ease;
+}
+
+.admin-fonction-bouton:hover,
+.admin-fonction-bouton:focus-visible{
+    transform:translateY(-2px);
+    border-color:var(--bleu);
+    box-shadow:0 7px 18px rgba(7,86,163,.14);
+    outline:none;
+}
+
+.admin-fonction-bouton.actif{
+    border-color:var(--bleu);
+    background:linear-gradient(135deg,var(--bleu),var(--bleu-fonce));
+    color:white;
+    box-shadow:0 7px 18px rgba(7,86,163,.22);
+}
+
+.admin-fonction-icone{
+    display:block;
+    margin-bottom:5px;
+    font-size:27px;
+    line-height:1;
+}
+
+.admin-fonction-badge{
+    position:absolute;
+    top:7px;
+    right:7px;
+    min-width:25px;
+    padding:3px 7px;
+    border-radius:20px;
+    background:var(--rouge);
+    color:white;
+    font-size:12px;
+    line-height:19px;
+}
+
+.admin-module.cache{
+    display:none;
+}
+
+.admin-module-entete{
+    margin:0 0 12px;
+    padding:14px;
+    border-radius:11px;
+    background:#eef6ff;
+    color:var(--bleu-fonce);
+}
+
+.admin-module-entete h4{
+    margin:0 0 5px;
+    font-size:19px;
+}
+
+.admin-module-entete p{
+    margin:0;
+    line-height:1.45;
+}
+
+.client-sans-compte{
+    border-left-color:#d97706;
+}
+
+.client-sans-compte .admin-badge{
+    background:#fff3d6;
+    color:#7a4e00;
+}
+
 
 /* ===== STOCK MAGASIN ET STOCK DE VENTE ===== */
 .stock-admin-panneau{
@@ -1403,6 +1492,16 @@ h2{
     .tableau-compte,
     .admin-resume{
         grid-template-columns:1fr;
+    }
+
+    .admin-menu-fonctions{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+
+    .admin-fonction-bouton{
+        min-height:88px;
+        padding:12px 7px;
+        font-size:14px;
     }
 
     .espace-client-grille,
@@ -2449,9 +2548,50 @@ footer{
 
         <div id="zoneAdminNarelvir" class="admin-narelvir cache" aria-labelledby="titreAdminNarelvir">
             <h3 id="titreAdminNarelvir">🛡️ Administration NARELVIR</h3>
-            <p class="admin-intro">Espace privé réservé au propriétaire : clients, commandes, suivi et facturation. Les mots de passe ne sont jamais affichés.</p>
-            <div class="admin-resume">
-                <div><strong id="totalClientsAdmin">0</strong>Clients</div>
+            <p class="admin-intro">Espace privé réservé au propriétaire. Choisissez une fonction ci-dessous : chaque bouton ouvre uniquement l’outil correspondant. Les mots de passe ne sont jamais affichés.</p>
+
+            <nav class="admin-menu-fonctions" aria-label="Fonctions de gestion NARELVIR">
+                <button type="button" class="admin-fonction-bouton actif" data-module-admin="tableau" aria-pressed="true" onclick="ouvrirModuleAdmin('tableau')">
+                    <span class="admin-fonction-icone">📊</span>Tableau de bord
+                </button>
+                <button type="button" class="admin-fonction-bouton" data-module-admin="vente" aria-pressed="false" onclick="ouvrirModuleAdmin('vente')">
+                    <span class="admin-fonction-icone">🧾</span>Nouvelle vente / facture
+                </button>
+                <button type="button" class="admin-fonction-bouton" data-module-admin="creances" aria-pressed="false" onclick="ouvrirModuleAdmin('creances')">
+                    <span class="admin-fonction-badge" id="menuBadgeCreancesAdmin">0</span>
+                    <span class="admin-fonction-icone">💳</span>Créances
+                </button>
+                <button type="button" class="admin-fonction-bouton" data-module-admin="stock" aria-pressed="false" onclick="ouvrirModuleAdmin('stock')">
+                    <span class="admin-fonction-badge" id="menuBadgeStockAdmin">0</span>
+                    <span class="admin-fonction-icone">📦</span>Stocks et arrivages
+                </button>
+                <button type="button" class="admin-fonction-bouton" data-module-admin="clients-compte" aria-pressed="false" onclick="ouvrirModuleAdmin('clients-compte')">
+                    <span class="admin-fonction-badge" id="menuBadgeClientsCompteAdmin">0</span>
+                    <span class="admin-fonction-icone">👤</span>Clients avec compte
+                </button>
+                <button type="button" class="admin-fonction-bouton" data-module-admin="clients-sans-compte" aria-pressed="false" onclick="ouvrirModuleAdmin('clients-sans-compte')">
+                    <span class="admin-fonction-badge" id="menuBadgeClientsSansCompteAdmin">0</span>
+                    <span class="admin-fonction-icone">👥</span>Clients sans compte
+                </button>
+                <button type="button" class="admin-fonction-bouton" data-module-admin="ventes" aria-pressed="false" onclick="ouvrirModuleAdmin('ventes')">
+                    <span class="admin-fonction-icone">🗂️</span>Ventes et factures
+                </button>
+                <button type="button" class="admin-fonction-bouton" data-module-admin="paiements" aria-pressed="false" onclick="ouvrirModuleAdmin('paiements')">
+                    <span class="admin-fonction-icone">✅</span>Ventes payées
+                </button>
+                <button type="button" class="admin-fonction-bouton" data-module-admin="commandes-site" aria-pressed="false" onclick="ouvrirModuleAdmin('commandes-site')">
+                    <span class="admin-fonction-icone">🌐</span>Commandes du site
+                </button>
+            </nav>
+
+            <section id="moduleTableauAdmin" class="admin-module" aria-labelledby="titreTableauAdmin">
+                <div class="admin-module-entete">
+                    <h4 id="titreTableauAdmin">📊 Résumé général</h4>
+                    <p>Consultez rapidement les clients, les ventes, les créances et les deux stocks.</p>
+                </div>
+                <div class="admin-resume">
+                <div><strong id="totalClientsAdmin">0</strong>Clients avec compte</div>
+                <div><strong id="totalClientsSansCompteAdmin">0</strong>Clients sans compte</div>
                 <div><strong id="totalCommandesAdmin">0</strong>Commandes</div>
                 <div><strong id="totalStockMagasinAdmin">0</strong>Unités magasin</div>
                 <div><strong id="totalStockVenteAdmin">0</strong>Unités en vente</div>
@@ -2462,8 +2602,9 @@ footer{
                 <div class="resume-creances"><strong id="totalCreancesAdmin">0</strong>FCFA de créances</div>
                 <div class="resume-retards"><strong id="totalRetardsAdmin">0</strong>FCFA en retard</div>
             </div>
+            </section>
 
-            <details class="vente-boutique" id="zoneVenteBoutique">
+            <details class="vente-boutique admin-module cache" id="zoneVenteBoutique">
                 <summary>➕ Nouvelle facture — client sur place ou à distance</summary>
                 <form class="vente-boutique-formulaire" id="formVenteBoutique" onsubmit="enregistrerVenteBoutique(event)">
                     <div class="vente-boutique-grille">
@@ -2552,7 +2693,7 @@ footer{
             </details>
 
 
-            <details class="stock-admin-panneau" id="zoneGestionStock">
+            <details class="stock-admin-panneau admin-module cache" id="zoneGestionStock">
                 <summary>📦 Stock magasin, stock de vente et arrivages</summary>
                 <div class="stock-admin-contenu">
                     <p class="admin-intro">Les arrivages entrent d’abord au magasin. Transférez ensuite la quantité souhaitée vers le stock de vente. Cet espace est visible uniquement par l’administrateur.</p>
@@ -2632,30 +2773,52 @@ footer{
                 </div>
             </details>
 
-            <h4 class="admin-section-titre">👥 Comptes clients</h4>
-            <div class="admin-outils">
-                <input type="search" id="rechercheClientsAdmin" placeholder="Rechercher nom, e-mail ou téléphone" aria-label="Rechercher un client" oninput="filtrerClientsAdmin()">
-                <button type="button" id="actualiserClientsAdmin" onclick="actualiserAdministration()">Actualiser</button>
-            </div>
-            <div id="messageAdminNarelvir" class="admin-message" role="status" aria-live="polite"></div>
-            <div id="listeClientsAdmin" class="admin-liste" aria-live="polite"></div>
+            <section id="moduleClientsCompteAdmin" class="admin-module cache" aria-labelledby="titreClientsCompteAdmin">
+                <div class="admin-module-entete">
+                    <h4 id="titreClientsCompteAdmin">👤 Clients avec un compte NARELVIR</h4>
+                    <p>Ces clients peuvent se connecter et consulter eux-mêmes leurs achats, leurs factures payées et leurs factures non payées.</p>
+                </div>
+                <div class="admin-outils">
+                    <input type="search" id="rechercheClientsAdmin" placeholder="Rechercher nom, e-mail ou téléphone" aria-label="Rechercher un client avec compte" oninput="filtrerClientsAdmin()">
+                    <button type="button" id="actualiserClientsAdmin" onclick="actualiserAdministration()">Actualiser</button>
+                </div>
+                <div id="messageAdminNarelvir" class="admin-message" role="status" aria-live="polite"></div>
+                <div id="listeClientsAdmin" class="admin-liste" aria-live="polite"></div>
+            </section>
 
-            <h4 class="admin-section-titre">📦 Gestion des commandes et factures</h4>
-            <div class="admin-outils">
-                <input type="search" id="rechercheCommandesAdmin" placeholder="Rechercher client, téléphone ou numéro" aria-label="Rechercher une commande" oninput="afficherCommandesAdmin()">
-                <select id="filtreCommandesAdmin" aria-label="Filtrer les commandes" onchange="afficherCommandesAdmin()">
-                    <option value="toutes">Toutes</option>
-                    <option value="en_retard">Créances en retard</option>
-                    <option value="creances">Toutes les créances</option>
-                    <option value="payees">Payées</option>
-                    <option value="distance">Clients à distance</option>
-                    <option value="boutique">Ventes sur place</option>
-                    <option value="site">Commandes en ligne</option>
-                </select>
-            </div>
-            <div id="listeCommandesAdmin" class="admin-liste" aria-live="polite">
-                <p class="compte-chargement">Chargement des commandes…</p>
-            </div>
+            <section id="moduleClientsSansCompteAdmin" class="admin-module cache" aria-labelledby="titreClientsSansCompteAdmin">
+                <div class="admin-module-entete">
+                    <h4 id="titreClientsSansCompteAdmin">👥 Clients sans compte</h4>
+                    <p>Ventes sur place ou à distance enregistrées sans compte client. Elles pourront être reliées automatiquement quand le client créera son compte avec le même téléphone.</p>
+                </div>
+                <div class="admin-outils">
+                    <input type="search" id="rechercheClientsSansCompteAdmin" placeholder="Rechercher nom, téléphone ou ville" aria-label="Rechercher un client sans compte" oninput="afficherClientsSansCompteAdmin()">
+                    <button type="button" onclick="actualiserAdministration()">Actualiser</button>
+                </div>
+                <div id="listeClientsSansCompteAdmin" class="admin-liste" aria-live="polite"></div>
+            </section>
+
+            <section id="moduleCommandesAdmin" class="admin-module cache" aria-labelledby="titreModuleCommandesAdmin">
+                <div class="admin-module-entete">
+                    <h4 id="titreModuleCommandesAdmin">🗂️ Ventes et factures</h4>
+                    <p id="descriptionModuleCommandesAdmin">Retrouvez toutes les ventes, factures, versements et statuts de livraison.</p>
+                </div>
+                <div class="admin-outils">
+                    <input type="search" id="rechercheCommandesAdmin" placeholder="Rechercher client, téléphone ou numéro" aria-label="Rechercher une commande" oninput="afficherCommandesAdmin()">
+                    <select id="filtreCommandesAdmin" aria-label="Filtrer les commandes" onchange="afficherCommandesAdmin()">
+                        <option value="toutes">Toutes</option>
+                        <option value="en_retard">Créances en retard</option>
+                        <option value="creances">Toutes les créances</option>
+                        <option value="payees">Payées</option>
+                        <option value="distance">Clients à distance</option>
+                        <option value="boutique">Ventes sur place</option>
+                        <option value="site">Commandes en ligne</option>
+                    </select>
+                </div>
+                <div id="listeCommandesAdmin" class="admin-liste" aria-live="polite">
+                    <p class="compte-chargement">Chargement des commandes…</p>
+                </div>
+            </section>
         </div>
 
         <button type="button" class="auth-bouton rouge" onclick="deconnecterClient()">Se déconnecter</button>
@@ -2825,10 +2988,174 @@ function creerLigneAdmin(libelle, valeur) {
     return ligne;
 }
 
+function ouvrirModuleAdmin(module, defiler) {
+    const configurations = {
+        tableau: { panneau: "moduleTableauAdmin" },
+        vente: { panneau: "zoneVenteBoutique", details: true },
+        stock: { panneau: "zoneGestionStock", details: true },
+        "clients-compte": { panneau: "moduleClientsCompteAdmin" },
+        "clients-sans-compte": { panneau: "moduleClientsSansCompteAdmin" },
+        ventes: {
+            panneau: "moduleCommandesAdmin",
+            filtre: "toutes",
+            titre: "🗂️ Ventes et factures",
+            description: "Retrouvez toutes les ventes, factures, versements et statuts de livraison."
+        },
+        creances: {
+            panneau: "moduleCommandesAdmin",
+            filtre: "creances",
+            titre: "💳 Créances clients",
+            description: "Ventes non entièrement payées. Enregistrez ici les nouveaux versements ou marquez une facture comme entièrement payée."
+        },
+        paiements: {
+            panneau: "moduleCommandesAdmin",
+            filtre: "payees",
+            titre: "✅ Ventes entièrement payées",
+            description: "Historique des ventes dont le solde restant est égal à zéro."
+        },
+        "commandes-site": {
+            panneau: "moduleCommandesAdmin",
+            filtre: "site",
+            titre: "🌐 Commandes reçues sur le site",
+            description: "Commandes enregistrées directement par les clients depuis narelvir.cm."
+        }
+    };
+    const configuration = configurations[module] || configurations.tableau;
+
+    document.querySelectorAll("#zoneAdminNarelvir .admin-module").forEach(function(panneau) {
+        panneau.classList.add("cache");
+        if (panneau.tagName === "DETAILS") panneau.open = false;
+    });
+
+    const panneau = document.getElementById(configuration.panneau);
+    if (!panneau) return;
+    panneau.classList.remove("cache");
+    if (configuration.details) panneau.open = true;
+
+    document.querySelectorAll("#zoneAdminNarelvir [data-module-admin]").forEach(function(bouton) {
+        const actif = bouton.dataset.moduleAdmin === module;
+        bouton.classList.toggle("actif", actif);
+        bouton.setAttribute("aria-pressed", actif ? "true" : "false");
+    });
+
+    if (configuration.filtre) {
+        const filtre = document.getElementById("filtreCommandesAdmin");
+        if (filtre) filtre.value = configuration.filtre;
+        const titre = document.getElementById("titreModuleCommandesAdmin");
+        const description = document.getElementById("descriptionModuleCommandesAdmin");
+        if (titre) titre.textContent = configuration.titre;
+        if (description) description.textContent = configuration.description;
+        afficherCommandesAdmin();
+    }
+
+    if (module === "clients-sans-compte") afficherClientsSansCompteAdmin();
+    if (defiler !== false) panneau.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function regrouperClientsSansCompte() {
+    const groupes = new Map();
+    commandesAdminNarelvir.forEach(function(commande) {
+        if (commande.client_id || commande.statut === "annulee") return;
+        const telephoneNormalise = String(commande.telephone || "").replace(/\D/g, "");
+        const nomNormalise = String(commande.nom_client || "Client NARELVIR").trim().toLowerCase();
+        const cle = telephoneNormalise ? "tel:" + telephoneNormalise : "nom:" + nomNormalise;
+        if (!groupes.has(cle)) {
+            groupes.set(cle, {
+                cle: cle,
+                nom: commande.nom_client || "Client NARELVIR",
+                telephone: commande.telephone || "",
+                ville: commande.ville || "",
+                adresse: commande.adresse || "",
+                nombreAchats: 0,
+                totalAchats: 0,
+                totalPaye: 0,
+                resteAPayer: 0,
+                dernierAchat: null
+            });
+        }
+        const client = groupes.get(cle);
+        client.nombreAchats += 1;
+        client.totalAchats += Number(commande.total || 0);
+        client.totalPaye += Number(commande.montant_paye || 0);
+        client.resteAPayer += Number(commande.reste_a_payer || 0);
+        if (!client.dernierAchat || new Date(commande.created_at) > new Date(client.dernierAchat)) {
+            client.dernierAchat = commande.created_at;
+            client.nom = commande.nom_client || client.nom;
+            client.ville = commande.ville || client.ville;
+            client.adresse = commande.adresse || client.adresse;
+        }
+    });
+    return Array.from(groupes.values()).sort(function(a, b) {
+        return new Date(b.dernierAchat || 0) - new Date(a.dernierAchat || 0);
+    });
+}
+
+function afficherClientsSansCompteAdmin() {
+    const conteneur = document.getElementById("listeClientsSansCompteAdmin");
+    if (!conteneur) return;
+    const tousLesClients = regrouperClientsSansCompte();
+    const recherche = String(document.getElementById("rechercheClientsSansCompteAdmin")?.value || "").trim().toLowerCase();
+    const liste = tousLesClients.filter(function(client) {
+        if (!recherche) return true;
+        return [client.nom, client.telephone, client.ville, client.adresse]
+            .filter(Boolean)
+            .some(function(valeur) { return String(valeur).toLowerCase().includes(recherche); });
+    });
+
+    document.getElementById("totalClientsSansCompteAdmin").textContent = String(tousLesClients.length);
+    document.getElementById("menuBadgeClientsSansCompteAdmin").textContent = String(tousLesClients.length);
+    conteneur.replaceChildren();
+
+    if (!liste.length) {
+        const vide = document.createElement("p");
+        vide.className = "compte-vide";
+        vide.textContent = tousLesClients.length
+            ? "Aucun client sans compte ne correspond à votre recherche."
+            : "Aucune vente sans compte client enregistrée.";
+        conteneur.appendChild(vide);
+        return;
+    }
+
+    liste.forEach(function(client) {
+        const carte = document.createElement("article");
+        carte.className = "admin-client client-sans-compte";
+        const nom = document.createElement("p");
+        nom.className = "admin-client-nom";
+        nom.textContent = client.nom;
+        carte.appendChild(nom);
+        carte.appendChild(creerLigneAdmin("Téléphone", client.telephone));
+        carte.appendChild(creerLigneAdmin("Ville / adresse", [client.ville, client.adresse].filter(Boolean).join(" — ")));
+        carte.appendChild(creerLigneAdmin("Nombre d’achats", String(client.nombreAchats)));
+        carte.appendChild(creerLigneAdmin("Total acheté", formaterMontant(client.totalAchats) + " FCFA"));
+        carte.appendChild(creerLigneAdmin("Déjà payé", formaterMontant(client.totalPaye) + " FCFA"));
+        carte.appendChild(creerLigneAdmin("Reste à payer", formaterMontant(client.resteAPayer) + " FCFA"));
+        carte.appendChild(creerLigneAdmin("Dernier achat", formaterDateAdmin(client.dernierAchat)));
+
+        const badge = document.createElement("span");
+        badge.className = "admin-badge";
+        badge.textContent = "Sans compte";
+        carte.appendChild(badge);
+
+        const voir = document.createElement("button");
+        voir.type = "button";
+        voir.className = "bouton-petit";
+        voir.textContent = "Voir ses ventes";
+        voir.addEventListener("click", function() {
+            ouvrirModuleAdmin("ventes");
+            const rechercheCommandes = document.getElementById("rechercheCommandesAdmin");
+            rechercheCommandes.value = client.telephone || client.nom;
+            afficherCommandesAdmin();
+        });
+        carte.appendChild(voir);
+        conteneur.appendChild(carte);
+    });
+}
+
 function afficherClientsAdmin(liste) {
     const conteneur = document.getElementById("listeClientsAdmin");
     conteneur.replaceChildren();
     document.getElementById("totalClientsAdmin").textContent = String(clientsAdminNarelvir.length);
+    document.getElementById("menuBadgeClientsCompteAdmin").textContent = String(clientsAdminNarelvir.length);
 
     if (!liste.length) {
         const vide = document.createElement("p");
@@ -3446,6 +3773,7 @@ function afficherStockAdmin() {
     document.getElementById("totalStockMagasinAdmin").textContent = formaterQuantiteStock(totalMagasin);
     document.getElementById("totalStockVenteAdmin").textContent = formaterQuantiteStock(totalVente);
     document.getElementById("totalAlertesStockAdmin").textContent = String(alertes.length);
+    document.getElementById("menuBadgeStockAdmin").textContent = String(alertes.length);
 
     liste.replaceChildren();
     if (!articlesStockNarelvir.length) {
@@ -3608,6 +3936,8 @@ function afficherCommandesAdmin() {
     conteneur.replaceChildren();
     document.getElementById("totalCommandesAdmin").textContent = String(commandesAdminNarelvir.length);
     const commandesActivesAdmin = commandesAdminNarelvir.filter(function(c) { return c.statut !== "annulee"; });
+    const commandesAvecCreance = commandesActivesAdmin.filter(function(c) { return Number(c.reste_a_payer || 0) > 0; });
+    document.getElementById("menuBadgeCreancesAdmin").textContent = String(commandesAvecCreance.length);
     document.getElementById("totalAchatsPayesAdmin").textContent = String(
         commandesActivesAdmin.filter(function(c) { return statutPaiementCommande(c) === "payee"; }).length
     );
@@ -3630,6 +3960,7 @@ function afficherCommandesAdmin() {
         return total + Number(commande.reste_a_payer || 0);
     }, 0);
     document.getElementById("totalRetardsAdmin").textContent = formaterMontant(retards);
+    afficherClientsSansCompteAdmin();
 
     const recherche = (document.getElementById("rechercheCommandesAdmin").value || "").trim().toLowerCase();
     const filtre = document.getElementById("filtreCommandesAdmin").value;
@@ -4529,6 +4860,7 @@ async function afficherEtatCompte(utilisateur) {
 
     if (estAdministrateurNarelvir(utilisateur)) {
         administration.classList.remove("cache");
+        ouvrirModuleAdmin("tableau", false);
         if (!document.getElementById("articlesVenteBoutique").children.length) {
             ajouterLigneVenteBoutique();
         }
@@ -5048,3 +5380,4 @@ initialiserCompteClient();
 
 </body>
 </html>
+
