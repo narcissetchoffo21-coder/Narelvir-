@@ -1,4 +1,4 @@
-const CACHE_NAME = "narelvir-v10";
+const CACHE_NAME = "narelvir-v11";
 
 const urlsToCache = [
   "/",
