@@ -802,6 +802,52 @@ h2{
     grid-column:1 / -1;
 }
 
+.paiement-groupes{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:16px;
+    margin-top:14px;
+}
+
+.paiement-groupe{
+    padding:14px;
+    border:1px solid #d7e0e7;
+    border-top:5px solid var(--bleu);
+    border-radius:12px;
+    background:#f8fafc;
+}
+
+.paiement-groupe.paye{
+    border-top-color:#238a4b;
+    background:#f3fbf6;
+}
+
+.paiement-groupe.impaye{
+    border-top-color:var(--rouge);
+    background:#fff7f7;
+}
+
+.paiement-groupe.annule{
+    border-top-color:#6b7280;
+    background:#f5f5f5;
+}
+
+.paiement-groupe-titre{
+    margin:0 0 10px;
+    color:var(--bleu-fonce);
+    font-size:18px;
+}
+
+.paiement-groupe-titre span{
+    display:inline-block;
+    min-width:28px;
+    margin-left:5px;
+    padding:2px 8px;
+    border-radius:20px;
+    background:rgba(0,0,0,0.08);
+    text-align:center;
+}
+
 .compte-chargement,
 .compte-vide{
     padding:16px;
@@ -1273,7 +1319,8 @@ h2{
         grid-template-columns:1fr;
     }
 
-    .espace-client-grille{
+    .espace-client-grille,
+    .paiement-groupes{
         grid-template-columns:1fr;
     }
 
@@ -2280,20 +2327,34 @@ footer{
                 <div id="messageProfilClient" class="admin-message" role="status" aria-live="polite"></div>
             </div>
 
-            <div class="compte-bloc" id="mesCommandesClient">
-                <h3>📦 Mes commandes</h3>
-                <p>Retrouvez ici vos commandes et leur état de traitement.</p>
+            <div class="compte-bloc compte-bloc-large" id="mesCommandesClient">
+                <h3>📦 Mes achats</h3>
+                <p>Vos achats payés et non payés sont présentés séparément.</p>
                 <button type="button" class="bouton-petit" onclick="actualiserEspaceClient()">Actualiser le suivi</button>
-                <div id="listeCommandesClient" aria-live="polite">
-                    <p class="compte-chargement">Chargement des commandes…</p>
+                <div class="paiement-groupes" aria-live="polite">
+                    <section class="paiement-groupe paye">
+                        <h4 class="paiement-groupe-titre">✅ Achats payés <span id="nombreAchatsPayesClient">0</span></h4>
+                        <div id="listeCommandesPayeesClient"><p class="compte-chargement">Chargement…</p></div>
+                    </section>
+                    <section class="paiement-groupe impaye">
+                        <h4 class="paiement-groupe-titre">⏳ Achats non payés <span id="nombreAchatsNonPayesClient">0</span></h4>
+                        <div id="listeCommandesNonPayeesClient"><p class="compte-chargement">Chargement…</p></div>
+                    </section>
                 </div>
             </div>
 
             <div class="compte-bloc compte-bloc-large" id="mesFacturesClient">
                 <h3>🧾 Mes factures</h3>
-                <p>Les factures créées par NARELVIR peuvent être téléchargées en PDF.</p>
-                <div id="listeFacturesClient" aria-live="polite">
-                    <p class="compte-chargement">Chargement des factures…</p>
+                <p>Vous pouvez consulter et télécharger séparément vos factures payées et non payées.</p>
+                <div class="paiement-groupes" aria-live="polite">
+                    <section class="paiement-groupe paye">
+                        <h4 class="paiement-groupe-titre">✅ Factures payées <span id="nombreFacturesPayeesClient">0</span></h4>
+                        <div id="listeFacturesPayeesClient"><p class="compte-chargement">Chargement…</p></div>
+                    </section>
+                    <section class="paiement-groupe impaye">
+                        <h4 class="paiement-groupe-titre">⏳ Factures non payées <span id="nombreFacturesNonPayeesClient">0</span></h4>
+                        <div id="listeFacturesNonPayeesClient"><p class="compte-chargement">Chargement…</p></div>
+                    </section>
                 </div>
             </div>
         </div>
@@ -2304,6 +2365,8 @@ footer{
             <div class="admin-resume">
                 <div><strong id="totalClientsAdmin">0</strong>Clients</div>
                 <div><strong id="totalCommandesAdmin">0</strong>Commandes</div>
+                <div><strong id="totalAchatsPayesAdmin">0</strong>Achats payés</div>
+                <div class="resume-creances"><strong id="totalAchatsNonPayesAdmin">0</strong>Achats non payés</div>
                 <div><strong id="chiffreAffairesAdmin">0</strong>FCFA confirmés</div>
                 <div class="resume-creances"><strong id="totalCreancesAdmin">0</strong>FCFA de créances</div>
                 <div class="resume-retards"><strong id="totalRetardsAdmin">0</strong>FCFA en retard</div>
@@ -3104,6 +3167,13 @@ function afficherCommandesAdmin() {
     const conteneur = document.getElementById("listeCommandesAdmin");
     conteneur.replaceChildren();
     document.getElementById("totalCommandesAdmin").textContent = String(commandesAdminNarelvir.length);
+    const commandesActivesAdmin = commandesAdminNarelvir.filter(function(c) { return c.statut !== "annulee"; });
+    document.getElementById("totalAchatsPayesAdmin").textContent = String(
+        commandesActivesAdmin.filter(function(c) { return statutPaiementCommande(c) === "payee"; }).length
+    );
+    document.getElementById("totalAchatsNonPayesAdmin").textContent = String(
+        commandesActivesAdmin.filter(function(c) { return statutPaiementCommande(c) !== "payee"; }).length
+    );
 
     const statutsComptabilises = ["confirmee", "preparation", "expediee", "livree"];
     const chiffreAffaires = commandesAdminNarelvir.reduce(function(total, commande) {
@@ -3150,7 +3220,43 @@ function afficherCommandesAdmin() {
     }
 
     const statuts = ["en_attente", "confirmee", "preparation", "expediee", "livree", "annulee"];
-    commandesAffichees.forEach(function(commande) {
+    const groupesCommandes = filtre === "toutes" ? [
+        {
+            titre: "✅ Achats payés",
+            classe: "paye",
+            liste: commandesAffichees.filter(function(c) { return c.statut !== "annulee" && statutPaiementCommande(c) === "payee"; })
+        },
+        {
+            titre: "⏳ Achats non payés",
+            classe: "impaye",
+            liste: commandesAffichees.filter(function(c) { return c.statut !== "annulee" && statutPaiementCommande(c) !== "payee"; })
+        },
+        {
+            titre: "🚫 Commandes annulées",
+            classe: "annule",
+            liste: commandesAffichees.filter(function(c) { return c.statut === "annulee"; }),
+            masquerSiVide: true
+        }
+    ] : [{ titre: "", classe: "", liste: commandesAffichees }];
+
+    groupesCommandes.forEach(function(groupe) {
+        if (groupe.masquerSiVide && !groupe.liste.length) return;
+        if (groupe.titre) {
+            const titreGroupe = document.createElement("h4");
+            titreGroupe.className = "paiement-groupe-titre";
+            titreGroupe.textContent = groupe.titre + " (" + groupe.liste.length + ")";
+            conteneur.appendChild(titreGroupe);
+        }
+        if (!groupe.liste.length) {
+            const videGroupe = document.createElement("p");
+            videGroupe.className = "compte-vide";
+            videGroupe.textContent = groupe.classe === "paye"
+                ? "Aucun achat entièrement payé."
+                : "Aucun achat restant à payer.";
+            conteneur.appendChild(videGroupe);
+            return;
+        }
+        groupe.liste.forEach(function(commande) {
         const carte = document.createElement("article");
         carte.className = "commande-carte";
 
@@ -3303,6 +3409,7 @@ function afficherCommandesAdmin() {
 
         carte.appendChild(actions);
         conteneur.appendChild(carte);
+        });
     });
 }
 
@@ -3566,60 +3673,81 @@ async function enregistrerProfilClient(evenement) {
     }
 }
 
-function afficherCommandesClient() {
-    const conteneur = document.getElementById("listeCommandesClient");
+function creerCarteCommandeClient(commande) {
+    const carte = document.createElement("article");
+    carte.className = "commande-carte";
+    const entete = document.createElement("div");
+    entete.className = "commande-entete";
+    const titre = document.createElement("h4");
+    titre.textContent = commande.numero;
+    entete.append(titre, creerBadgeStatut(commande.statut), creerBadgeStatut(statutPaiementCommande(commande)));
+    carte.appendChild(entete);
+    carte.appendChild(creerLigneAdmin("Date", formaterDateAdmin(commande.created_at)));
+    carte.appendChild(creerLigneAdmin("Total", formaterMontant(commande.total) + " FCFA"));
+    carte.appendChild(creerLigneAdmin("Déjà payé", formaterMontant(commande.montant_paye) + " FCFA"));
+    carte.appendChild(creerLigneAdmin("Reste à payer", formaterMontant(commande.reste_a_payer) + " FCFA"));
+    carte.appendChild(creerListeArticlesCommande(commande.articles_commandes));
+    carte.appendChild(creerHistoriquePaiements(commande.paiements_commandes));
+
+    const recommander = document.createElement("button");
+    recommander.type = "button";
+    recommander.className = "bouton-petit";
+    recommander.textContent = "Ajouter de nouveau au panier";
+    recommander.addEventListener("click", function() { recommanderCommande(commande); });
+    carte.appendChild(recommander);
+    if (Number(commande.reste_a_payer || 0) > 0) {
+        const payer = document.createElement("button");
+        payer.type = "button";
+        payer.className = "bouton-petit whatsapp-relance";
+        payer.textContent = "💬 Contacter NARELVIR pour payer";
+        payer.addEventListener("click", function() { contacterNarelvirPourPaiement(commande); });
+        carte.appendChild(payer);
+    }
+    return carte;
+}
+
+function remplirListePaiementsClient(conteneur, liste, messageVide) {
     conteneur.replaceChildren();
+    if (!liste.length) {
+        const vide = document.createElement("p");
+        vide.className = "compte-vide";
+        vide.textContent = messageVide;
+        conteneur.appendChild(vide);
+        return;
+    }
+    liste.forEach(function(commande) {
+        conteneur.appendChild(creerCarteCommandeClient(commande));
+    });
+}
+
+function afficherCommandesClient() {
     const statutsAchat = ["confirmee", "preparation", "expediee", "livree"];
     const achats = commandesClientActuel.filter(function(c) { return statutsAchat.includes(c.statut); });
     const totalAchats = achats.reduce(function(total, commande) {
         return total + Number(commande.total || 0);
     }, 0);
+    const commandesActives = commandesClientActuel.filter(function(c) { return c.statut !== "annulee"; });
+    const commandesPayees = commandesActives.filter(function(c) { return statutPaiementCommande(c) === "payee"; });
+    const commandesNonPayees = commandesActives.filter(function(c) { return statutPaiementCommande(c) !== "payee"; });
+
     document.getElementById("nombreAchatsClient").textContent = String(achats.length);
     document.getElementById("montantAchatsClient").textContent = formaterMontant(totalAchats);
     document.getElementById("nombreCommandesCoursClient").textContent = String(
         commandesClientActuel.filter(function(c) { return !["livree", "annulee"].includes(c.statut); }).length
     );
+    document.getElementById("nombreAchatsPayesClient").textContent = String(commandesPayees.length);
+    document.getElementById("nombreAchatsNonPayesClient").textContent = String(commandesNonPayees.length);
 
-    if (!commandesClientActuel.length) {
-        const vide = document.createElement("p");
-        vide.className = "compte-vide";
-        vide.textContent = "Vous n’avez encore aucun achat ou commande relié à ce compte.";
-        conteneur.appendChild(vide);
-        return;
-    }
-
-    commandesClientActuel.forEach(function(commande) {
-        const carte = document.createElement("article");
-        carte.className = "commande-carte";
-        const entete = document.createElement("div");
-        entete.className = "commande-entete";
-        const titre = document.createElement("h4");
-        titre.textContent = commande.numero;
-        entete.append(titre, creerBadgeStatut(commande.statut), creerBadgeStatut(statutPaiementCommande(commande)));
-        carte.appendChild(entete);
-        carte.appendChild(creerLigneAdmin("Date", formaterDateAdmin(commande.created_at)));
-        carte.appendChild(creerLigneAdmin("Total", formaterMontant(commande.total) + " FCFA"));
-        carte.appendChild(creerLigneAdmin("Déjà payé", formaterMontant(commande.montant_paye) + " FCFA"));
-        carte.appendChild(creerLigneAdmin("Reste à payer", formaterMontant(commande.reste_a_payer) + " FCFA"));
-        carte.appendChild(creerListeArticlesCommande(commande.articles_commandes));
-        carte.appendChild(creerHistoriquePaiements(commande.paiements_commandes));
-
-        const recommander = document.createElement("button");
-        recommander.type = "button";
-        recommander.className = "bouton-petit";
-        recommander.textContent = "Ajouter de nouveau au panier";
-        recommander.addEventListener("click", function() { recommanderCommande(commande); });
-        carte.appendChild(recommander);
-        if (Number(commande.reste_a_payer || 0) > 0) {
-            const payer = document.createElement("button");
-            payer.type = "button";
-            payer.className = "bouton-petit whatsapp-relance";
-            payer.textContent = "💬 Contacter NARELVIR pour payer";
-            payer.addEventListener("click", function() { contacterNarelvirPourPaiement(commande); });
-            carte.appendChild(payer);
-        }
-        conteneur.appendChild(carte);
-    });
+    remplirListePaiementsClient(
+        document.getElementById("listeCommandesPayeesClient"),
+        commandesPayees,
+        "Vous n’avez aucun achat entièrement payé."
+    );
+    remplirListePaiementsClient(
+        document.getElementById("listeCommandesNonPayeesClient"),
+        commandesNonPayees,
+        "Vous n’avez aucun achat restant à payer."
+    );
 }
 
 function contacterNarelvirPourPaiement(commande) {
@@ -3654,45 +3782,69 @@ function recommanderCommande(commande) {
     document.getElementById("panier").scrollIntoView({ behavior: "smooth" });
 }
 
-function afficherFacturesClient() {
-    const conteneur = document.getElementById("listeFacturesClient");
-    conteneur.replaceChildren();
-    document.getElementById("nombreFacturesClient").textContent = String(facturesClientActuel.length);
+function creerCarteFactureClient(facture) {
+    const carte = document.createElement("article");
+    carte.className = "facture-carte";
+    const suivi = Object.assign({ total: facture.montant }, facture.commandes || {});
+    const entete = document.createElement("div");
+    entete.className = "facture-entete";
+    const titre = document.createElement("h4");
+    titre.textContent = "Facture " + facture.numero;
+    entete.append(titre, creerBadgeStatut(facture.statut), creerBadgeStatut(statutPaiementCommande(suivi)));
+    carte.appendChild(entete);
+    carte.appendChild(creerLigneAdmin("Date", formaterDateAdmin(facture.date_emission)));
+    carte.appendChild(creerLigneAdmin("Montant", formaterMontant(facture.montant) + " FCFA"));
+    carte.appendChild(creerLigneAdmin("Déjà payé", formaterMontant(suivi.montant_paye) + " FCFA"));
+    carte.appendChild(creerLigneAdmin("Solde dû", formaterMontant(suivi.reste_a_payer) + " FCFA"));
+    if (suivi.date_echeance) {
+        carte.appendChild(creerLigneAdmin("Échéance", new Date(suivi.date_echeance + "T00:00:00").toLocaleDateString("fr-FR")));
+    }
+    const bouton = document.createElement("button");
+    bouton.type = "button";
+    bouton.className = "bouton-petit vert";
+    bouton.textContent = "Télécharger le PDF";
+    bouton.addEventListener("click", function() { telechargerFacturePDF(facture.id); });
+    carte.appendChild(bouton);
+    return carte;
+}
 
-    if (!facturesClientActuel.length) {
+function remplirListeFacturesClient(conteneur, liste, messageVide) {
+    conteneur.replaceChildren();
+    if (!liste.length) {
         const vide = document.createElement("p");
         vide.className = "compte-vide";
-        vide.textContent = "Aucune facture disponible pour le moment.";
+        vide.textContent = messageVide;
         conteneur.appendChild(vide);
         return;
     }
-
-    facturesClientActuel.forEach(function(facture) {
-        const carte = document.createElement("article");
-        carte.className = "facture-carte";
-        const suivi = Object.assign({ total: facture.montant }, facture.commandes || {});
-        const entete = document.createElement("div");
-        entete.className = "facture-entete";
-        const titre = document.createElement("h4");
-        titre.textContent = "Facture " + facture.numero;
-        entete.append(titre, creerBadgeStatut(facture.statut), creerBadgeStatut(statutPaiementCommande(suivi)));
-        carte.appendChild(entete);
-        carte.appendChild(creerLigneAdmin("Date", formaterDateAdmin(facture.date_emission)));
-        carte.appendChild(creerLigneAdmin("Montant", formaterMontant(facture.montant) + " FCFA"));
-        carte.appendChild(creerLigneAdmin("Déjà payé", formaterMontant(suivi.montant_paye) + " FCFA"));
-        carte.appendChild(creerLigneAdmin("Solde dû", formaterMontant(suivi.reste_a_payer) + " FCFA"));
-        if (suivi.date_echeance) {
-            carte.appendChild(creerLigneAdmin("Échéance", new Date(suivi.date_echeance + "T00:00:00").toLocaleDateString("fr-FR")));
-        }
-
-        const bouton = document.createElement("button");
-        bouton.type = "button";
-        bouton.className = "bouton-petit vert";
-        bouton.textContent = "Télécharger le PDF";
-        bouton.addEventListener("click", function() { telechargerFacturePDF(facture.id); });
-        carte.appendChild(bouton);
-        conteneur.appendChild(carte);
+    liste.forEach(function(facture) {
+        conteneur.appendChild(creerCarteFactureClient(facture));
     });
+}
+
+function afficherFacturesClient() {
+    const facturesPayees = facturesClientActuel.filter(function(facture) {
+        const suivi = Object.assign({ total: facture.montant }, facture.commandes || {});
+        return statutPaiementCommande(suivi) === "payee";
+    });
+    const facturesNonPayees = facturesClientActuel.filter(function(facture) {
+        const suivi = Object.assign({ total: facture.montant }, facture.commandes || {});
+        return statutPaiementCommande(suivi) !== "payee";
+    });
+    document.getElementById("nombreFacturesClient").textContent = String(facturesClientActuel.length);
+    document.getElementById("nombreFacturesPayeesClient").textContent = String(facturesPayees.length);
+    document.getElementById("nombreFacturesNonPayeesClient").textContent = String(facturesNonPayees.length);
+
+    remplirListeFacturesClient(
+        document.getElementById("listeFacturesPayeesClient"),
+        facturesPayees,
+        "Vous n’avez aucune facture entièrement payée."
+    );
+    remplirListeFacturesClient(
+        document.getElementById("listeFacturesNonPayeesClient"),
+        facturesNonPayees,
+        "Vous n’avez aucune facture restant à payer."
+    );
 }
 
 async function chargerFacturesClient() {
