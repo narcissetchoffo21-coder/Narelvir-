@@ -1,4 +1,4 @@
-const CACHE_NAME = "narelvir-v12-security";
+const CACHE_NAME = "narelvir-v13-retours";
 
 const PRECACHE_URLS = [
   "/",
