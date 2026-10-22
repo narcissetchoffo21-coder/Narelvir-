@@ -5707,7 +5707,7 @@ async function afficherEtatCompte(utilisateur) {
         initialiserCanalNotificationsAdmin();
         const etatNotifications = document.getElementById("etatNotificationsAdmin");
         if (etatNotifications && localStorage.getItem("narelvir-alertes-activees") === "oui") {
-            etatNotifications.textContent = Notification.permission === "granted"
+            etatNotifications.textContent = ("Notification" in window && Notification.permission === "granted")
                 ? "✅ Alertes déjà autorisées sur cet appareil."
                 : "Les alertes doivent être réactivées dans les réglages du navigateur.";
         }
