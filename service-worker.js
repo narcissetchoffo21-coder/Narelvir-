@@ -1,4 +1,4 @@
-const CACHE_NAME = "narelvir-v14-retours-rpc";
+const CACHE_NAME = "narelvir-v15-propositions-alertes";
 
 const PRECACHE_URLS = [
   "/",
@@ -64,4 +64,44 @@ self.addEventListener("fetch", function(event) {
       })
     );
   }
+});
+
+
+self.addEventListener("push", function(event) {
+  let donnees = {};
+  try {
+    donnees = event.data ? event.data.json() : {};
+  } catch (erreur) {
+    donnees = { title: "NARELVIR", body: event.data ? event.data.text() : "Nouvelle activité" };
+  }
+  const titre = donnees.title || "NARELVIR";
+  const options = {
+    body: donnees.body || "Nouvelle activité sur votre site",
+    icon: "/icon-192-1.png",
+    badge: "/icon-192-1.png",
+    tag: donnees.tag || "narelvir-notification",
+    renotify: true,
+    silent: false,
+    vibrate: [250, 100, 250],
+    data: { url: donnees.url || "https://www.narelvir.cm/#connexion" }
+  };
+  event.waitUntil(self.registration.showNotification(titre, options));
+});
+
+self.addEventListener("notificationclick", function(event) {
+  event.notification.close();
+  const cible = event.notification.data && event.notification.data.url
+    ? event.notification.data.url
+    : "https://www.narelvir.cm/#connexion";
+  event.waitUntil(
+    clients.matchAll({ type: "window", includeUncontrolled: true }).then(function(fenetres) {
+      for (const fenetre of fenetres) {
+        if ("focus" in fenetre) {
+          fenetre.navigate(cible);
+          return fenetre.focus();
+        }
+      }
+      return clients.openWindow ? clients.openWindow(cible) : undefined;
+    })
+  );
 });
