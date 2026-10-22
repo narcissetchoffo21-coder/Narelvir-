@@ -4071,7 +4071,7 @@ function creerFormulaireRetourCommande(commande, zone, boutonOuvrir) {
     labelMotif.textContent = "Motif obligatoire";
     const motif = document.createElement("textarea");
     motif.value = "Client n’a pas retiré la commande";
-    motif.maxLength = 500;
+    motif.maxLength = 300;
 
     const avertissement = document.createElement("p");
     avertissement.className = "retour-commande-avertissement";
@@ -4123,7 +4123,7 @@ async function retournerCommandeAdmin(commande, traitement, motif, bouton) {
     try {
         const resultat = await clientSupabase.rpc("retourner_commande_admin", {
             p_commande_id: commande.id,
-            p_traitement: traitement,
+            p_traitement_paiement: traitement,
             p_motif: raison
         });
         if (resultat.error) throw resultat.error;
