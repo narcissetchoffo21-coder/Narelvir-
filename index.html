@@ -1349,6 +1349,64 @@ h2{
     background:white;
 }
 
+.retour-commande-zone{
+    width:100%;
+    margin-top:10px;
+    padding:13px;
+    border:1px solid #e3aa3d;
+    border-radius:10px;
+    background:#fff8e8;
+}
+
+.retour-commande-zone label{
+    display:block;
+    margin:8px 0 4px;
+    color:#4d3a13;
+    font-weight:bold;
+}
+
+.retour-commande-zone select,
+.retour-commande-zone textarea{
+    width:100%;
+    min-height:42px;
+    padding:9px 10px;
+    border:1px solid #c9ad72;
+    border-radius:8px;
+    background:white;
+    font:inherit;
+}
+
+.retour-commande-zone textarea{
+    min-height:76px;
+    resize:vertical;
+}
+
+.retour-commande-avertissement{
+    margin:8px 0;
+    color:#704d08;
+    font-size:14px;
+    line-height:1.4;
+}
+
+.retour-commande-boutons{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:10px;
+}
+
+.retour-commande-details{
+    margin:10px 0;
+    padding:10px 12px;
+    border-left:4px solid #bc6917;
+    border-radius:7px;
+    background:#fff1dc;
+}
+
+.retour-commande-details p{
+    margin:4px 0;
+}
+
 .admin-narelvir{
     margin-top:22px;
     padding:18px;
@@ -2530,6 +2588,10 @@ footer{
                         <h4 class="paiement-groupe-titre">⏳ Achats non payés <span id="nombreAchatsNonPayesClient">0</span></h4>
                         <div id="listeCommandesNonPayeesClient"><p class="compte-chargement">Chargement…</p></div>
                     </section>
+                    <section class="paiement-groupe annule">
+                        <h4 class="paiement-groupe-titre">↩️ Achats retournés ou annulés <span id="nombreAchatsAnnulesClient">0</span></h4>
+                        <div id="listeCommandesAnnuleesClient"><p class="compte-chargement">Chargement…</p></div>
+                    </section>
                 </div>
             </div>
 
@@ -2544,6 +2606,10 @@ footer{
                     <section class="paiement-groupe impaye">
                         <h4 class="paiement-groupe-titre">⏳ Factures non payées <span id="nombreFacturesNonPayeesClient">0</span></h4>
                         <div id="listeFacturesNonPayeesClient"><p class="compte-chargement">Chargement…</p></div>
+                    </section>
+                    <section class="paiement-groupe annule">
+                        <h4 class="paiement-groupe-titre">↩️ Factures annulées <span id="nombreFacturesAnnuleesClient">0</span></h4>
+                        <div id="listeFacturesAnnuleesClient"><p class="compte-chargement">Chargement…</p></div>
                     </section>
                 </div>
             </div>
@@ -3950,6 +4016,136 @@ async function transfererStockVente(evenement) {
     }
 }
 
+function libelleTraitementRetour(traitement) {
+    return ({
+        rembourse: "Remboursé au client",
+        avoir: "Conservé comme avoir client",
+        sans_paiement: "Annulé sans paiement"
+    })[traitement] || "Non précisé";
+}
+
+function ajouterDetailsRetourCommande(carte, commande) {
+    if (!commande || commande.statut !== "annulee") return;
+    const details = document.createElement("div");
+    details.className = "retour-commande-details";
+    const titre = document.createElement("strong");
+    titre.textContent = "↩️ Commande retournée / annulée";
+    details.appendChild(titre);
+    if (commande.motif_retour) details.appendChild(creerLigneAdmin("Motif", commande.motif_retour));
+    if (commande.traitement_retour) {
+        details.appendChild(creerLigneAdmin("Traitement", libelleTraitementRetour(commande.traitement_retour)));
+    }
+    if (Number(commande.montant_retour || 0) > 0) {
+        details.appendChild(creerLigneAdmin("Montant concerné", formaterMontant(commande.montant_retour) + " FCFA"));
+    }
+    if (commande.retourne_at) details.appendChild(creerLigneAdmin("Date du retour", formaterDateAdmin(commande.retourne_at)));
+    details.appendChild(creerLigneAdmin("Stock", commande.stock_reintegre ? "Réintégré automatiquement" : "Non réintégré"));
+    carte.appendChild(details);
+}
+
+function creerFormulaireRetourCommande(commande, zone, boutonOuvrir) {
+    zone.replaceChildren();
+    zone.className = "retour-commande-zone";
+
+    const titre = document.createElement("strong");
+    titre.textContent = "Retourner / annuler " + commande.numero;
+
+    const labelTraitement = document.createElement("label");
+    labelTraitement.textContent = "Traitement du paiement";
+    const traitement = document.createElement("select");
+    const montantPaye = Number(commande.montant_paye || 0);
+    const options = montantPaye > 0
+        ? [
+            ["rembourse", "Remboursé au client"],
+            ["avoir", "Conserver comme avoir client"]
+        ]
+        : [["sans_paiement", "Annuler sans paiement"]];
+    options.forEach(function(item) {
+        const option = document.createElement("option");
+        option.value = item[0];
+        option.textContent = item[1];
+        traitement.appendChild(option);
+    });
+
+    const labelMotif = document.createElement("label");
+    labelMotif.textContent = "Motif obligatoire";
+    const motif = document.createElement("textarea");
+    motif.value = "Client n’a pas retiré la commande";
+    motif.maxLength = 500;
+
+    const avertissement = document.createElement("p");
+    avertissement.className = "retour-commande-avertissement";
+    avertissement.textContent = montantPaye > 0
+        ? "Le site enregistrera le traitement choisi et remettra les articles en stock. Si vous choisissez « Remboursé », rendez aussi réellement l’argent au client."
+        : "Les articles seront remis automatiquement dans le stock de vente.";
+
+    const boutons = document.createElement("div");
+    boutons.className = "retour-commande-boutons";
+    const confirmer = document.createElement("button");
+    confirmer.type = "button";
+    confirmer.className = "bouton-petit rouge";
+    confirmer.textContent = "Confirmer le retour";
+    confirmer.addEventListener("click", function() {
+        retournerCommandeAdmin(commande, traitement.value, motif.value, confirmer);
+    });
+    const fermer = document.createElement("button");
+    fermer.type = "button";
+    fermer.className = "bouton-petit";
+    fermer.textContent = "Fermer";
+    fermer.addEventListener("click", function() {
+        zone.remove();
+        boutonOuvrir.disabled = false;
+    });
+    boutons.append(confirmer, fermer);
+    zone.append(titre, labelTraitement, traitement, labelMotif, motif, avertissement, boutons);
+}
+
+async function retournerCommandeAdmin(commande, traitement, motif, bouton) {
+    const raison = String(motif || "").trim();
+    if (!raison) {
+        afficherMessageAdmin("Indiquez le motif du retour.", "erreur");
+        return;
+    }
+    const montantPaye = Number(commande.montant_paye || 0);
+    const choix = traitement === "rembourse"
+        ? "Remboursement au client : " + formaterMontant(montantPaye) + " FCFA."
+        : traitement === "avoir"
+            ? "Avoir client conservé : " + formaterMontant(montantPaye) + " FCFA."
+            : "Aucun paiement à traiter.";
+    const confirme = window.confirm([
+        "Confirmer le retour de la commande " + commande.numero + " ?",
+        choix,
+        "Les articles vendus seront remis dans le stock de vente. Cette opération ne pourra pas être répétée."
+    ].join("\n\n"));
+    if (!confirme) return;
+
+    bouton.disabled = true;
+    try {
+        const resultat = await clientSupabase.rpc("retourner_commande_admin", {
+            p_commande_id: commande.id,
+            p_traitement: traitement,
+            p_motif: raison
+        });
+        if (resultat.error) throw resultat.error;
+        const retour = resultat.data || {};
+        afficherMessageAdmin(
+            "Commande retournée. " + formaterQuantiteStock(retour.quantite_reintegree || 0) +
+            " article(s) réintégré(s) dans le stock de vente.",
+            "info"
+        );
+        await Promise.all([
+            chargerCommandesAdmin(utilisateurConnecteNarelvir),
+            chargerStockAdmin(utilisateurConnecteNarelvir),
+            chargerCommandesClient(),
+            chargerFacturesClient()
+        ]);
+    } catch (erreur) {
+        afficherMessageAdmin(erreur && erreur.message ? erreur.message : "Impossible de retourner cette commande.", "erreur");
+        console.error("Retour de commande impossible :", erreur);
+        bouton.disabled = false;
+    }
+}
+
 function afficherCommandesAdmin() {
     const conteneur = document.getElementById("listeCommandesAdmin");
     conteneur.replaceChildren();
@@ -4009,7 +4205,7 @@ function afficherCommandesAdmin() {
         return;
     }
 
-    const statuts = ["en_attente", "confirmee", "preparation", "expediee", "livree", "annulee"];
+    const statuts = ["en_attente", "confirmee", "preparation", "expediee", "livree"];
     const groupesCommandes = filtre === "toutes" ? [
         {
             titre: "✅ Achats payés",
@@ -4057,7 +4253,8 @@ function afficherCommandesAdmin() {
         const origine = document.createElement("span");
         origine.className = "admin-badge";
         origine.textContent = libelleOrigineCommande(commande.origine);
-        entete.append(titre, origine, creerBadgeStatut(commande.statut), creerBadgeStatut(statutPaiementCommande(commande)));
+        entete.append(titre, origine, creerBadgeStatut(commande.statut));
+        if (commande.statut !== "annulee") entete.appendChild(creerBadgeStatut(statutPaiementCommande(commande)));
         carte.appendChild(entete);
         carte.appendChild(creerLigneAdmin("Client", commande.nom_client || "Client NARELVIR"));
         carte.appendChild(creerLigneAdmin("Téléphone", commande.telephone));
@@ -4078,27 +4275,30 @@ function afficherCommandesAdmin() {
         }
         carte.appendChild(creerListeArticlesCommande(commande.articles_commandes));
         carte.appendChild(creerHistoriquePaiements(commande.paiements_commandes));
+        ajouterDetailsRetourCommande(carte, commande);
 
         const actions = document.createElement("div");
         actions.className = "admin-commande-actions";
-        const select = document.createElement("select");
-        select.setAttribute("aria-label", "Statut de la commande " + commande.numero);
-        statuts.forEach(function(statut) {
-            const option = document.createElement("option");
-            option.value = statut;
-            option.textContent = libelleStatutCommande(statut);
-            option.selected = statut === commande.statut;
-            select.appendChild(option);
-        });
+        if (commande.statut !== "annulee") {
+            const select = document.createElement("select");
+            select.setAttribute("aria-label", "Statut de la commande " + commande.numero);
+            statuts.forEach(function(statut) {
+                const option = document.createElement("option");
+                option.value = statut;
+                option.textContent = libelleStatutCommande(statut);
+                option.selected = statut === commande.statut;
+                select.appendChild(option);
+            });
 
-        const enregistrer = document.createElement("button");
-        enregistrer.type = "button";
-        enregistrer.className = "bouton-petit";
-        enregistrer.textContent = "Mettre à jour";
-        enregistrer.addEventListener("click", function() {
-            mettreAJourStatutCommande(commande.id, select.value, enregistrer);
-        });
-        actions.append(select, enregistrer);
+            const enregistrer = document.createElement("button");
+            enregistrer.type = "button";
+            enregistrer.className = "bouton-petit";
+            enregistrer.textContent = "Mettre à jour";
+            enregistrer.addEventListener("click", function() {
+                mettreAJourStatutCommande(commande.id, select.value, enregistrer);
+            });
+            actions.append(select, enregistrer);
+        }
 
         if (commande.origine === "distance" && commande.telephone) {
             const compteRendu = document.createElement("button");
@@ -4163,7 +4363,24 @@ function afficherCommandesAdmin() {
             actions.appendChild(paiement);
         }
 
-        if (commande.telephone && Number(commande.reste_a_payer || 0) > 0) {
+        if (commande.statut !== "annulee") {
+            const retourner = document.createElement("button");
+            retourner.type = "button";
+            retourner.className = "bouton-petit rouge";
+            retourner.textContent = "↩️ Retourner / annuler";
+            retourner.addEventListener("click", function() {
+                retourner.disabled = true;
+                const zoneExistante = carte.querySelector(".retour-commande-zone");
+                if (zoneExistante) zoneExistante.remove();
+                const zone = document.createElement("div");
+                creerFormulaireRetourCommande(commande, zone, retourner);
+                actions.appendChild(zone);
+                zone.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            });
+            actions.appendChild(retourner);
+        }
+
+        if (commande.statut !== "annulee" && commande.telephone && Number(commande.reste_a_payer || 0) > 0) {
             const relancer = document.createElement("button");
             relancer.type = "button";
             relancer.className = "bouton-petit whatsapp-relance";
@@ -4209,7 +4426,7 @@ async function chargerCommandesAdmin(utilisateur) {
 
     const resultat = await clientSupabase
         .from("commandes")
-        .select("id,numero,client_id,total,statut,mode_commande,origine,source_saisie,montant_paye,reste_a_payer,date_echeance,mode_paiement,nom_client,telephone,ville,adresse,note,signature_client,created_at,articles_commandes(id,nom,prix,quantite,sous_total),factures(id,numero,statut,montant),paiements_commandes(id,montant,mode_paiement,reference,note,solde_apres,created_at)")
+        .select("id,numero,client_id,total,statut,mode_commande,origine,source_saisie,montant_paye,reste_a_payer,date_echeance,mode_paiement,nom_client,telephone,ville,adresse,note,signature_client,created_at,traitement_retour,motif_retour,montant_retour,retourne_at,stock_reintegre,articles_commandes(id,nom,prix,quantite,sous_total),factures(id,numero,statut,montant),paiements_commandes(id,montant,mode_paiement,reference,note,solde_apres,created_at)")
         .order("created_at", { ascending: false });
 
     if (resultat.error) throw resultat.error;
@@ -4473,7 +4690,8 @@ function creerCarteCommandeClient(commande) {
     entete.className = "commande-entete";
     const titre = document.createElement("h4");
     titre.textContent = commande.numero;
-    entete.append(titre, creerBadgeStatut(commande.statut), creerBadgeStatut(statutPaiementCommande(commande)));
+    entete.append(titre, creerBadgeStatut(commande.statut));
+    if (commande.statut !== "annulee") entete.appendChild(creerBadgeStatut(statutPaiementCommande(commande)));
     carte.appendChild(entete);
     carte.appendChild(creerLigneAdmin("Date", formaterDateAdmin(commande.created_at)));
     carte.appendChild(creerLigneAdmin("Total", formaterMontant(commande.total) + " FCFA"));
@@ -4481,6 +4699,7 @@ function creerCarteCommandeClient(commande) {
     carte.appendChild(creerLigneAdmin("Reste à payer", formaterMontant(commande.reste_a_payer) + " FCFA"));
     carte.appendChild(creerListeArticlesCommande(commande.articles_commandes));
     carte.appendChild(creerHistoriquePaiements(commande.paiements_commandes));
+    ajouterDetailsRetourCommande(carte, commande);
 
     const recommander = document.createElement("button");
     recommander.type = "button";
@@ -4488,7 +4707,7 @@ function creerCarteCommandeClient(commande) {
     recommander.textContent = "Ajouter de nouveau au panier";
     recommander.addEventListener("click", function() { recommanderCommande(commande); });
     carte.appendChild(recommander);
-    if (Number(commande.reste_a_payer || 0) > 0) {
+    if (commande.statut !== "annulee" && Number(commande.reste_a_payer || 0) > 0) {
         const payer = document.createElement("button");
         payer.type = "button";
         payer.className = "bouton-petit whatsapp-relance";
@@ -4520,6 +4739,7 @@ function afficherCommandesClient() {
         return total + Number(commande.total || 0);
     }, 0);
     const commandesActives = commandesClientActuel.filter(function(c) { return c.statut !== "annulee"; });
+    const commandesAnnulees = commandesClientActuel.filter(function(c) { return c.statut === "annulee"; });
     const commandesPayees = commandesActives.filter(function(c) { return statutPaiementCommande(c) === "payee"; });
     const commandesNonPayees = commandesActives.filter(function(c) { return statutPaiementCommande(c) !== "payee"; });
 
@@ -4530,6 +4750,7 @@ function afficherCommandesClient() {
     );
     document.getElementById("nombreAchatsPayesClient").textContent = String(commandesPayees.length);
     document.getElementById("nombreAchatsNonPayesClient").textContent = String(commandesNonPayees.length);
+    document.getElementById("nombreAchatsAnnulesClient").textContent = String(commandesAnnulees.length);
 
     remplirListePaiementsClient(
         document.getElementById("listeCommandesPayeesClient"),
@@ -4540,6 +4761,11 @@ function afficherCommandesClient() {
         document.getElementById("listeCommandesNonPayeesClient"),
         commandesNonPayees,
         "Vous n’avez aucun achat restant à payer."
+    );
+    remplirListePaiementsClient(
+        document.getElementById("listeCommandesAnnuleesClient"),
+        commandesAnnulees,
+        "Vous n’avez aucun achat retourné ou annulé."
     );
 }
 
@@ -4556,7 +4782,7 @@ async function chargerCommandesClient() {
     if (!utilisateurConnecteNarelvir) return;
     const resultat = await clientSupabase
         .from("commandes")
-        .select("id,numero,total,statut,montant_paye,reste_a_payer,date_echeance,created_at,articles_commandes(id,nom,prix,quantite,sous_total),paiements_commandes(id,montant,mode_paiement,reference,note,solde_apres,created_at)")
+        .select("id,numero,total,statut,montant_paye,reste_a_payer,date_echeance,created_at,traitement_retour,motif_retour,montant_retour,retourne_at,stock_reintegre,articles_commandes(id,nom,prix,quantite,sous_total),paiements_commandes(id,montant,mode_paiement,reference,note,solde_apres,created_at)")
         .eq("client_id", utilisateurConnecteNarelvir.id)
         .order("created_at", { ascending: false });
     if (resultat.error) throw resultat.error;
@@ -4583,12 +4809,14 @@ function creerCarteFactureClient(facture) {
     entete.className = "facture-entete";
     const titre = document.createElement("h4");
     titre.textContent = "Facture " + facture.numero;
-    entete.append(titre, creerBadgeStatut(facture.statut), creerBadgeStatut(statutPaiementCommande(suivi)));
+    entete.append(titre, creerBadgeStatut(facture.statut));
+    if (facture.statut !== "annulee") entete.appendChild(creerBadgeStatut(statutPaiementCommande(suivi)));
     carte.appendChild(entete);
     carte.appendChild(creerLigneAdmin("Date", formaterDateAdmin(facture.date_emission)));
     carte.appendChild(creerLigneAdmin("Montant", formaterMontant(facture.montant) + " FCFA"));
     carte.appendChild(creerLigneAdmin("Déjà payé", formaterMontant(suivi.montant_paye) + " FCFA"));
     carte.appendChild(creerLigneAdmin("Solde dû", formaterMontant(suivi.reste_a_payer) + " FCFA"));
+    ajouterDetailsRetourCommande(carte, suivi);
     if (suivi.date_echeance) {
         carte.appendChild(creerLigneAdmin("Échéance", new Date(suivi.date_echeance + "T00:00:00").toLocaleDateString("fr-FR")));
     }
@@ -4616,17 +4844,24 @@ function remplirListeFacturesClient(conteneur, liste, messageVide) {
 }
 
 function afficherFacturesClient() {
-    const facturesPayees = facturesClientActuel.filter(function(facture) {
+    const facturesAnnulees = facturesClientActuel.filter(function(facture) {
+        return facture.statut === "annulee" || (facture.commandes && facture.commandes.statut === "annulee");
+    });
+    const facturesActives = facturesClientActuel.filter(function(facture) {
+        return !facturesAnnulees.includes(facture);
+    });
+    const facturesPayees = facturesActives.filter(function(facture) {
         const suivi = Object.assign({ total: facture.montant }, facture.commandes || {});
         return statutPaiementCommande(suivi) === "payee";
     });
-    const facturesNonPayees = facturesClientActuel.filter(function(facture) {
+    const facturesNonPayees = facturesActives.filter(function(facture) {
         const suivi = Object.assign({ total: facture.montant }, facture.commandes || {});
         return statutPaiementCommande(suivi) !== "payee";
     });
     document.getElementById("nombreFacturesClient").textContent = String(facturesClientActuel.length);
     document.getElementById("nombreFacturesPayeesClient").textContent = String(facturesPayees.length);
     document.getElementById("nombreFacturesNonPayeesClient").textContent = String(facturesNonPayees.length);
+    document.getElementById("nombreFacturesAnnuleesClient").textContent = String(facturesAnnulees.length);
 
     remplirListeFacturesClient(
         document.getElementById("listeFacturesPayeesClient"),
@@ -4638,13 +4873,18 @@ function afficherFacturesClient() {
         facturesNonPayees,
         "Vous n’avez aucune facture restant à payer."
     );
+    remplirListeFacturesClient(
+        document.getElementById("listeFacturesAnnuleesClient"),
+        facturesAnnulees,
+        "Vous n’avez aucune facture annulée."
+    );
 }
 
 async function chargerFacturesClient() {
     if (!utilisateurConnecteNarelvir) return;
     const resultat = await clientSupabase
         .from("factures")
-        .select("id,numero,commande_id,montant,statut,date_emission,commandes(montant_paye,reste_a_payer,date_echeance)")
+        .select("id,numero,commande_id,montant,statut,date_emission,commandes(statut,montant_paye,reste_a_payer,date_echeance,traitement_retour,motif_retour,montant_retour,retourne_at,stock_reintegre)")
         .eq("client_id", utilisateurConnecteNarelvir.id)
         .order("date_emission", { ascending: false });
     if (resultat.error) throw resultat.error;
