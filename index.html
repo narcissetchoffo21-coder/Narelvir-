@@ -1741,6 +1741,30 @@ footer{
 @media (max-width: 768px){
     nav[aria-label="Navigation rapide"]{display:none;}
 }
+
+/* ===== PROPOSITIONS DE PRIX ET NOTIFICATIONS ===== */
+.proposition-actions-panier{background:#fff7d6;border:1px solid #e4b400;color:#5b4700}
+.proposition-lignes{display:grid;gap:10px;margin:14px 0}
+.proposition-ligne{display:grid;grid-template-columns:minmax(180px,2fr) minmax(110px,1fr) minmax(130px,1fr);gap:10px;align-items:end;padding:12px;border:1px solid #d8e0ea;border-radius:10px;background:#f8fbff}
+.proposition-ligne label{display:grid;gap:5px;font-weight:700}
+.proposition-ligne .proposition-produit{align-self:center}
+.proposition-prix-officiel{color:#0756a3;font-weight:700}
+.proposition-totaux{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}
+.proposition-totaux span{background:#eef5ff;border-radius:999px;padding:8px 12px;font-weight:700}
+.proposition-carte,.notification-carte{border:1px solid #d8e0ea;border-radius:12px;padding:14px;margin:10px 0;background:#fff}
+.proposition-carte.non-lue,.notification-carte.non-lue{border-left:5px solid #e31b23;background:#fff9f9}
+.proposition-entete,.notification-entete{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center}
+.proposition-statut{display:inline-block;border-radius:999px;padding:5px 9px;font-size:12px;font-weight:800;background:#e8edf4}
+.proposition-statut.envoyee{background:#fff0ba;color:#654d00}
+.proposition-statut.acceptee{background:#d8f5e3;color:#0b6232}
+.proposition-statut.refusee,.proposition-statut.annulee{background:#ffe0e0;color:#8d1414}
+.proposition-articles{margin:10px 0;padding-left:20px}
+.proposition-admin-actions{display:grid;gap:8px;margin-top:12px}
+.proposition-admin-actions textarea{width:100%;min-height:70px}
+.notification-outils{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}
+.notification-etat{padding:10px;border-radius:8px;background:#eef5ff}
+@media (max-width:700px){.proposition-ligne{grid-template-columns:1fr}}
+
 </style>
 </head>
 
@@ -2474,6 +2498,7 @@ footer{
     <div class="actions-panier">
         <button type="button" id="envoyerPanierWhatsApp" class="panier-whatsapp" onclick="envoyerPanierWhatsApp()" disabled>💬 Commander le panier sur WhatsApp</button>
         <button type="button" id="commanderPanier" class="commander-panier" onclick="commanderPanierWhatsApp()" disabled>✅ Enregistrer dans mon compte</button>
+        <button type="button" id="proposerPrixPanier" class="proposition-actions-panier" onclick="preparerPropositionDepuisPanier(true)" disabled>💬 Proposer mes prix</button>
         <button type="button" id="viderPanier" class="vider-panier" onclick="viderPanier()" disabled>🗑️ Vider le panier</button>
     </div>
 </section>
@@ -2575,6 +2600,26 @@ footer{
                 <div id="messageProfilClient" class="admin-message" role="status" aria-live="polite"></div>
             </div>
 
+
+            <div class="compte-bloc compte-bloc-large" id="zonePropositionsClient">
+                <h3>💬 Proposer mes prix</h3>
+                <p>Le prix officiel NARELVIR reste visible. Vous pouvez proposer un autre prix pour chaque article. Votre proposition doit être validée par NARELVIR avant de devenir une commande et une facture.</p>
+                <button type="button" class="bouton-petit" onclick="preparerPropositionDepuisPanier(false)">Charger les articles de mon panier</button>
+                <form id="formPropositionPrixClient" class="auth-formulaire" onsubmit="envoyerPropositionPrix(event)">
+                    <div id="articlesPropositionClient" class="proposition-lignes"><p class="compte-vide">Ajoutez des articles au panier, puis chargez-les ici.</p></div>
+                    <div class="proposition-totaux">
+                        <span>Prix officiels : <strong id="totalOriginalProposition">0</strong> FCFA</span>
+                        <span>Votre proposition : <strong id="totalProposeProposition">0</strong> FCFA</span>
+                    </div>
+                    <label for="messagePropositionClient">Message pour NARELVIR (facultatif)</label>
+                    <textarea id="messagePropositionClient" maxlength="1000" placeholder="Précisez votre besoin, la livraison ou toute autre information."></textarea>
+                    <button type="submit" id="envoyerPropositionClient" class="auth-bouton" disabled>Envoyer la proposition à NARELVIR</button>
+                </form>
+                <div id="messagePropositionClientEtat" class="admin-message" role="status" aria-live="polite"></div>
+                <h4>Mes propositions envoyées</h4>
+                <div id="listePropositionsClient" aria-live="polite"><p class="compte-chargement">Chargement…</p></div>
+            </div>
+
             <div class="compte-bloc compte-bloc-large" id="mesCommandesClient">
                 <h3>📦 Mes achats</h3>
                 <p>Vos achats payés et non payés sont présentés séparément.</p>
@@ -2647,6 +2692,14 @@ footer{
                 </button>
                 <button type="button" class="admin-fonction-bouton" data-module-admin="paiements" aria-pressed="false" onclick="ouvrirModuleAdmin('paiements')">
                     <span class="admin-fonction-icone">✅</span>Ventes payées
+                </button>
+                <button type="button" class="admin-fonction-bouton" data-module-admin="propositions" aria-pressed="false" onclick="ouvrirModuleAdmin('propositions')">
+                    <span class="admin-fonction-badge" id="menuBadgePropositionsAdmin">0</span>
+                    <span class="admin-fonction-icone">💬</span>Propositions de prix
+                </button>
+                <button type="button" class="admin-fonction-bouton" data-module-admin="notifications" aria-pressed="false" onclick="ouvrirModuleAdmin('notifications')">
+                    <span class="admin-fonction-badge" id="menuBadgeNotificationsAdmin">0</span>
+                    <span class="admin-fonction-icone">🔔</span>Alertes
                 </button>
                 <button type="button" class="admin-fonction-bouton" data-module-admin="commandes-site" aria-pressed="false" onclick="ouvrirModuleAdmin('commandes-site')">
                     <span class="admin-fonction-icone">🌐</span>Commandes du site
@@ -2826,6 +2879,17 @@ footer{
 
                             <button type="submit" class="auth-bouton">Transférer au stock de vente</button>
                         </form>
+
+                        <form class="stock-formulaire" id="formRetourStockMagasin" onsubmit="retournerStockMagasin(event)">
+                            <h4>↩️ Retourner au magasin</h4>
+                            <label for="retourArticleStock">Produit en stock de vente *</label>
+                            <select id="retourArticleStock" required><option value="">Aucun produit enregistré</option></select>
+                            <label for="retourQuantiteStock">Quantité à retourner *</label>
+                            <input id="retourQuantiteStock" type="number" min="0.001" step="0.001" required inputmode="decimal">
+                            <label for="retourNoteStock">Motif ou note</label>
+                            <textarea id="retourNoteStock" placeholder="Ex. Retrait du rayon ou erreur de transfert"></textarea>
+                            <button type="submit" class="auth-bouton">Retourner au stock magasin</button>
+                        </form>
                     </div>
 
                     <div id="messageStockAdmin" class="admin-message" role="status" aria-live="polite"></div>
@@ -2865,6 +2929,29 @@ footer{
                     <button type="button" onclick="actualiserAdministration()">Actualiser</button>
                 </div>
                 <div id="listeClientsSansCompteAdmin" class="admin-liste" aria-live="polite"></div>
+            </section>
+
+
+            <section id="modulePropositionsAdmin" class="admin-module cache" aria-labelledby="titrePropositionsAdmin">
+                <div class="admin-module-entete"><h4 id="titrePropositionsAdmin">💬 Propositions de prix des clients</h4><p>Le prix officiel est conservé. Acceptez une proposition pour créer automatiquement la commande et la facture, ou refusez-la avec une réponse.</p></div>
+                <div class="admin-outils">
+                    <select id="filtrePropositionsAdmin" aria-label="Filtrer les propositions" onchange="afficherPropositionsAdmin()">
+                        <option value="envoyee">À valider</option><option value="toutes">Toutes</option><option value="acceptee">Acceptées</option><option value="refusee">Refusées</option>
+                    </select>
+                    <button type="button" onclick="chargerPropositionsAdmin()">Actualiser</button>
+                </div>
+                <div id="messagePropositionsAdmin" class="admin-message" role="status" aria-live="polite"></div>
+                <div id="listePropositionsAdmin" class="admin-liste" aria-live="polite"><p class="compte-chargement">Chargement des propositions…</p></div>
+            </section>
+
+            <section id="moduleNotificationsAdmin" class="admin-module cache" aria-labelledby="titreNotificationsAdmin">
+                <div class="admin-module-entete"><h4 id="titreNotificationsAdmin">🔔 Alertes NARELVIR</h4><p>Activez les alertes sur cet appareil pour être prévenu des commandes, paiements, propositions et nouveaux comptes, même lorsque le site est fermé.</p></div>
+                <div class="notification-outils">
+                    <button type="button" class="auth-bouton" onclick="activerAlertesNotifications()">Activer les alertes sur cet appareil</button>
+                    <button type="button" class="bouton-petit" onclick="marquerNotificationsLues()">Tout marquer comme lu</button>
+                </div>
+                <p id="etatNotificationsAdmin" class="notification-etat">Les alertes ne sont pas encore activées sur cet appareil.</p>
+                <div id="listeNotificationsAdmin" class="admin-liste" aria-live="polite"><p class="compte-chargement">Chargement des alertes…</p></div>
             </section>
 
             <section id="moduleCommandesAdmin" class="admin-module cache" aria-labelledby="titreModuleCommandesAdmin">
@@ -2970,6 +3057,11 @@ let estAdministrateurActuelNarelvir = false;
 let profilClientActuel = null;
 let commandesClientActuel = [];
 let facturesClientActuel = [];
+let propositionsClientNarelvir = [];
+let propositionsAdminNarelvir = [];
+let notificationsAdminNarelvir = [];
+let canalNotificationsAdminNarelvir = null;
+let contexteAudioNotificationsNarelvir = null;
 let commandeEnCours = false;
 
 function afficherMessageAuth(message, type) {
@@ -3076,6 +3168,8 @@ function ouvrirModuleAdmin(module, defiler) {
         stock: { panneau: "zoneGestionStock", details: true },
         "clients-compte": { panneau: "moduleClientsCompteAdmin" },
         "clients-sans-compte": { panneau: "moduleClientsSansCompteAdmin" },
+        propositions: { panneau: "modulePropositionsAdmin" },
+        notifications: { panneau: "moduleNotificationsAdmin" },
         ventes: {
             panneau: "moduleCommandesAdmin",
             filtre: "toutes",
@@ -3130,6 +3224,8 @@ function ouvrirModuleAdmin(module, defiler) {
     }
 
     if (module === "clients-sans-compte") afficherClientsSansCompteAdmin();
+    if (module === "propositions") afficherPropositionsAdmin();
+    if (module === "notifications") afficherNotificationsAdmin();
     if (defiler !== false) panneau.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
@@ -3796,6 +3892,7 @@ function libelleMouvementStock(type) {
     const libelles = {
         arrivage: "Arrivage au magasin",
         transfert_vers_vente: "Transfert magasin → vente",
+        retour_vers_magasin: "Retour vente → magasin",
         vente: "Sortie par vente",
         retour_vente: "Retour au stock de vente",
         ajustement_magasin: "Ajustement magasin",
@@ -3812,22 +3909,28 @@ function afficherMessageStock(message, type) {
 }
 
 function actualiserSelectTransfertStock() {
-    const select = document.getElementById("transfertArticleStock");
-    if (!select) return;
-    const valeur = select.value;
-    select.replaceChildren();
-    const vide = document.createElement("option");
-    vide.value = "";
-    vide.textContent = articlesStockNarelvir.length ? "Choisissez un produit" : "Aucun produit enregistré";
-    select.appendChild(vide);
-    articlesStockNarelvir.filter(function(article) { return article.actif !== false; }).forEach(function(article) {
-        const option = document.createElement("option");
-        option.value = article.id;
-        option.textContent = article.nom + " — magasin : " + formaterQuantiteStock(article.stock_magasin) + " " + (article.unite || "pièce");
-        option.disabled = Number(article.stock_magasin || 0) <= 0;
-        select.appendChild(option);
+    [
+        { id: "transfertArticleStock", source: "stock_magasin", libelle: "magasin" },
+        { id: "retourArticleStock", source: "stock_vente", libelle: "vente" }
+    ].forEach(function(configuration) {
+        const select = document.getElementById(configuration.id);
+        if (!select) return;
+        const valeur = select.value;
+        select.replaceChildren();
+        const vide = document.createElement("option");
+        vide.value = "";
+        vide.textContent = articlesStockNarelvir.length ? "Choisissez un produit" : "Aucun produit enregistré";
+        select.appendChild(vide);
+        articlesStockNarelvir.filter(function(article) { return article.actif !== false; }).forEach(function(article) {
+            const option = document.createElement("option");
+            option.value = article.id;
+            option.textContent = article.nom + " — " + configuration.libelle + " : " +
+                formaterQuantiteStock(article[configuration.source]) + " " + (article.unite || "pièce");
+            option.disabled = Number(article[configuration.source] || 0) <= 0;
+            select.appendChild(option);
+        });
+        select.value = valeur;
     });
-    select.value = valeur;
 }
 
 function actualiserSelectsStockVente() {
@@ -4011,6 +4114,38 @@ async function transfererStockVente(evenement) {
     } catch (erreur) {
         afficherMessageStock(erreur && erreur.message ? erreur.message : "Impossible de transférer ce stock.", "erreur");
         console.error("Transfert impossible :", erreur);
+    } finally {
+        bouton.disabled = false;
+    }
+}
+
+
+async function retournerStockMagasin(evenement) {
+    evenement.preventDefault();
+    if (!estAdministrateurNarelvir(utilisateurConnecteNarelvir)) return;
+    const formulaire = evenement.currentTarget;
+    const bouton = formulaire.querySelector("button[type='submit']");
+    bouton.disabled = true;
+    afficherMessageStock("", "info");
+    try {
+        const resultat = await clientSupabase.rpc("retourner_stock_magasin_admin", {
+            p_article_id: document.getElementById("retourArticleStock").value,
+            p_quantite: Number(document.getElementById("retourQuantiteStock").value),
+            p_note: document.getElementById("retourNoteStock").value.trim() || null
+        });
+        if (resultat.error) throw resultat.error;
+        const retour = resultat.data || {};
+        formulaire.reset();
+        afficherMessageStock(
+            "Retour au magasin effectué pour " + (retour.nom || "le produit") +
+            ". Magasin : " + formaterQuantiteStock(retour.stock_magasin) +
+            " • Vente : " + formaterQuantiteStock(retour.stock_vente) + ".",
+            "info"
+        );
+        await chargerStockAdmin(utilisateurConnecteNarelvir);
+    } catch (erreur) {
+        afficherMessageStock(erreur && erreur.message ? erreur.message : "Impossible de retourner ce stock au magasin.", "erreur");
+        console.error("Retour au magasin impossible :", erreur);
     } finally {
         bouton.disabled = false;
     }
@@ -4443,8 +4578,11 @@ async function actualiserAdministration(utilisateur) {
         await Promise.all([
             chargerClientsAdmin(utilisateurActuel),
             chargerCommandesAdmin(utilisateurActuel),
-            chargerStockAdmin(utilisateurActuel)
+            chargerStockAdmin(utilisateurActuel),
+            chargerPropositionsAdmin(),
+            chargerNotificationsAdmin()
         ]);
+        afficherPropositionsAdmin();
     } catch (erreur) {
         afficherMessageAdmin("La base complète doit encore être activée avec le fichier SQL.", "erreur");
         console.error("Administration indisponible :", erreur);
@@ -5071,6 +5209,431 @@ async function telechargerRecuPaiementPDF(paiementId) {
     }
 }
 
+
+function libelleStatutProposition(statut) {
+    return ({ envoyee: "À valider", acceptee: "Acceptée", refusee: "Refusée", annulee: "Annulée" })[statut] || statut || "Inconnue";
+}
+
+function afficherMessageProposition(message, type) {
+    const zone = document.getElementById("messagePropositionClientEtat");
+    if (!zone) return;
+    zone.textContent = message || "";
+    zone.className = message ? "admin-message visible " + (type || "info") : "admin-message";
+}
+
+function calculerTotauxProposition() {
+    let original = 0;
+    let propose = 0;
+    document.querySelectorAll("#articlesPropositionClient .proposition-ligne").forEach(function(ligne) {
+        const quantite = Number(ligne.dataset.quantite || 0);
+        original += Number(ligne.dataset.prixOriginal || 0) * quantite;
+        const saisie = ligne.querySelector(".prix-propose-client");
+        propose += Number(saisie ? saisie.value : 0) * quantite;
+    });
+    const totalOriginal = document.getElementById("totalOriginalProposition");
+    const totalPropose = document.getElementById("totalProposeProposition");
+    if (totalOriginal) totalOriginal.textContent = formaterMontant(original);
+    if (totalPropose) totalPropose.textContent = formaterMontant(propose);
+}
+
+function preparerPropositionDepuisPanier(defiler) {
+    if (!utilisateurConnecteNarelvir) {
+        afficherMessageAuth("Connectez-vous ou créez un compte pour proposer vos prix.", "erreur");
+        document.getElementById("connexion").scrollIntoView({ behavior: "smooth" });
+        return;
+    }
+    if (estAdministrateurActuelNarelvir) {
+        afficherMessageAuth("Le compte administrateur ne peut pas envoyer une proposition client.", "erreur");
+        return;
+    }
+    if (!panier.length) {
+        afficherMessageProposition("Votre panier est vide.", "erreur");
+        return;
+    }
+
+    const conteneur = document.getElementById("articlesPropositionClient");
+    conteneur.replaceChildren();
+    panier.forEach(function(article) {
+        const ligne = document.createElement("div");
+        ligne.className = "proposition-ligne";
+        ligne.dataset.nom = article.nom;
+        ligne.dataset.quantite = String(article.quantite);
+        ligne.dataset.prixOriginal = String(article.prix);
+
+        const produit = document.createElement("div");
+        produit.className = "proposition-produit";
+        const nom = document.createElement("strong");
+        nom.textContent = article.nom;
+        const details = document.createElement("div");
+        details.textContent = article.quantite + " × " + formaterMontant(article.prix) + " FCFA";
+        produit.append(nom, details);
+
+        const officiel = document.createElement("div");
+        const etiquetteOfficielle = document.createElement("span");
+        etiquetteOfficielle.textContent = "Prix officiel";
+        const prixOfficiel = document.createElement("div");
+        prixOfficiel.className = "proposition-prix-officiel";
+        prixOfficiel.textContent = formaterMontant(article.prix) + " FCFA";
+        officiel.append(etiquetteOfficielle, prixOfficiel);
+
+        const label = document.createElement("label");
+        label.textContent = "Votre prix unitaire";
+        const saisie = document.createElement("input");
+        saisie.type = "number";
+        saisie.min = "0";
+        saisie.max = "100000000";
+        saisie.step = "1";
+        saisie.required = true;
+        saisie.inputMode = "numeric";
+        saisie.value = String(article.prix);
+        saisie.className = "prix-propose-client";
+        saisie.addEventListener("input", calculerTotauxProposition);
+        label.appendChild(saisie);
+
+        ligne.append(produit, officiel, label);
+        conteneur.appendChild(ligne);
+    });
+    document.getElementById("envoyerPropositionClient").disabled = false;
+    calculerTotauxProposition();
+    afficherMessageProposition("", "info");
+    if (defiler !== false) document.getElementById("zonePropositionsClient").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function creerCarteProposition(proposition, administrateur) {
+    const carte = document.createElement("article");
+    carte.className = "proposition-carte";
+    const entete = document.createElement("div");
+    entete.className = "proposition-entete";
+    const titre = document.createElement("strong");
+    titre.textContent = proposition.numero;
+    const statut = document.createElement("span");
+    statut.className = "proposition-statut " + proposition.statut;
+    statut.textContent = libelleStatutProposition(proposition.statut);
+    entete.append(titre, statut);
+    carte.appendChild(entete);
+    carte.appendChild(creerLigneAdmin("Date", formaterDateAdmin(proposition.created_at)));
+
+    if (administrateur) {
+        const profil = clientsAdminNarelvir.find(function(client) { return client.id === proposition.client_id; });
+        carte.appendChild(creerLigneAdmin("Client", profil ? (profil.nom || profil.email) : "Compte client"));
+        if (profil && profil.telephone) carte.appendChild(creerLigneAdmin("Téléphone", profil.telephone));
+    }
+
+    const articles = document.createElement("ul");
+    articles.className = "proposition-articles";
+    (proposition.articles_proposition_prix || []).forEach(function(article) {
+        const ligne = document.createElement("li");
+        ligne.textContent = article.quantite + " × " + article.nom +
+            " — officiel " + formaterMontant(article.prix_original) +
+            " FCFA, proposé " + formaterMontant(article.prix_propose) + " FCFA";
+        articles.appendChild(ligne);
+    });
+    carte.appendChild(articles);
+    carte.appendChild(creerLigneAdmin("Total officiel", formaterMontant(proposition.total_original) + " FCFA"));
+    carte.appendChild(creerLigneAdmin("Total proposé", formaterMontant(proposition.total_propose) + " FCFA"));
+    if (proposition.message_client) carte.appendChild(creerLigneAdmin("Message du client", proposition.message_client));
+    if (proposition.reponse_admin) carte.appendChild(creerLigneAdmin("Réponse NARELVIR", proposition.reponse_admin));
+    if (proposition.commande_id) carte.appendChild(creerLigneAdmin("Commande créée", "Oui"));
+
+    if (administrateur && proposition.statut === "envoyee") {
+        const actions = document.createElement("div");
+        actions.className = "proposition-admin-actions";
+        const reponse = document.createElement("textarea");
+        reponse.maxLength = 1000;
+        reponse.placeholder = "Réponse ou précision pour le client (facultatif)";
+        const boutons = document.createElement("div");
+        boutons.className = "retour-commande-boutons";
+        const accepter = document.createElement("button");
+        accepter.type = "button";
+        accepter.className = "bouton-petit vert";
+        accepter.textContent = "Accepter et créer la facture";
+        accepter.addEventListener("click", function() {
+            traiterPropositionAdmin(proposition, "accepter", reponse.value, accepter);
+        });
+        const refuser = document.createElement("button");
+        refuser.type = "button";
+        refuser.className = "bouton-petit rouge";
+        refuser.textContent = "Refuser";
+        refuser.addEventListener("click", function() {
+            traiterPropositionAdmin(proposition, "refuser", reponse.value, refuser);
+        });
+        boutons.append(accepter, refuser);
+        actions.append(reponse, boutons);
+        carte.appendChild(actions);
+    }
+    return carte;
+}
+
+function afficherPropositionsClient() {
+    const zone = document.getElementById("listePropositionsClient");
+    if (!zone) return;
+    zone.replaceChildren();
+    if (!propositionsClientNarelvir.length) {
+        const vide = document.createElement("p");
+        vide.className = "compte-vide";
+        vide.textContent = "Vous n’avez encore envoyé aucune proposition.";
+        zone.appendChild(vide);
+        return;
+    }
+    propositionsClientNarelvir.forEach(function(proposition) {
+        zone.appendChild(creerCarteProposition(proposition, false));
+    });
+}
+
+async function chargerPropositionsClient() {
+    if (!clientSupabase || !utilisateurConnecteNarelvir || estAdministrateurActuelNarelvir) return;
+    const resultat = await clientSupabase
+        .from("propositions_prix")
+        .select("id,numero,statut,total_original,total_propose,message_client,reponse_admin,commande_id,created_at,articles_proposition_prix(id,nom,quantite,prix_original,prix_propose,sous_total_original,sous_total_propose)")
+        .eq("client_id", utilisateurConnecteNarelvir.id)
+        .order("created_at", { ascending: false });
+    if (resultat.error) throw resultat.error;
+    propositionsClientNarelvir = resultat.data || [];
+    afficherPropositionsClient();
+}
+
+async function envoyerPropositionPrix(evenement) {
+    evenement.preventDefault();
+    const formulaire = evenement.currentTarget;
+    if (!utilisateurConnecteNarelvir || estAdministrateurActuelNarelvir) {
+        afficherMessageProposition("Seul un client connecté peut envoyer une proposition.", "erreur");
+        return;
+    }
+    const lignes = Array.from(document.querySelectorAll("#articlesPropositionClient .proposition-ligne"));
+    if (!lignes.length) {
+        afficherMessageProposition("Chargez d’abord les articles de votre panier.", "erreur");
+        return;
+    }
+    const articles = lignes.map(function(ligne) {
+        return {
+            nom: ligne.dataset.nom,
+            quantite: Number(ligne.dataset.quantite),
+            prix_propose: Number(ligne.querySelector(".prix-propose-client").value)
+        };
+    });
+    basculerBoutonFormulaire(formulaire, true);
+    try {
+        const resultat = await clientSupabase.rpc("creer_proposition_prix", {
+            p_articles: articles,
+            p_message: document.getElementById("messagePropositionClient").value.trim() || null
+        });
+        if (resultat.error) throw resultat.error;
+        document.getElementById("messagePropositionClient").value = "";
+        afficherMessageProposition(
+            "Proposition " + resultat.data.numero + " envoyée. NARELVIR doit la valider avant la création d’une commande ou d’une facture.",
+            "info"
+        );
+        await chargerPropositionsClient();
+    } catch (erreur) {
+        afficherMessageProposition(erreur && erreur.message ? erreur.message : "Impossible d’envoyer la proposition.", "erreur");
+        console.error("Proposition impossible :", erreur);
+    } finally {
+        basculerBoutonFormulaire(formulaire, false);
+    }
+}
+
+function afficherMessagePropositionsAdmin(message, type) {
+    const zone = document.getElementById("messagePropositionsAdmin");
+    if (!zone) return;
+    zone.textContent = message || "";
+    zone.className = message ? "admin-message visible " + (type || "info") : "admin-message";
+}
+
+function afficherPropositionsAdmin() {
+    const zone = document.getElementById("listePropositionsAdmin");
+    if (!zone) return;
+    const filtre = document.getElementById("filtrePropositionsAdmin");
+    const valeur = filtre ? filtre.value : "envoyee";
+    const liste = propositionsAdminNarelvir.filter(function(proposition) {
+        return valeur === "toutes" || proposition.statut === valeur;
+    });
+    zone.replaceChildren();
+    if (!liste.length) {
+        const vide = document.createElement("p");
+        vide.className = "compte-vide";
+        vide.textContent = valeur === "envoyee" ? "Aucune proposition en attente." : "Aucune proposition dans ce filtre.";
+        zone.appendChild(vide);
+        return;
+    }
+    liste.forEach(function(proposition) { zone.appendChild(creerCarteProposition(proposition, true)); });
+}
+
+async function chargerPropositionsAdmin() {
+    if (!clientSupabase || !estAdministrateurNarelvir(utilisateurConnecteNarelvir)) return;
+    const resultat = await clientSupabase
+        .from("propositions_prix")
+        .select("id,numero,client_id,statut,total_original,total_propose,message_client,reponse_admin,commande_id,created_at,articles_proposition_prix(id,nom,quantite,prix_original,prix_propose,sous_total_original,sous_total_propose)")
+        .order("created_at", { ascending: false })
+        .limit(200);
+    if (resultat.error) throw resultat.error;
+    propositionsAdminNarelvir = resultat.data || [];
+    const enAttente = propositionsAdminNarelvir.filter(function(p) { return p.statut === "envoyee"; }).length;
+    const badge = document.getElementById("menuBadgePropositionsAdmin");
+    if (badge) badge.textContent = String(enAttente);
+    afficherPropositionsAdmin();
+}
+
+async function traiterPropositionAdmin(proposition, decision, reponse, bouton) {
+    if (!estAdministrateurNarelvir(utilisateurConnecteNarelvir)) return;
+    const verbe = decision === "accepter" ? "accepter cette proposition et créer la commande/facture" : "refuser cette proposition";
+    if (!window.confirm("Voulez-vous " + verbe + " ?")) return;
+    bouton.disabled = true;
+    try {
+        const resultat = await clientSupabase.rpc("traiter_proposition_prix_admin", {
+            p_proposition_id: proposition.id,
+            p_decision: decision,
+            p_reponse: String(reponse || "").trim() || null
+        });
+        if (resultat.error) throw resultat.error;
+        afficherMessagePropositionsAdmin(
+            decision === "accepter"
+                ? "Proposition acceptée. La commande et la facture ont été créées sans modifier le prix officiel du catalogue."
+                : "Proposition refusée.",
+            "info"
+        );
+        await Promise.all([chargerPropositionsAdmin(), chargerCommandesAdmin(), chargerStockAdmin()]);
+    } catch (erreur) {
+        afficherMessagePropositionsAdmin(erreur && erreur.message ? erreur.message : "Impossible de traiter cette proposition.", "erreur");
+        console.error("Traitement de la proposition impossible :", erreur);
+    } finally {
+        bouton.disabled = false;
+    }
+}
+
+function jouerAlerteSonore() {
+    try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        if (!contexteAudioNotificationsNarelvir) contexteAudioNotificationsNarelvir = new AudioCtx();
+        if (contexteAudioNotificationsNarelvir.state === "suspended") contexteAudioNotificationsNarelvir.resume();
+        [0, 0.18].forEach(function(decalage) {
+            const oscillateur = contexteAudioNotificationsNarelvir.createOscillator();
+            const volume = contexteAudioNotificationsNarelvir.createGain();
+            oscillateur.frequency.value = 880;
+            volume.gain.setValueAtTime(0.0001, contexteAudioNotificationsNarelvir.currentTime + decalage);
+            volume.gain.exponentialRampToValueAtTime(0.18, contexteAudioNotificationsNarelvir.currentTime + decalage + 0.02);
+            volume.gain.exponentialRampToValueAtTime(0.0001, contexteAudioNotificationsNarelvir.currentTime + decalage + 0.14);
+            oscillateur.connect(volume);
+            volume.connect(contexteAudioNotificationsNarelvir.destination);
+            oscillateur.start(contexteAudioNotificationsNarelvir.currentTime + decalage);
+            oscillateur.stop(contexteAudioNotificationsNarelvir.currentTime + decalage + 0.15);
+        });
+    } catch (erreur) { console.warn("Alerte sonore non disponible :", erreur); }
+}
+
+function afficherNotificationsAdmin() {
+    const zone = document.getElementById("listeNotificationsAdmin");
+    if (!zone) return;
+    const nonLues = notificationsAdminNarelvir.filter(function(notification) { return !notification.lue_at; }).length;
+    const badge = document.getElementById("menuBadgeNotificationsAdmin");
+    if (badge) badge.textContent = String(nonLues);
+    zone.replaceChildren();
+    if (!notificationsAdminNarelvir.length) {
+        const vide = document.createElement("p");
+        vide.className = "compte-vide";
+        vide.textContent = "Aucune alerte enregistrée.";
+        zone.appendChild(vide);
+        return;
+    }
+    notificationsAdminNarelvir.forEach(function(notification) {
+        const carte = document.createElement("article");
+        carte.className = "notification-carte" + (notification.lue_at ? "" : " non-lue");
+        const entete = document.createElement("div");
+        entete.className = "notification-entete";
+        const titre = document.createElement("strong");
+        titre.textContent = notification.titre;
+        const date = document.createElement("span");
+        date.textContent = formaterDateAdmin(notification.created_at);
+        entete.append(titre, date);
+        const message = document.createElement("p");
+        message.textContent = notification.message;
+        carte.append(entete, message);
+        zone.appendChild(carte);
+    });
+}
+
+async function chargerNotificationsAdmin() {
+    if (!clientSupabase || !estAdministrateurNarelvir(utilisateurConnecteNarelvir)) return;
+    const resultat = await clientSupabase
+        .from("notifications_admin")
+        .select("id,type_evenement,titre,message,donnees,lue_at,created_at")
+        .order("created_at", { ascending: false })
+        .limit(100);
+    if (resultat.error) throw resultat.error;
+    notificationsAdminNarelvir = resultat.data || [];
+    afficherNotificationsAdmin();
+}
+
+function initialiserCanalNotificationsAdmin() {
+    if (!clientSupabase || !estAdministrateurNarelvir(utilisateurConnecteNarelvir)) return;
+    if (canalNotificationsAdminNarelvir) clientSupabase.removeChannel(canalNotificationsAdminNarelvir);
+    canalNotificationsAdminNarelvir = clientSupabase
+        .channel("notifications-admin-narelvir")
+        .on("postgres_changes", { event: "INSERT", schema: "public", table: "notifications_admin" }, function(message) {
+            notificationsAdminNarelvir.unshift(message.new);
+            notificationsAdminNarelvir = notificationsAdminNarelvir.slice(0, 100);
+            afficherNotificationsAdmin();
+            jouerAlerteSonore();
+        })
+        .subscribe();
+}
+
+function convertirCleVapid(cle) {
+    const remplissage = "=".repeat((4 - cle.length % 4) % 4);
+    const base64 = (cle + remplissage).replace(/-/g, "+").replace(/_/g, "/");
+    const brute = atob(base64);
+    return Uint8Array.from(Array.from(brute).map(function(caractere) { return caractere.charCodeAt(0); }));
+}
+
+async function activerAlertesNotifications() {
+    const etat = document.getElementById("etatNotificationsAdmin");
+    if (!estAdministrateurNarelvir(utilisateurConnecteNarelvir)) return;
+    if (!("serviceWorker" in navigator) || !("PushManager" in window) || !("Notification" in window)) {
+        etat.textContent = "Ce navigateur ne prend pas en charge les alertes lorsque le site est fermé.";
+        return;
+    }
+    try {
+        jouerAlerteSonore();
+        const permission = await Notification.requestPermission();
+        if (permission !== "granted") {
+            etat.textContent = "Autorisation refusée. Ouvrez les réglages du navigateur pour autoriser les notifications de narelvir.cm.";
+            return;
+        }
+        const inscription = await navigator.serviceWorker.ready;
+        const cle = await clientSupabase.functions.invoke("narelvir-notifications", { body: { action: "public_key" } });
+        if (cle.error || !cle.data || !cle.data.publicKey) throw cle.error || new Error("Clé de notification indisponible");
+        let abonnement = await inscription.pushManager.getSubscription();
+        if (!abonnement) {
+            abonnement = await inscription.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: convertirCleVapid(cle.data.publicKey)
+            });
+        }
+        const sauvegarde = await clientSupabase.functions.invoke("narelvir-notifications", {
+            body: { action: "subscribe", subscription: abonnement.toJSON() }
+        });
+        if (sauvegarde.error) throw sauvegarde.error;
+        localStorage.setItem("narelvir-alertes-activees", "oui");
+        etat.textContent = "✅ Alertes actives sur cet appareil, même lorsque le site est fermé. Le son dépend aussi du volume et du mode silencieux de l’appareil.";
+    } catch (erreur) {
+        etat.textContent = "Impossible d’activer les alertes : " + (erreur && erreur.message ? erreur.message : "réessayez.");
+        console.error("Activation des alertes impossible :", erreur);
+    }
+}
+
+async function marquerNotificationsLues() {
+    if (!estAdministrateurNarelvir(utilisateurConnecteNarelvir)) return;
+    const resultat = await clientSupabase.rpc("marquer_notifications_lues_admin");
+    if (resultat.error) {
+        document.getElementById("etatNotificationsAdmin").textContent = resultat.error.message;
+        return;
+    }
+    notificationsAdminNarelvir.forEach(function(notification) {
+        if (!notification.lue_at) notification.lue_at = new Date().toISOString();
+    });
+    afficherNotificationsAdmin();
+}
+
 async function afficherEtatCompte(utilisateur) {
     const invite = document.getElementById("zoneAuthInvite");
     const compte = document.getElementById("zoneCompteConnecte");
@@ -5088,7 +5651,16 @@ async function afficherEtatCompte(utilisateur) {
         commandesAdminNarelvir = [];
         commandesClientActuel = [];
         facturesClientActuel = [];
+        propositionsClientNarelvir = [];
+        propositionsAdminNarelvir = [];
+        notificationsAdminNarelvir = [];
         profilClientActuel = null;
+        const zonePropositions = document.getElementById("zonePropositionsClient");
+        if (zonePropositions) zonePropositions.classList.remove("cache");
+        if (canalNotificationsAdminNarelvir && clientSupabase) {
+            clientSupabase.removeChannel(canalNotificationsAdminNarelvir);
+            canalNotificationsAdminNarelvir = null;
+        }
         return;
     }
 
@@ -5111,6 +5683,7 @@ async function afficherEtatCompte(utilisateur) {
         await synchroniserPanierCompte();
         await chargerCommandesClient();
         await chargerFacturesClient();
+        if (!estAdministrateurActuelNarelvir) await chargerPropositionsClient();
     } catch (erreur) {
         commandesClientActuel = [];
         facturesClientActuel = [];
@@ -5120,6 +5693,9 @@ async function afficherEtatCompte(utilisateur) {
         console.error("Espace client incomplet :", erreur);
     }
 
+    const zonePropositions = document.getElementById("zonePropositionsClient");
+    if (zonePropositions) zonePropositions.classList.toggle("cache", estAdministrateurActuelNarelvir);
+
     if (estAdministrateurNarelvir(utilisateur)) {
         administration.classList.remove("cache");
         ouvrirModuleAdmin("tableau", false);
@@ -5128,10 +5704,19 @@ async function afficherEtatCompte(utilisateur) {
         }
         adapterFormulaireVenteDistance();
         await actualiserAdministration(utilisateur);
+        initialiserCanalNotificationsAdmin();
+        const etatNotifications = document.getElementById("etatNotificationsAdmin");
+        if (etatNotifications && localStorage.getItem("narelvir-alertes-activees") === "oui") {
+            etatNotifications.textContent = Notification.permission === "granted"
+                ? "✅ Alertes déjà autorisées sur cet appareil."
+                : "Les alertes doivent être réactivées dans les réglages du navigateur.";
+        }
     } else {
         administration.classList.add("cache");
         clientsAdminNarelvir = [];
         commandesAdminNarelvir = [];
+        propositionsAdminNarelvir = [];
+        notificationsAdminNarelvir = [];
     }
 }
 
@@ -5429,6 +6014,7 @@ function afficherPanier() {
     const boutonCommander = document.getElementById("commanderPanier");
     const boutonWhatsApp = document.getElementById("envoyerPanierWhatsApp");
     const boutonVider = document.getElementById("viderPanier");
+    const boutonProposer = document.getElementById("proposerPrixPanier");
     let total = 0;
     let nombre = 0;
 
@@ -5488,6 +6074,7 @@ function afficherPanier() {
     nombreElement.textContent = nombre;
     boutonCommander.disabled = panier.length === 0;
     boutonWhatsApp.disabled = panier.length === 0;
+    boutonProposer.disabled = panier.length === 0;
     boutonVider.disabled = panier.length === 0;
 }
 
